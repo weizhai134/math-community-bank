@@ -1,0 +1,317 @@
+[
+  {
+    "id": "c1-basic",
+    "chapter": 1,
+    "tier": "basic",
+    "name": "极限的门槛",
+    "questionIds": [
+      "c1q01",
+      "c1q02",
+      "c1q03",
+      "c1q04",
+      "c1q05"
+    ],
+    "targetSec": 450,
+    "brief": "定义域、极限与连续的基本功"
+  },
+  {
+    "id": "c1-advanced",
+    "chapter": 1,
+    "tier": "advanced",
+    "name": "无穷小的迷宫",
+    "questionIds": [
+      "c1q06",
+      "c1q07",
+      "c1q08",
+      "c1q09",
+      "c1q10"
+    ],
+    "targetSec": 600,
+    "brief": "等价无穷小、渐近线与分段连续"
+  },
+  {
+    "id": "c1-boss",
+    "chapter": 1,
+    "tier": "boss",
+    "name": "连续性的试炼",
+    "questionIds": [
+      "c1q11",
+      "c1q12",
+      "c1q13",
+      "c1q14",
+      "c1q15"
+    ],
+    "targetSec": 760,
+    "brief": "泰勒展开与可导性的综合挑战"
+  },
+  {
+    "id": "c2-basic",
+    "chapter": 2,
+    "tier": "basic",
+    "name": "变化率的起点",
+    "questionIds": [
+      "c2q01",
+      "c2q02",
+      "c2q03",
+      "c2q04",
+      "c2q05"
+    ],
+    "targetSec": 450,
+    "brief": "导数定义、复合函数与幂指函数"
+  },
+  {
+    "id": "c2-advanced",
+    "chapter": 2,
+    "tier": "advanced",
+    "name": "求导法则工坊",
+    "questionIds": [
+      "c2q06",
+      "c2q07",
+      "c2q08",
+      "c2q09",
+      "c2q10"
+    ],
+    "targetSec": 600,
+    "brief": "切线、参数方程与隐函数"
+  },
+  {
+    "id": "c2-boss",
+    "chapter": 2,
+    "tier": "boss",
+    "name": "高阶导数深渊",
+    "questionIds": [
+      "c2q11",
+      "c2q12",
+      "c2q13",
+      "c2q14",
+      "c2q15"
+    ],
+    "targetSec": 760,
+    "brief": "导数定义、高阶导数与对数求导"
+  },
+  {
+    "id": "c3-basic",
+    "chapter": 3,
+    "tier": "basic",
+    "name": "中值定理入口",
+    "questionIds": [
+      "c3q01",
+      "c3q02",
+      "c3q03",
+      "c3q04",
+      "c3q05"
+    ],
+    "targetSec": 450,
+    "brief": "罗尔、拉格朗日与单调性"
+  },
+  {
+    "id": "c3-advanced",
+    "chapter": 3,
+    "tier": "advanced",
+    "name": "函数形态实验室",
+    "questionIds": [
+      "c3q06",
+      "c3q07",
+      "c3q08",
+      "c3q09",
+      "c3q10"
+    ],
+    "targetSec": 600,
+    "brief": "极值、最值、渐近线与不等式"
+  },
+  {
+    "id": "c3-boss",
+    "chapter": 3,
+    "tier": "boss",
+    "name": "极值王座",
+    "questionIds": [
+      "c3q11",
+      "c3q12",
+      "c3q13",
+      "c3q14",
+      "c3q15"
+    ],
+    "targetSec": 760,
+    "brief": "方程根数、参数反求与拐点"
+  },
+  {
+    "id": "c4-basic",
+    "chapter": 4,
+    "tier": "basic",
+    "name": "原函数营地",
+    "questionIds": [
+      "c4q01",
+      "c4q02",
+      "c4q03",
+      "c4q04",
+      "c4q05"
+    ],
+    "targetSec": 450,
+    "brief": "基本公式与直接积分"
+  },
+  {
+    "id": "c4-advanced",
+    "chapter": 4,
+    "tier": "advanced",
+    "name": "积分技巧回廊",
+    "questionIds": [
+      "c4q06",
+      "c4q07",
+      "c4q08",
+      "c4q09",
+      "c4q10"
+    ],
+    "targetSec": 620,
+    "brief": "分部积分、配方法、有理函数"
+  },
+  {
+    "id": "c4-boss",
+    "chapter": 4,
+    "tier": "boss",
+    "name": "分部积分迷宫",
+    "questionIds": [
+      "c4q11",
+      "c4q12",
+      "c4q13",
+      "c4q14",
+      "c4q15"
+    ],
+    "targetSec": 780,
+    "brief": "多次分部、根式换元与循环积分"
+  },
+  {
+    "id": "c5-basic",
+    "chapter": 5,
+    "tier": "basic",
+    "name": "黎曼和之门",
+    "questionIds": [
+      "c5q01",
+      "c5q02",
+      "c5q03",
+      "c5q04",
+      "c5q05"
+    ],
+    "targetSec": 450,
+    "brief": "牛顿—莱布尼茨公式与奇偶性"
+  },
+  {
+    "id": "c5-advanced",
+    "chapter": 5,
+    "tier": "advanced",
+    "name": "定积分工坊",
+    "questionIds": [
+      "c5q06",
+      "c5q07",
+      "c5q08",
+      "c5q09",
+      "c5q10"
+    ],
+    "targetSec": 600,
+    "brief": "绝对值、分部与反常积分"
+  },
+  {
+    "id": "c5-boss",
+    "chapter": 5,
+    "tier": "boss",
+    "name": "对称与收敛",
+    "questionIds": [
+      "c5q11",
+      "c5q12",
+      "c5q13",
+      "c5q14",
+      "c5q15"
+    ],
+    "targetSec": 780,
+    "brief": "对称性、换元和递推公式"
+  },
+  {
+    "id": "c6-basic",
+    "chapter": 6,
+    "tier": "basic",
+    "name": "面积工坊",
+    "questionIds": [
+      "c6q01",
+      "c6q02",
+      "c6q03",
+      "c6q04",
+      "c6q05"
+    ],
+    "targetSec": 460,
+    "brief": "面积、体积和弧长的基本模型"
+  },
+  {
+    "id": "c6-advanced",
+    "chapter": 6,
+    "tier": "advanced",
+    "name": "体积与弧长",
+    "questionIds": [
+      "c6q06",
+      "c6q07",
+      "c6q08",
+      "c6q09",
+      "c6q10"
+    ],
+    "targetSec": 620,
+    "brief": "垫圈法、平均值、变力做功"
+  },
+  {
+    "id": "c6-boss",
+    "chapter": 6,
+    "tier": "boss",
+    "name": "应用综合塔",
+    "questionIds": [
+      "c6q11",
+      "c6q12",
+      "c6q13",
+      "c6q14",
+      "c6q15"
+    ],
+    "targetSec": 800,
+    "brief": "综合面积、截面体积与参数弧长"
+  },
+  {
+    "id": "c7-basic",
+    "chapter": 7,
+    "tier": "basic",
+    "name": "微分方程起点",
+    "questionIds": [
+      "c7q01",
+      "c7q02",
+      "c7q03",
+      "c7q04",
+      "c7q05"
+    ],
+    "targetSec": 460,
+    "brief": "阶数、可分离变量与特征根"
+  },
+  {
+    "id": "c7-advanced",
+    "chapter": 7,
+    "tier": "advanced",
+    "name": "一阶方程工坊",
+    "questionIds": [
+      "c7q06",
+      "c7q07",
+      "c7q08",
+      "c7q09",
+      "c7q10"
+    ],
+    "targetSec": 620,
+    "brief": "积分因子与二阶初值问题"
+  },
+  {
+    "id": "c7-boss",
+    "chapter": 7,
+    "tier": "boss",
+    "name": "二阶方程王座",
+    "questionIds": [
+      "c7q11",
+      "c7q12",
+      "c7q13",
+      "c7q14",
+      "c7q15"
+    ],
+    "targetSec": 800,
+    "brief": "特解、全微分方程与伯努利代换"
+  }
+]

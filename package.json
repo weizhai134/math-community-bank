@@ -1,0 +1,31 @@
+{
+  "name": "gaoshu-quest",
+  "private": true,
+  "version": "1.0.0",
+  "description": "同济版高等数学第八版上册 · 纯前端闯关刷题应用",
+  "type": "module",
+  "scripts": {
+    "dev": "vite",
+    "dev:lan": "vite --host 0.0.0.0",
+    "build": "tsc -b && vite build",
+    "preview": "vite preview",
+    "preview:lan": "vite preview --host 0.0.0.0",
+    "typecheck": "tsc -b --pretty false",
+    "verify:supabase": "node scripts/verify-supabase.mjs"
+  },
+  "dependencies": {
+    "@supabase/supabase-js": "^2.119.0",
+    "dexie": "^4.0.11",
+    "katex": "^0.19.1",
+    "react": "^18.3.1",
+    "react-dom": "^18.3.1",
+    "zustand": "^5.0.3"
+  },
+  "devDependencies": {
+    "@types/react": "^18.3.18",
+    "@types/react-dom": "^18.3.5",
+    "@vitejs/plugin-react": "^4.3.4",
+    "typescript": "~5.7.3",
+    "vite": "^6.1.0"
+  }
+}

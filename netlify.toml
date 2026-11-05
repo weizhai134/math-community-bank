@@ -1,0 +1,24 @@
+# Netlify 部署配置
+# 项目使用 hash 路由（#/community），所有页面都由 index.html 承载，不需要 SPA rewrite。
+# 环境变量请在 Netlify 后台 Site configuration → Environment variables 里配置：
+#   VITE_SUPABASE_URL
+#   VITE_SUPABASE_ANON_KEY
+# 只放 anon key，绝不要放 service_role key。
+
+[build]
+  command = "npm run build"
+  publish = "dist"
+
+[build.environment]
+  NODE_VERSION = "20"
+
+# Service Worker 与 manifest 不要被长缓存，否则部署新版本后客户端迟迟不更新
+[[headers]]
+  for = "/sw.js"
+  [headers.values]
+    Cache-Control = "no-cache"
+
+[[headers]]
+  for = "/manifest.webmanifest"
+  [headers.values]
+    Cache-Control = "no-cache"

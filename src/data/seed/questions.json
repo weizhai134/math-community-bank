@@ -1,0 +1,1913 @@
+[
+  {
+    "id": "c1q01",
+    "chapter": 1,
+    "topic": "函数定义域",
+    "difficulty": "基础",
+    "source": "原创",
+    "type": "choice",
+    "stem": "函数 $f(x)=\\dfrac{\\sqrt{4-x^2}}{x-1}$ 的定义域是（ ）。",
+    "options": [
+      {
+        "id": "A",
+        "text": "$[-2,2]$"
+      },
+      {
+        "id": "B",
+        "text": "$[-2,2]\\setminus\\{1\\}$"
+      },
+      {
+        "id": "C",
+        "text": "$(-2,2)\\setminus\\{1\\}$"
+      },
+      {
+        "id": "D",
+        "text": "$[-2,2)$"
+      }
+    ],
+    "answer": "B",
+    "explanation": "根号内必须非负：$4-x^2\\ge 0$，得 $-2\\le x\\le 2$。分母不能为零：$x-1\\ne 0$，得 $x\\ne 1$。两者取交集，定义域为 $[-2,2]\\setminus\\{1\\}$。"
+  },
+  {
+    "id": "c1q02",
+    "chapter": 1,
+    "topic": "函数极限",
+    "difficulty": "基础",
+    "source": "原创",
+    "type": "judge",
+    "stem": "判断：若 $\\lim_{x\\to 0}\\dfrac{f(x)}{x}=1$，则必有 $f(0)=0$。若认为错误，请举出反例。",
+    "answer": false,
+    "explanation": "错误。极限只约束 $x\\ne 0$ 时的取值，不约束函数在 $x=0$ 处的定义。取\n$$f(x)=\\begin{cases}x,&x\\ne 0,\\\\1,&x=0,\\end{cases}$$\n则 $\\lim_{x\\to 0}f(x)/x=\\lim_{x\\to 0}1=1$，但 $f(0)=1\\ne 0$。若再额外假设 $f$ 在 $0$ 处连续，才能推出 $f(0)=\\lim_{x\\to 0}f(x)=0$。"
+  },
+  {
+    "id": "c1q03",
+    "chapter": 1,
+    "topic": "因式分解求极限",
+    "difficulty": "基础",
+    "source": "原创",
+    "type": "solution",
+    "stem": "求 $\\displaystyle\\lim_{x\\to 1}\\frac{x^3-1}{x^2-1}$。",
+    "answer": "$\\dfrac{3}{2}$",
+    "explanation": "先约去趋于零的公因子。利用\n$$x^3-1=(x-1)(x^2+x+1),\\qquad x^2-1=(x-1)(x+1),$$\n当 $x\\ne 1$ 时\n$$\\frac{x^3-1}{x^2-1}=\\frac{x^2+x+1}{x+1}.$$\n令 $x\\to 1$，得\n$$\\lim_{x\\to 1}\\frac{x^3-1}{x^2-1}=\\frac{1+1+1}{1+1}=\\frac32.$$"
+  },
+  {
+    "id": "c1q04",
+    "chapter": 1,
+    "topic": "函数的连续性",
+    "difficulty": "基础",
+    "source": "原创",
+    "type": "choice",
+    "stem": "设 $f(x)=\\begin{cases}\\dfrac{x^2-1}{x-1},&x\\ne 1,\\\\a,&x=1.\\end{cases}$ 若 $f$ 在 $x=1$ 处连续，则 $a=$（ ）。",
+    "options": [
+      {
+        "id": "A",
+        "text": "0"
+      },
+      {
+        "id": "B",
+        "text": "1"
+      },
+      {
+        "id": "C",
+        "text": "2"
+      },
+      {
+        "id": "D",
+        "text": "不存在这样的 $a$"
+      }
+    ],
+    "answer": "C",
+    "explanation": "连续要求 $\\lim_{x\\to 1}f(x)=f(1)=a$。当 $x\\ne 1$ 时\n$$f(x)=\\frac{(x-1)(x+1)}{x-1}=x+1,$$\n所以 $\\lim_{x\\to 1}f(x)=2$。因此 $a=2$。"
+  },
+  {
+    "id": "c1q05",
+    "chapter": 1,
+    "topic": "数列极限",
+    "difficulty": "进阶",
+    "source": "网络改编",
+    "type": "judge",
+    "stem": "判断：单调有界数列一定收敛。",
+    "answer": true,
+    "explanation": "正确。这是单调有界准则：若数列 $\\{a_n\\}$ 单调递增且有上界，则它收敛于其上确界；若单调递减且有下界，则收敛于其下确界。例如 $a_n=1-\\frac1n$ 单调递增且小于 $1$，故收敛于 $1$。注意“有界”与“单调”缺一不可：$a_n=(-1)^n$ 有界但不收敛，$a_n=n$ 单调但无界。"
+  },
+  {
+    "id": "c1q06",
+    "chapter": 1,
+    "topic": "等价无穷小",
+    "difficulty": "基础",
+    "source": "原创",
+    "type": "choice",
+    "stem": "$\\displaystyle\\lim_{x\\to 0}\\frac{1-\\cos x}{x^2}=$（ ）。",
+    "options": [
+      {
+        "id": "A",
+        "text": "0"
+      },
+      {
+        "id": "B",
+        "text": "$\\dfrac12$"
+      },
+      {
+        "id": "C",
+        "text": "1"
+      },
+      {
+        "id": "D",
+        "text": "$+\\infty$"
+      }
+    ],
+    "answer": "B",
+    "explanation": "利用 $1-\\cos x=2\\sin^2\\frac{x}{2}$，并用 $\\sin u\\sim u$（$u\\to 0$）：\n$$\\frac{1-\\cos x}{x^2}\n=\\frac{2\\sin^2(x/2)}{x^2}\n=2\\left(\\frac{\\sin(x/2)}{x/2}\\right)^2\\cdot\\frac{(x/2)^2}{x^2}\n=2\\cdot 1^2\\cdot\\frac14=\\frac12.$$\n也可由泰勒展开 $1-\\cos x=\\frac{x^2}{2}+o(x^2)$ 直接得到。"
+  },
+  {
+    "id": "c1q07",
+    "chapter": 1,
+    "topic": "零点定理",
+    "difficulty": "进阶",
+    "source": "原创",
+    "type": "judge",
+    "stem": "判断：若函数 $f$ 在闭区间 $[a,b]$ 上连续，且 $f(a)f(b)<0$，则 $f$ 在 $(a,b)$ 内至少有一个零点。",
+    "answer": true,
+    "explanation": "正确，这是零点定理（介值定理的推论）。$f(a)f(b)<0$ 说明两端函数值异号，而连续函数不能从正的一侧“跳过”零到达负的一侧。因此存在 $\\xi\\in(a,b)$ 使 $f(\\xi)=0$。例如 $f(x)=x^3+x-1$ 在 $[0,1]$ 上连续，$f(0)=-1<0$，$f(1)=1>0$，故在 $(0,1)$ 内有零点。"
+  },
+  {
+    "id": "c1q08",
+    "chapter": 1,
+    "topic": "三角极限",
+    "difficulty": "进阶",
+    "source": "网络改编",
+    "type": "solution",
+    "stem": "求 $\\displaystyle\\lim_{x\\to 0}\\frac{\\tan x-\\sin x}{x^3}$。",
+    "answer": "$\\dfrac12$",
+    "explanation": "先化简：\n$$\\tan x-\\sin x=\\frac{\\sin x}{\\cos x}-\\sin x\n=\\sin x\\cdot\\frac{1-\\cos x}{\\cos x}.$$\n于是\n$$\\frac{\\tan x-\\sin x}{x^3}\n=\\frac{\\sin x}{x}\\cdot\\frac{1-\\cos x}{x^2}\\cdot\\frac{1}{\\cos x}.$$\n分别用 $\\lim_{x\\to0}\\frac{\\sin x}{x}=1$、$\\lim_{x\\to0}\\frac{1-\\cos x}{x^2}=\\frac12$、$\\lim_{x\\to0}\\cos x=1$，得极限为\n$$1\\cdot\\frac12\\cdot 1=\\frac12.$$。"
+  },
+  {
+    "id": "c1q09",
+    "chapter": 1,
+    "topic": "曲线的渐近线",
+    "difficulty": "进阶",
+    "source": "原创",
+    "type": "choice",
+    "stem": "曲线 $y=\\dfrac{x^2+1}{x-1}$ 的渐近线为（ ）。",
+    "options": [
+      {
+        "id": "A",
+        "text": "$x=1$ 与 $y=x$"
+      },
+      {
+        "id": "B",
+        "text": "$x=1$ 与 $y=x+1$"
+      },
+      {
+        "id": "C",
+        "text": "$x=-1$ 与 $y=x-1$"
+      },
+      {
+        "id": "D",
+        "text": "只有 $x=1$"
+      }
+    ],
+    "answer": "B",
+    "explanation": "先做多项式除法：\n$$y=\\frac{x^2+1}{x-1}=x+1+\\frac{2}{x-1}.$$\n当 $x\\to 1$ 时分式趋于无穷，故 $x=1$ 是铅直渐近线。当 $x\\to\\pm\\infty$ 时，$\\frac{2}{x-1}\\to 0$，曲线与直线 $y=x+1$ 的差趋于零，故 $y=x+1$ 是斜渐近线。"
+  },
+  {
+    "id": "c1q10",
+    "chapter": 1,
+    "topic": "分段函数连续性",
+    "difficulty": "进阶",
+    "source": "原创",
+    "type": "solution",
+    "stem": "设 $f(x)=\\begin{cases}\\dfrac{e^{ax}-1}{x},&x\\ne 0,\\\\2,&x=0.\\end{cases}$ 若 $f$ 在 $x=0$ 处连续，求常数 $a$。",
+    "answer": "$a=2$",
+    "explanation": "连续要求\n$$\\lim_{x\\to 0}\\frac{e^{ax}-1}{x}=f(0)=2.$$\n利用等价无穷小 $e^u-1\\sim u$（$u\\to0$）：\n$$\\lim_{x\\to0}\\frac{e^{ax}-1}{x}\n=\\lim_{x\\to0}\\frac{e^{ax}-1}{ax}\\cdot a\n=1\\cdot a=a.$$\n所以 $a=2$。当 $a=2$ 时，左、右极限均为 $2$，且等于函数值，连续性成立。"
+  },
+  {
+    "id": "c1q11",
+    "chapter": 1,
+    "topic": "泰勒展开求极限",
+    "difficulty": "挑战",
+    "source": "网络改编",
+    "type": "choice",
+    "stem": "$\\displaystyle\\lim_{x\\to 0}\\left(\\frac{1}{x^2}-\\frac{1}{\\sin^2 x}\\right)=$（ ）。",
+    "options": [
+      {
+        "id": "A",
+        "text": "$-\\dfrac13$"
+      },
+      {
+        "id": "B",
+        "text": "0"
+      },
+      {
+        "id": "C",
+        "text": "$\\dfrac13$"
+      },
+      {
+        "id": "D",
+        "text": "$+\\infty$"
+      }
+    ],
+    "answer": "A",
+    "explanation": "由 $\\sin x=x-\\frac{x^3}{6}+o(x^3)$，得\n$$\\sin^2x=x^2-\\frac{x^4}{3}+o(x^4)\n=x^2\\left(1-\\frac{x^2}{3}+o(x^2)\\right).$$\n于是\n$$\\frac{1}{\\sin^2x}\n=\\frac{1}{x^2}\\left(1+\\frac{x^2}{3}+o(x^2)\\right)\n=\\frac{1}{x^2}+\\frac13+o(1).$$\n因此原式\n$$=\\frac{1}{x^2}-\\left(\\frac{1}{x^2}+\\frac13+o(1)\\right)\\to-\\frac13.$$"
+  },
+  {
+    "id": "c1q12",
+    "chapter": 1,
+    "topic": "极限与可导性",
+    "difficulty": "挑战",
+    "source": "原创",
+    "type": "judge",
+    "stem": "判断：若 $\\lim_{x\\to 0}\\dfrac{f(x)}{x^2}=1$，则 $f$ 在 $x=0$ 处可导，且 $f'(0)=0$。若认为错误，请举出反例。",
+    "answer": false,
+    "explanation": "错误。该极限条件不能保证 $f$ 在 $0$ 处连续，更不能保证可导。反例：\n$$f(x)=\\begin{cases}x^2,&x\\ne0,\\\\1,&x=0.\\end{cases}$$\n此时当 $x\\ne0$，$f(x)/x^2=1$，故极限为 $1$。但 $\\lim_{x\\to0}f(x)=0\\ne f(0)=1$，函数在 $0$ 处不连续，因而不可导。若补充“$f(0)=0$ 且在 $0$ 处连续”，则由 $f(x)=x^2+o(x^2)$ 可得 $f'(0)=0$。"
+  },
+  {
+    "id": "c1q13",
+    "chapter": 1,
+    "topic": "泰勒公式综合",
+    "difficulty": "挑战",
+    "source": "网络改编",
+    "type": "solution",
+    "stem": "求 $\\displaystyle\\lim_{x\\to0}\\frac{e^x\\sin x-x(1+x)}{x^3}$。",
+    "answer": "$\\dfrac13$",
+    "explanation": "展开到 $x^3$：\n$$e^x=1+x+\\frac{x^2}{2}+\\frac{x^3}{6}+o(x^3),\\qquad\n\\sin x=x-\\frac{x^3}{6}+o(x^3).$$\n相乘并只保留不超过 $x^3$ 的项：\n$$e^x\\sin x\n=x+x^2+\\left(\\frac12-\\frac16\\right)x^3+o(x^3)\n=x+x^2+\\frac{x^3}{3}+o(x^3).$$\n又 $x(1+x)=x+x^2$，所以\n$$e^x\\sin x-x(1+x)=\\frac{x^3}{3}+o(x^3).$$\n除以 $x^3$ 并令 $x\\to0$，极限为 $\\frac13$。"
+  },
+  {
+    "id": "c1q14",
+    "chapter": 1,
+    "topic": "重要极限的渐近展开",
+    "difficulty": "挑战",
+    "source": "网络改编",
+    "type": "solution",
+    "stem": "求 $\\displaystyle\\lim_{x\\to0}\\frac{(1+x)^{1/x}-e}{x}$。",
+    "answer": "$-\\dfrac{e}{2}$",
+    "explanation": "令 $u=\\frac1x\\ln(1+x)$，则 $(1+x)^{1/x}=e^u$。利用\n$$\\ln(1+x)=x-\\frac{x^2}{2}+\\frac{x^3}{3}+o(x^3),$$\n得\n$$u=1-\\frac{x}{2}+\\frac{x^2}{3}+o(x^2).$$\n再用 $e^u=e\\,e^{u-1}$ 与 $e^t=1+t+\\frac{t^2}{2}+o(t^2)$：\n$$e^u=e\\left[1+\\left(-\\frac x2+\\frac{x^2}{3}\\right)\n+\\frac12\\left(-\\frac x2\\right)^2+o(x^2)\\right]\n=e\\left(1-\\frac x2+\\frac{11x^2}{24}+o(x^2)\\right).$$\n因此\n$$(1+x)^{1/x}-e=-\\frac e2x+O(x^2),$$\n除以 $x$ 后取极限得 $-\\frac e2$。"
+  },
+  {
+    "id": "c1q15",
+    "chapter": 1,
+    "topic": "连续与可导",
+    "difficulty": "挑战",
+    "source": "原创",
+    "type": "choice",
+    "stem": "设 $f(x)=\\begin{cases}x\\sin\\dfrac1x,&x\\ne0,\\\\0,&x=0.\\end{cases}$ 则（ ）。",
+    "options": [
+      {
+        "id": "A",
+        "text": "在 $x=0$ 处连续且可导"
+      },
+      {
+        "id": "B",
+        "text": "在 $x=0$ 处连续但不可导"
+      },
+      {
+        "id": "C",
+        "text": "在 $x=0$ 处不连续但可导"
+      },
+      {
+        "id": "D",
+        "text": "在 $x=0$ 处既不连续也不可导"
+      }
+    ],
+    "answer": "B",
+    "explanation": "连续性：当 $x\\ne0$ 时\n$$0\\le\\left|x\\sin\\frac1x\\right|\\le |x|,$$\n由夹逼准则 $\\lim_{x\\to0}f(x)=0=f(0)$，故在 $0$ 处连续。\n可导性：考察差商\n$$\\frac{f(x)-f(0)}{x-0}\n=\\frac{x\\sin(1/x)}{x}=\\sin\\frac1x.$$\n当 $x\\to0$ 时 $\\sin\\frac1x$ 在 $-1$ 与 $1$ 之间振荡，没有极限，所以 $f'(0)$ 不存在。因此连续但不可导。"
+  },
+  {
+    "id": "c2q01",
+    "chapter": 2,
+    "topic": "导数的基本计算",
+    "difficulty": "基础",
+    "source": "原创",
+    "type": "choice",
+    "stem": "设 $f(x)=x^3-3x$，则 $f'(1)=$（ ）。",
+    "options": [
+      {
+        "id": "A",
+        "text": "$-3$"
+      },
+      {
+        "id": "B",
+        "text": "0"
+      },
+      {
+        "id": "C",
+        "text": "3"
+      },
+      {
+        "id": "D",
+        "text": "6"
+      }
+    ],
+    "answer": "B",
+    "explanation": "逐项求导：\n$$f'(x)=3x^2-3.$$\n代入 $x=1$，得 $f'(1)=3-3=0$。从图像看，$f$ 在 $x=1$ 处切线水平。"
+  },
+  {
+    "id": "c2q02",
+    "chapter": 2,
+    "topic": "可导与连续",
+    "difficulty": "基础",
+    "source": "原创",
+    "type": "judge",
+    "stem": "判断：若函数 $f$ 在 $x_0$ 处可导，则 $f$ 在 $x_0$ 处连续。",
+    "answer": true,
+    "explanation": "正确。若 $f'(x_0)$ 存在，则\n$$f(x)-f(x_0)=\\frac{f(x)-f(x_0)}{x-x_0}(x-x_0).$$\n当 $x\\to x_0$ 时，第一个因子趋于 $f'(x_0)$，第二个因子趋于 $0$，故 $f(x)\\to f(x_0)$，即 $f$ 在 $x_0$ 连续。反之不成立，例如 $f(x)=|x|$ 在 $0$ 处连续但不可导。"
+  },
+  {
+    "id": "c2q03",
+    "chapter": 2,
+    "topic": "复合函数求导",
+    "difficulty": "基础",
+    "source": "原创",
+    "type": "solution",
+    "stem": "设 $y=\\ln(1+x^2)$，求 $\\dfrac{dy}{dx}$ 与 $\\dfrac{d^2y}{dx^2}$。",
+    "answer": "$\\dfrac{dy}{dx}=\\dfrac{2x}{1+x^2}$，$\\dfrac{d^2y}{dx^2}=\\dfrac{2(1-x^2)}{(1+x^2)^2}$",
+    "explanation": "令 $u=1+x^2$，则 $y=\\ln u$。由链式法则\n$$\\frac{dy}{dx}=\\frac1u\\cdot u'=\\frac{1}{1+x^2}\\cdot 2x=\\frac{2x}{1+x^2}.$$\n再求导，用商法则：\n$$\\frac{d^2y}{dx^2}\n=2\\cdot\\frac{(1+x^2)-x(2x)}{(1+x^2)^2}\n=\\frac{2(1-x^2)}{(1+x^2)^2}.$$"
+  },
+  {
+    "id": "c2q04",
+    "chapter": 2,
+    "topic": "幂指函数求导",
+    "difficulty": "基础",
+    "source": "网络改编",
+    "type": "choice",
+    "stem": "函数 $y=x^x\\ (x>0)$ 在 $x=1$ 处的导数值为（ ）。",
+    "options": [
+      {
+        "id": "A",
+        "text": "0"
+      },
+      {
+        "id": "B",
+        "text": "1"
+      },
+      {
+        "id": "C",
+        "text": "$e$"
+      },
+      {
+        "id": "D",
+        "text": "$1+e$"
+      }
+    ],
+    "answer": "B",
+    "explanation": "对 $y=x^x$ 两边取对数：\n$$\\ln y=x\\ln x.$$\n两边对 $x$ 求导：\n$$\\frac{y'}y=\\ln x+1,$$\n所以\n$$y'=x^x(\\ln x+1).$$\n代入 $x=1$：$y'(1)=1^1(0+1)=1$。"
+  },
+  {
+    "id": "c2q05",
+    "chapter": 2,
+    "topic": "绝对值函数的可导性",
+    "difficulty": "进阶",
+    "source": "原创",
+    "type": "judge",
+    "stem": "判断：若 $f$ 在 $x_0$ 处可导，则 $|f|$ 在 $x_0$ 处一定可导。若认为错误，请举出反例。",
+    "answer": false,
+    "explanation": "错误。取 $f(x)=x$，$x_0=0$。$f$ 在 $0$ 处可导且 $f'(0)=1$，但\n$$|f(x)|=|x|$$\n在 $0$ 处不可导：左导数 $-1$，右导数 $1$，二者不相等。\n一般地，若 $f(x_0)\\ne0$，由链式法则 $|f|$ 在 $x_0$ 附近可导；问题只可能出现在 $f(x_0)=0$ 且 $f$ 在该点变号时。"
+  },
+  {
+    "id": "c2q06",
+    "chapter": 2,
+    "topic": "切线方程",
+    "difficulty": "基础",
+    "source": "原创",
+    "type": "choice",
+    "stem": "曲线 $y=e^{2x}$ 在点 $(0,1)$ 处的切线方程为（ ）。",
+    "options": [
+      {
+        "id": "A",
+        "text": "$y=2x+1$"
+      },
+      {
+        "id": "B",
+        "text": "$y=x+1$"
+      },
+      {
+        "id": "C",
+        "text": "$y=2x-1$"
+      },
+      {
+        "id": "D",
+        "text": "$y=\\frac12x+1$"
+      }
+    ],
+    "answer": "A",
+    "explanation": "先求斜率：\n$$y'=2e^{2x},\\qquad y'(0)=2e^0=2.$$\n由点斜式，切线为\n$$y-1=2(x-0),$$\n即 $y=2x+1$。"
+  },
+  {
+    "id": "c2q07",
+    "chapter": 2,
+    "topic": "参数方程求导",
+    "difficulty": "进阶",
+    "source": "原创",
+    "type": "judge",
+    "stem": "设 $\\begin{cases}x=t^2,\\\\y=t^3,\\end{cases}$ 则曲线在 $t=1$ 处的切线斜率为 $\\dfrac32$。",
+    "answer": true,
+    "explanation": "对参数 $t$ 分别求导：\n$$\\frac{dx}{dt}=2t,\\qquad \\frac{dy}{dt}=3t^2.$$\n当 $t=1$ 时，$dx/dt=2\\ne0$，故\n$$\\frac{dy}{dx}=\\frac{dy/dt}{dx/dt}=\\frac{3t^2}{2t}=\\frac32.$$\n因此切线斜率为 $\\frac32$。对应点为 $(1,1)$。"
+  },
+  {
+    "id": "c2q08",
+    "chapter": 2,
+    "topic": "隐函数求导",
+    "difficulty": "进阶",
+    "source": "网络改编",
+    "type": "solution",
+    "stem": "设曲线由方程 $x^2+xy+y^2=3$ 确定，求该曲线在点 $(1,1)$ 处的切线方程。",
+    "answer": "$y=-x+2$",
+    "explanation": "两边对 $x$ 求导，注意 $y=y(x)$：\n$$2x+y+xy'+2yy'=0.$$\n整理得\n$$y'(x+2y)=-(2x+y),$$\n所以\n$$y'=-\\frac{2x+y}{x+2y}.$$\n在 $(1,1)$ 处，\n$$y'=-\\frac{2+1}{1+2}=-1.$$\n切线方程为\n$$y-1=-(x-1),$$\n即 $y=-x+2$。"
+  },
+  {
+    "id": "c2q09",
+    "chapter": 2,
+    "topic": "反三角函数求导",
+    "difficulty": "进阶",
+    "source": "原创",
+    "type": "choice",
+    "stem": "函数 $f(x)=\\arctan\\dfrac{1+x}{1-x}$（$x\\ne1$）的导数为（ ）。",
+    "options": [
+      {
+        "id": "A",
+        "text": "$\\dfrac{1}{1+x^2}$"
+      },
+      {
+        "id": "B",
+        "text": "$\\dfrac{2}{1+x^2}$"
+      },
+      {
+        "id": "C",
+        "text": "$\\dfrac{1}{1-x^2}$"
+      },
+      {
+        "id": "D",
+        "text": "$\\dfrac{1}{(1+x)^2}$"
+      }
+    ],
+    "answer": "A",
+    "explanation": "注意恒等式\n$$\\tan\\left(\\frac\\pi4+\\arctan x\\right)\n=\\frac{1+x}{1-x}.$$\n因此在 $x\\ne1$ 的连续分支上，\n$$\\arctan\\frac{1+x}{1-x}=\\frac\\pi4+\\arctan x+C,$$\n其中 $C$ 为分段常数。求导得\n$$f'(x)=\\frac{1}{1+x^2}.$$\n也可直接用链式法则验证：\n$$f'=\\frac{1}{1+\\left(\\frac{1+x}{1-x}\\right)^2}\n\\cdot\\frac{(1-x)+(1+x)}{(1-x)^2}\n=\\frac{(1-x)^2}{(1-x)^2+(1+x)^2}\\cdot\\frac{2}{(1-x)^2}\n=\\frac{1}{1+x^2}.$$"
+  },
+  {
+    "id": "c2q10",
+    "chapter": 2,
+    "topic": "商法则",
+    "difficulty": "进阶",
+    "source": "原创",
+    "type": "solution",
+    "stem": "设 $y=\\dfrac{(x+1)^2}{x-1}$，求 $y'$ 并化简。",
+    "answer": "$y'=\\dfrac{(x+1)(x-3)}{(x-1)^2}$",
+    "explanation": "由商的求导法则，\n$$y'=\\frac{2(x+1)(x-1)-(x+1)^2}{(x-1)^2}.$$\n提取公因子 $x+1$：\n$$y'=\\frac{(x+1)[2(x-1)-(x+1)]}{(x-1)^2}\n=\\frac{(x+1)(x-3)}{(x-1)^2}.$$\n因此 $y'=0$ 的点为 $x=-1,3$（$x\\ne1$）。"
+  },
+  {
+    "id": "c2q11",
+    "chapter": 2,
+    "topic": "导数定义",
+    "difficulty": "挑战",
+    "source": "网络改编",
+    "type": "choice",
+    "stem": "设 $f(x)=\\begin{cases}x^2\\sin\\dfrac1x,&x\\ne0,\\\\0,&x=0.\\end{cases}$ 则 $f'(0)=$（ ）。",
+    "options": [
+      {
+        "id": "A",
+        "text": "不存在"
+      },
+      {
+        "id": "B",
+        "text": "0"
+      },
+      {
+        "id": "C",
+        "text": "1"
+      },
+      {
+        "id": "D",
+        "text": "$\\sin 1$"
+      }
+    ],
+    "answer": "B",
+    "explanation": "直接用导数定义：\n$$f'(0)=\\lim_{x\\to0}\\frac{f(x)-f(0)}{x}\n=\\lim_{x\\to0}\\frac{x^2\\sin(1/x)}{x}\n=\\lim_{x\\to0}x\\sin\\frac1x.$$\n由于\n$$\\left|x\\sin\\frac1x\\right|\\le |x|\\to0,$$\n由夹逼准则该极限为 $0$，故 $f'(0)=0$。注意 $f'$ 在 $0$ 处不连续，但这不影响 $f'(0)$ 存在。"
+  },
+  {
+    "id": "c2q12",
+    "chapter": 2,
+    "topic": "极值必要条件",
+    "difficulty": "挑战",
+    "source": "原创",
+    "type": "judge",
+    "stem": "判断：若 $f'(x_0)=0$，则 $x_0$ 一定是 $f$ 的极值点。若认为错误，请举出反例。",
+    "answer": false,
+    "explanation": "错误。$f'(x_0)=0$ 只是可导函数在极值点处的必要条件，不是充分条件。反例：\n$$f(x)=x^3,\\qquad x_0=0.$$\n此时 $f'(x)=3x^2$，$f'(0)=0$，但在 $0$ 两侧 $f$ 都递增，$x=0$ 不是极值点，而是拐点。判断极值还需考察导数符号变化或二阶导数等信息。"
+  },
+  {
+    "id": "c2q13",
+    "chapter": 2,
+    "topic": "高阶导数",
+    "difficulty": "挑战",
+    "source": "网络改编",
+    "type": "solution",
+    "stem": "求 $y=\\ln x$ 的 $n$ 阶导数 $y^{(n)}$（$n\\ge1$）。",
+    "answer": "$y^{(n)}=\\dfrac{(-1)^{n-1}(n-1)!}{x^n}$",
+    "explanation": "逐阶求导并寻找规律：\n$$y'=\\frac1x=x^{-1},$$\n$$y''=-x^{-2},$$\n$$y'''=2x^{-3},$$\n$$y^{(4)}=-6x^{-4}.$$\n一般地，对 $n\\ge1$，\n$$y^{(n)}=(-1)^{n-1}(n-1)!\\,x^{-n}.$$\n可用数学归纳法验证：假设 $n=k$ 时成立，则\n$$\\left((-1)^{k-1}(k-1)!x^{-k}\\right)'\n=(-1)^k k!x^{-(k+1)},$$\n正是 $n=k+1$ 的形式。"
+  },
+  {
+    "id": "c2q14",
+    "chapter": 2,
+    "topic": "对数求导法",
+    "difficulty": "挑战",
+    "source": "原创",
+    "type": "solution",
+    "stem": "设 $y=(1+x)^{1/x}\\ (x>-1,\\ x\\ne0)$，求 $y'$。",
+    "answer": "$y'=(1+x)^{1/x}\\left[\\dfrac{1}{x(1+x)}-\\dfrac{\\ln(1+x)}{x^2}\\right]$",
+    "explanation": "两边取对数：\n$$\\ln y=\\frac{\\ln(1+x)}{x}.$$\n两边对 $x$ 求导，左边为 $y'/y$：\n$$\\frac{y'}y\n=\\frac{\\frac{x}{1+x}-\\ln(1+x)}{x^2}.$$\n因此\n$$y'=(1+x)^{1/x}\\left[\\frac{1}{x(1+x)}-\\frac{\\ln(1+x)}{x^2}\\right].$$\n当 $x\\to0$ 时该式有极限，但原函数在 $x=0$ 处按连续延拓定义更为方便。"
+  },
+  {
+    "id": "c2q15",
+    "chapter": 2,
+    "topic": "高阶导数综合",
+    "difficulty": "挑战",
+    "source": "网络改编",
+    "type": "choice",
+    "stem": "设 $f(x)=\\sin^2x$，则 $f^{(100)}(0)=$（ ）。",
+    "options": [
+      {
+        "id": "A",
+        "text": "$2^{99}$"
+      },
+      {
+        "id": "B",
+        "text": "$-2^{99}$"
+      },
+      {
+        "id": "C",
+        "text": "$2^{100}$"
+      },
+      {
+        "id": "D",
+        "text": "0"
+      }
+    ],
+    "answer": "B",
+    "explanation": "先降幂：\n$$f(x)=\\sin^2x=\\frac{1-\\cos 2x}{2}.$$\n$\\cos 2x$ 的 $n$ 阶导数为\n$$(\\cos 2x)^{(n)}=2^n\\cos\\left(2x+\\frac{n\\pi}{2}\\right).$$\n因此\n$$f^{(n)}(x)=-\\frac{2^n}{2}\\cos\\left(2x+\\frac{n\\pi}{2}\\right)\n=-2^{n-1}\\cos\\left(2x+\\frac{n\\pi}{2}\\right).$$\n取 $n=100$，$100\\pi/2=50\\pi$ 为 $\\pi$ 的偶数倍，$\\cos(2x+50\\pi)=\\cos2x$。代入 $x=0$：\n$$f^{(100)}(0)=-2^{99}\\cos0=-2^{99}.$$"
+  },
+  {
+    "id": "c3q01",
+    "chapter": 3,
+    "topic": "罗尔定理",
+    "difficulty": "基础",
+    "source": "原创",
+    "type": "choice",
+    "stem": "函数 $f(x)=x^2-4x+3$ 在区间 $[1,3]$ 上满足罗尔定理条件，则定理中的 $\\xi=$（ ）。",
+    "options": [
+      {
+        "id": "A",
+        "text": "1"
+      },
+      {
+        "id": "B",
+        "text": "$\\dfrac32$"
+      },
+      {
+        "id": "C",
+        "text": "2"
+      },
+      {
+        "id": "D",
+        "text": "3"
+      }
+    ],
+    "answer": "C",
+    "explanation": "$f$ 是多项式，在 $[1,3]$ 连续、在 $(1,3)$ 可导，且\n$$f(1)=1-4+3=0,\\qquad f(3)=9-12+3=0,$$\n满足罗尔定理。求导：\n$$f'(x)=2x-4.$$\n令 $f'(\\xi)=0$，得 $\\xi=2\\in(1,3)$。"
+  },
+  {
+    "id": "c3q02",
+    "chapter": 3,
+    "topic": "拉格朗日中值定理",
+    "difficulty": "基础",
+    "source": "原创",
+    "type": "judge",
+    "stem": "判断：若 $f$ 在 $[a,b]$ 上连续、在 $(a,b)$ 内可导，则存在 $\\xi\\in(a,b)$，使 $f(b)-f(a)=f'(\\xi)(b-a)$。",
+    "answer": true,
+    "explanation": "正确，这就是拉格朗日中值定理。几何上，割线斜率 $\\frac{f(b)-f(a)}{b-a}$ 等于某点切线斜率 $f'(\\xi)$。例如 $f(x)=x^2$ 在 $[0,2]$ 上，$f(2)-f(0)=4$，存在 $\\xi=1$ 使 $f'(\\xi)(2-0)=2\\cdot2=4$。罗尔定理是其 $f(a)=f(b)$ 的特例。"
+  },
+  {
+    "id": "c3q03",
+    "chapter": 3,
+    "topic": "单调性与极值",
+    "difficulty": "基础",
+    "source": "原创",
+    "type": "solution",
+    "stem": "求函数 $f(x)=x^3-3x^2+1$ 的单调区间、极值，并指出极大值点与极小值点。",
+    "answer": "增区间 $(-\\infty,0)$、$(2,+\\infty)$；减区间 $(0,2)$；极大值 $f(0)=1$，极小值 $f(2)=-3$",
+    "explanation": "定义域为 $\\mathbb R$。求导：\n$$f'(x)=3x^2-6x=3x(x-2).$$\n令 $f'(x)=0$，得驻点 $x=0,2$。列表判断符号：\n\n- 当 $x<0$ 时，$x<0$ 且 $x-2<0$，故 $f'(x)>0$；\n- 当 $0<x<2$ 时，$f'(x)<0$；\n- 当 $x>2$ 时，$f'(x)>0$。\n\n因此 $f$ 在 $(-\\infty,0)$ 与 $(2,+\\infty)$ 上单调递增，在 $(0,2)$ 上单调递减。$x=0$ 为极大值点，\n$$f(0)=1;$$\n$x=2$ 为极小值点，\n$$f(2)=8-12+1=-3.$$"
+  },
+  {
+    "id": "c3q04",
+    "chapter": 3,
+    "topic": "洛必达法则",
+    "difficulty": "基础",
+    "source": "原创",
+    "type": "choice",
+    "stem": "$\\displaystyle\\lim_{x\\to0}\\frac{e^x-1-x}{x^2}=$（ ）。",
+    "options": [
+      {
+        "id": "A",
+        "text": "0"
+      },
+      {
+        "id": "B",
+        "text": "$\\dfrac12$"
+      },
+      {
+        "id": "C",
+        "text": "1"
+      },
+      {
+        "id": "D",
+        "text": "$+\\infty$"
+      }
+    ],
+    "answer": "B",
+    "explanation": "这是 $\\frac00$ 型。用洛必达法则：\n$$\\lim_{x\\to0}\\frac{e^x-1-x}{x^2}\n=\\lim_{x\\to0}\\frac{e^x-1}{2x}.$$\n仍为 $\\frac00$ 型，再次使用：\n$$=\\lim_{x\\to0}\\frac{e^x}{2}=\\frac12.$$\n也可由 $e^x=1+x+\\frac{x^2}{2}+o(x^2)$ 直接得到。"
+  },
+  {
+    "id": "c3q05",
+    "chapter": 3,
+    "topic": "曲线的凹凸性",
+    "difficulty": "进阶",
+    "source": "原创",
+    "type": "judge",
+    "stem": "判断：若在区间 $I$ 上 $f''(x)>0$，则曲线 $y=f(x)$ 在 $I$ 上是下凸（凹向上）的。",
+    "answer": true,
+    "explanation": "正确。$f''>0$ 说明 $f'$ 单调递增，曲线切线斜率随 $x$ 增大而增大，曲线呈下凸（凹向上）形状。例如 $f(x)=x^2$，$f''(x)=2>0$，图像开口向上。反过来，若 $f''<0$，则曲线上凸（凹向下）。凹凸性发生改变的点称为拐点，但 $f''(x_0)=0$ 只是拐点的候选条件，不充分。"
+  },
+  {
+    "id": "c3q06",
+    "chapter": 3,
+    "topic": "最值",
+    "difficulty": "基础",
+    "source": "原创",
+    "type": "choice",
+    "stem": "当 $x>0$ 时，函数 $f(x)=x+\\dfrac1x$ 的最小值为（ ）。",
+    "options": [
+      {
+        "id": "A",
+        "text": "1"
+      },
+      {
+        "id": "B",
+        "text": "2"
+      },
+      {
+        "id": "C",
+        "text": "$\\sqrt2$"
+      },
+      {
+        "id": "D",
+        "text": "不存在"
+      }
+    ],
+    "answer": "B",
+    "explanation": "由基本不等式，对 $x>0$，\n$$x+\\frac1x\\ge2\\sqrt{x\\cdot\\frac1x}=2,$$\n等号当且仅当 $x=\\frac1x$，即 $x=1$ 时成立，所以最小值为 $2$。\n也可求导：\n$$f'(x)=1-\\frac1{x^2},$$\n令 $f'(x)=0$ 得 $x=1$；当 $0<x<1$ 时 $f'<0$，当 $x>1$ 时 $f'>0$，故 $x=1$ 为极小值点也是最小值点，$f(1)=2$。"
+  },
+  {
+    "id": "c3q07",
+    "chapter": 3,
+    "topic": "二阶导数判别法",
+    "difficulty": "进阶",
+    "source": "原创",
+    "type": "judge",
+    "stem": "判断：若 $f'(x_0)=0$ 且 $f''(x_0)<0$，则 $x_0$ 是 $f$ 的极大值点。",
+    "answer": true,
+    "explanation": "正确。由 $f''(x_0)<0$ 及二阶导数定义，在 $x_0$ 的某邻域内 $f'$ 单调递减。又 $f'(x_0)=0$，故在 $x_0$ 左侧 $f'>0$，右侧 $f'<0$。函数先增后减，因此 $x_0$ 为极大值点。例如 $f(x)=-x^2$，$f'(0)=0$，$f''(0)=-2<0$，$0$ 为极大值点。"
+  },
+  {
+    "id": "c3q08",
+    "chapter": 3,
+    "topic": "闭区间最值",
+    "difficulty": "进阶",
+    "source": "网络改编",
+    "type": "solution",
+    "stem": "求函数 $f(x)=x^3-3x+1$ 在闭区间 $[-2,2]$ 上的最大值与最小值，并指出取得最值的点。",
+    "answer": "最大值为 $3$，在 $x=-1,2$ 取得；最小值为 $-1$，在 $x=-2,1$ 取得",
+    "explanation": "先求驻点：\n$$f'(x)=3x^2-3=3(x-1)(x+1),$$\n驻点为 $x=-1,1$，均在区间内。再计算驻点与端点的函数值：\n$$f(-2)=-8+6+1=-1,$$\n$$f(-1)=-1+3+1=3,$$\n$$f(1)=1-3+1=-1,$$\n$$f(2)=8-6+1=3.$$\n比较得最大值 $3$（在 $x=-1$ 与 $x=2$ 处），最小值 $-1$（在 $x=-2$ 与 $x=1$ 处）。"
+  },
+  {
+    "id": "c3q09",
+    "chapter": 3,
+    "topic": "渐近线",
+    "difficulty": "进阶",
+    "source": "原创",
+    "type": "choice",
+    "stem": "曲线 $y=\\dfrac{x^2+x}{x-1}$ 的斜渐近线为（ ）。",
+    "options": [
+      {
+        "id": "A",
+        "text": "$y=x$"
+      },
+      {
+        "id": "B",
+        "text": "$y=x+1$"
+      },
+      {
+        "id": "C",
+        "text": "$y=x+2$"
+      },
+      {
+        "id": "D",
+        "text": "$y=x-1$"
+      }
+    ],
+    "answer": "C",
+    "explanation": "做多项式除法：\n$$y=\\frac{x^2+x}{x-1}\n=\\frac{x^2-x+2x-2+2}{x-1}\n=x+2+\\frac{2}{x-1}.$$\n当 $x\\to\\pm\\infty$ 时，$\\frac{2}{x-1}\\to0$，曲线与直线 $y=x+2$ 的距离趋于零，故斜渐近线为 $y=x+2$。同时 $x=1$ 为铅直渐近线，因为 $x\\to1$ 时 $|y|\\to\\infty$。"
+  },
+  {
+    "id": "c3q10",
+    "chapter": 3,
+    "topic": "不等式证明",
+    "difficulty": "进阶",
+    "source": "网络改编",
+    "type": "solution",
+    "stem": "证明：当 $x>0$ 时，$\\ln(1+x)<x$。",
+    "answer": "证明见解析",
+    "explanation": "令\n$$g(x)=x-\\ln(1+x),\\qquad x>0.$$\n则\n$$g'(x)=1-\\frac1{1+x}=\\frac{x}{1+x}>0\\quad(x>0).$$\n所以 $g$ 在 $(0,+\\infty)$ 上严格递增。又 $g(0)=0$，故当 $x>0$ 时\n$$g(x)>g(0)=0,$$\n即\n$$x-\\ln(1+x)>0\\implies \\ln(1+x)<x.$$\n这说明等号只在 $x=0$ 处取得。"
+  },
+  {
+    "id": "c3q11",
+    "chapter": 3,
+    "topic": "方程实根个数",
+    "difficulty": "挑战",
+    "source": "网络改编",
+    "type": "choice",
+    "stem": "方程 $x^3-3x+1=0$ 的实根个数为（ ）。",
+    "options": [
+      {
+        "id": "A",
+        "text": "1"
+      },
+      {
+        "id": "B",
+        "text": "2"
+      },
+      {
+        "id": "C",
+        "text": "3"
+      },
+      {
+        "id": "D",
+        "text": "无法确定"
+      }
+    ],
+    "answer": "C",
+    "explanation": "令 $f(x)=x^3-3x+1$，则\n$$f'(x)=3x^2-3=3(x-1)(x+1).$$\n$f$ 在 $(-\\infty,-1)$ 递增，在 $(-1,1)$ 递减，在 $(1,+\\infty)$ 递增。计算极值：\n$$f(-1)=-1+3+1=3>0,\\qquad f(1)=1-3+1=-1<0.$$\n又\n$$\\lim_{x\\to-\\infty}f(x)=-\\infty,\\qquad \\lim_{x\\to+\\infty}f(x)=+\\infty.$$\n由连续性：\n- 在 $(-\\infty,-1)$ 内，函数从 $-\\infty$ 增到 $3$，恰有一个零点；\n- 在 $(-1,1)$ 内，函数从 $3$ 减到 $-1$，恰有一个零点；\n- 在 $(1,+\\infty)$ 内，函数从 $-1$ 增到 $+\\infty$，恰有一个零点。\n每段严格单调，故各一个，共 $3$ 个实根。"
+  },
+  {
+    "id": "c3q12",
+    "chapter": 3,
+    "topic": "极值的必要条件",
+    "difficulty": "挑战",
+    "source": "原创",
+    "type": "judge",
+    "stem": "判断：若函数 $f$ 在 $x_0$ 处取得极大值，则必有 $f'(x_0)=0$。若认为错误，请举出反例。",
+    "answer": false,
+    "explanation": "错误。该结论只在 $f$ 于 $x_0$ 可导时成立。反例：\n$$f(x)=-|x|,\\qquad x_0=0.$$\n此时对任意 $x$ 都有 $f(x)\\le 0=f(0)$，所以 $f$ 在 $x_0=0$ 处取得极大值。但\n$$\\lim_{x\\to0^-}\\frac{f(x)-f(0)}{x}=\\lim_{x\\to0^-}\\frac{x}{x}=1,\n\\qquad\n\\lim_{x\\to0^+}\\frac{f(x)-f(0)}{x}=\\lim_{x\\to0^+}\\frac{-x}{x}=-1,$$\n左右导数不相等，$f'(0)$ 不存在。因此极大值点也可能出现在不可导点，求极值时必须同时检查驻点和不可导点。"
+  },
+  {
+    "id": "c3q13",
+    "chapter": 3,
+    "topic": "函数最值与不等式",
+    "difficulty": "挑战",
+    "source": "网络改编",
+    "type": "solution",
+    "stem": "证明：对任意实数 $x$，都有 $e^x\\ge 1+x$，并指出等号成立的条件。",
+    "answer": "等号仅在 $x=0$ 时成立",
+    "explanation": "令\n$$g(x)=e^x-1-x.$$\n则 $g$ 在 $\\mathbb R$ 上可导，且\n$$g'(x)=e^x-1.$$\n当 $x<0$ 时 $g'(x)<0$，当 $x>0$ 时 $g'(x)>0$，所以 $g$ 在 $x=0$ 处取得全局最小值：\n$$g(0)=e^0-1-0=0.$$\n因此对任意 $x$，\n$$g(x)\\ge g(0)=0,$$\n即 $e^x\\ge1+x$。由于 $x=0$ 是唯一的极小值点且函数严格单调性在两侧成立，等号仅在 $x=0$ 时取得。"
+  },
+  {
+    "id": "c3q14",
+    "chapter": 3,
+    "topic": "极值条件确定参数",
+    "difficulty": "挑战",
+    "source": "原创",
+    "type": "solution",
+    "stem": "设 $f(x)=x^3+ax^2+bx+c$ 在 $x=-1$ 处取得极大值 $6$，在 $x=3$ 处取得极小值。求 $a,b,c$，并求极小值。",
+    "answer": "$a=-3,\\ b=-9,\\ c=1$，极小值为 $-26$",
+    "explanation": "由极值点处导数为零：\n$$f'(x)=3x^2+2ax+b.$$\n于是\n$$f'(-1)=3-2a+b=0,\\qquad f'(3)=27+6a+b=0.$$\n两式相减：\n$$24+8a=0\\implies a=-3.$$\n代回第一式：$3+6+b=0$，得 $b=-9$。\n再由 $f(-1)=6$：\n$$-1+a-b+c=-1-3+9+c=5+c=6,$$\n所以 $c=1$。此时\n$$f(x)=x^3-3x^2-9x+1,$$\n$$f(3)=27-27-27+1=-26.$$\n又 $f''(x)=6x-6$，$f''(-1)=-12<0$（极大），$f''(3)=12>0$（极小），符号与题意一致。"
+  },
+  {
+    "id": "c3q15",
+    "chapter": 3,
+    "topic": "拐点",
+    "difficulty": "挑战",
+    "source": "原创",
+    "type": "choice",
+    "stem": "曲线 $y=x^3-3x^2+2$ 的拐点横坐标为（ ）。",
+    "options": [
+      {
+        "id": "A",
+        "text": "0"
+      },
+      {
+        "id": "B",
+        "text": "1"
+      },
+      {
+        "id": "C",
+        "text": "2"
+      },
+      {
+        "id": "D",
+        "text": "$\\dfrac32$"
+      }
+    ],
+    "answer": "B",
+    "explanation": "求二阶导数：\n$$y'=3x^2-6x,\\qquad y''=6x-6=6(x-1).$$\n令 $y''=0$，得 $x=1$。当 $x<1$ 时 $y''<0$，曲线凹向下；当 $x>1$ 时 $y''>0$，曲线凹向上。凹凸性在 $x=1$ 两侧发生改变，因此 $x=1$ 是拐点横坐标。对应纵坐标为\n$$y(1)=1-3+2=0,$$\n拐点为 $(1,0)$。"
+  },
+  {
+    "id": "c4q01",
+    "chapter": 4,
+    "topic": "基本积分公式",
+    "difficulty": "基础",
+    "source": "原创",
+    "type": "choice",
+    "stem": "$\\displaystyle\\int x^2\\,dx=$（ ）。",
+    "options": [
+      {
+        "id": "A",
+        "text": "$2x+C$"
+      },
+      {
+        "id": "B",
+        "text": "$\\dfrac{x^3}{3}+C$"
+      },
+      {
+        "id": "C",
+        "text": "$x^3+C$"
+      },
+      {
+        "id": "D",
+        "text": "$\\dfrac{x^2}{2}+C$"
+      }
+    ],
+    "answer": "B",
+    "explanation": "由幂函数积分公式\n$$\\int x^n\\,dx=\\frac{x^{n+1}}{n+1}+C\\quad(n\\ne-1),$$\n取 $n=2$，得\n$$\\int x^2\\,dx=\\frac{x^3}{3}+C.$$\n验证：$\\left(\\frac{x^3}{3}+C\\right)'=x^2$。不定积分必须写任意常数 $C$。"
+  },
+  {
+    "id": "c4q02",
+    "chapter": 4,
+    "topic": "不定积分的性质",
+    "difficulty": "基础",
+    "source": "原创",
+    "type": "judge",
+    "stem": "判断：$\\displaystyle\\int f'(x)\\,dx=f(x)+C$。",
+    "answer": true,
+    "explanation": "正确。若 $F(x)=f(x)$，则 $F'(x)=f'(x)$，按原函数的定义，$f$ 是 $f'$ 的一个原函数。所有原函数相差常数，因此\n$$\\int f'(x)\\,dx=f(x)+C.$$\n例如 $\\int (2x)\\,dx=x^2+C$。注意反过来 $\\left(\\int f(x)\\,dx\\right)'=f(x)$，而 $\\int f(x)\\,dx$ 是一个函数族。"
+  },
+  {
+    "id": "c4q03",
+    "chapter": 4,
+    "topic": "直接积分法",
+    "difficulty": "基础",
+    "source": "原创",
+    "type": "solution",
+    "stem": "求 $\\displaystyle\\int\\left(3x^2+\\frac2x\\right)dx$。",
+    "answer": "$x^3+2\\ln|x|+C$",
+    "explanation": "逐项积分：\n$$\\int\\left(3x^2+\\frac2x\\right)dx\n=3\\int x^2\\,dx+2\\int\\frac1x\\,dx.$$\n由幂函数积分公式和 $\\int\\frac1x dx=\\ln|x|+C$，\n$$3\\cdot\\frac{x^3}{3}+2\\ln|x|+C=x^3+2\\ln|x|+C.$$\n定义域为 $x\\ne0$，因此对数内要加绝对值。"
+  },
+  {
+    "id": "c4q04",
+    "chapter": 4,
+    "topic": "指数函数积分",
+    "difficulty": "基础",
+    "source": "原创",
+    "type": "choice",
+    "stem": "$\\displaystyle\\int e^{2x}\\,dx=$（ ）。",
+    "options": [
+      {
+        "id": "A",
+        "text": "$e^{2x}+C$"
+      },
+      {
+        "id": "B",
+        "text": "$2e^{2x}+C$"
+      },
+      {
+        "id": "C",
+        "text": "$\\dfrac12e^{2x}+C$"
+      },
+      {
+        "id": "D",
+        "text": "$e^{x^2}+C$"
+      }
+    ],
+    "answer": "C",
+    "explanation": "令 $u=2x$，则 $du=2\\,dx$，$dx=\\frac12du$。于是\n$$\\int e^{2x}\\,dx=\\frac12\\int e^u\\,du=\\frac12e^u+C=\\frac12e^{2x}+C.$$\n验证：$\\left(\\frac12e^{2x}\\right)'=\\frac12\\cdot2e^{2x}=e^{2x}$。"
+  },
+  {
+    "id": "c4q05",
+    "chapter": 4,
+    "topic": "反三角函数积分",
+    "difficulty": "进阶",
+    "source": "原创",
+    "type": "judge",
+    "stem": "判断：$\\displaystyle\\int\\frac{dx}{1+x^2}=\\arctan x+C$。",
+    "answer": true,
+    "explanation": "正确。因为\n$$(\\arctan x)'=\\frac{1}{1+x^2},$$\n所以 $\\arctan x$ 是 $\\frac{1}{1+x^2}$ 的一个原函数，故\n$$\\int\\frac{dx}{1+x^2}=\\arctan x+C.$$\n类似地，$\\int\\frac{dx}{\\sqrt{1-x^2}}=\\arcsin x+C$（$|x|<1$）。"
+  },
+  {
+    "id": "c4q06",
+    "chapter": 4,
+    "topic": "分部积分",
+    "difficulty": "基础",
+    "source": "网络改编",
+    "type": "choice",
+    "stem": "$\\displaystyle\\int x\\cos x\\,dx=$（ ）。",
+    "options": [
+      {
+        "id": "A",
+        "text": "$x\\sin x+\\cos x+C$"
+      },
+      {
+        "id": "B",
+        "text": "$x\\sin x-\\cos x+C$"
+      },
+      {
+        "id": "C",
+        "text": "$x\\cos x+\\sin x+C$"
+      },
+      {
+        "id": "D",
+        "text": "$\\dfrac{x^2}{2}\\sin x+C$"
+      }
+    ],
+    "answer": "A",
+    "explanation": "取 $u=x$，$dv=\\cos x\\,dx$，则 $du=dx$，$v=\\sin x$。由分部积分公式\n$$\\int x\\cos x\\,dx=x\\sin x-\\int\\sin x\\,dx\n=x\\sin x+\\cos x+C.$$\n验证：\n$$(x\\sin x+\\cos x)'=\\sin x+x\\cos x-\\sin x=x\\cos x.$$"
+  },
+  {
+    "id": "c4q07",
+    "chapter": 4,
+    "topic": "三角恒等变形积分",
+    "difficulty": "进阶",
+    "source": "原创",
+    "type": "judge",
+    "stem": "判断：$\\displaystyle\\int\\sin^2x\\,dx=\\frac{x}{2}-\\frac{\\sin2x}{4}+C$。",
+    "answer": true,
+    "explanation": "用降幂公式\n$$\\sin^2x=\\frac{1-\\cos2x}{2}.$$\n于是\n$$\\int\\sin^2x\\,dx\n=\\frac12\\int dx-\\frac12\\int\\cos2x\\,dx\n=\\frac{x}{2}-\\frac{\\sin2x}{4}+C.$$\n验证：\n$$\\left(\\frac{x}{2}-\\frac{\\sin2x}{4}\\right)'\n=\\frac12-\\frac{2\\cos2x}{4}\n=\\frac{1-\\cos2x}{2}=\\sin^2x.$$"
+  },
+  {
+    "id": "c4q08",
+    "chapter": 4,
+    "topic": "分部积分综合",
+    "difficulty": "进阶",
+    "source": "网络改编",
+    "type": "solution",
+    "stem": "求 $\\displaystyle\\int x\\ln x\\,dx\\ (x>0)$。",
+    "answer": "$\\dfrac{x^2}{2}\\ln x-\\dfrac{x^2}{4}+C$",
+    "explanation": "取 $u=\\ln x$，$dv=x\\,dx$，则\n$$du=\\frac1x\\,dx,\\qquad v=\\frac{x^2}{2}.$$\n由分部积分：\n$$\\int x\\ln x\\,dx\n=\\frac{x^2}{2}\\ln x-\\int\\frac{x^2}{2}\\cdot\\frac1x\\,dx\n=\\frac{x^2}{2}\\ln x-\\frac12\\int x\\,dx.$$\n因此\n$$\\int x\\ln x\\,dx\n=\\frac{x^2}{2}\\ln x-\\frac{x^2}{4}+C.$$\n验证：\n$$\\left(\\frac{x^2}{2}\\ln x-\\frac{x^2}{4}\\right)'\n=x\\ln x+\\frac{x}{2}-\\frac{x}{2}=x\\ln x.$$。"
+  },
+  {
+    "id": "c4q09",
+    "chapter": 4,
+    "topic": "配方法积分",
+    "difficulty": "进阶",
+    "source": "原创",
+    "type": "choice",
+    "stem": "$\\displaystyle\\int\\frac{dx}{x^2+4x+5}=$（ ）。",
+    "options": [
+      {
+        "id": "A",
+        "text": "$\\arctan(x+2)+C$"
+      },
+      {
+        "id": "B",
+        "text": "$\\ln|x^2+4x+5|+C$"
+      },
+      {
+        "id": "C",
+        "text": "$\\dfrac{1}{x+2}+C$"
+      },
+      {
+        "id": "D",
+        "text": "$\\arctan x+C$"
+      }
+    ],
+    "answer": "A",
+    "explanation": "配方：\n$$x^2+4x+5=(x+2)^2+1.$$\n令 $u=x+2$，$du=dx$，则\n$$\\int\\frac{dx}{(x+2)^2+1}\n=\\int\\frac{du}{u^2+1}\n=\\arctan u+C\n=\\arctan(x+2)+C.$$"
+  },
+  {
+    "id": "c4q10",
+    "chapter": 4,
+    "topic": "有理函数积分",
+    "difficulty": "进阶",
+    "source": "网络改编",
+    "type": "solution",
+    "stem": "求 $\\displaystyle\\int\\frac{dx}{x^2-a^2}$，其中 $a\\ne0$。",
+    "answer": "$\\dfrac{1}{2a}\\ln\\left|\\dfrac{x-a}{x+a}\\right|+C$",
+    "explanation": "先做部分分式分解：\n$$\\frac{1}{x^2-a^2}\n=\\frac{1}{(x-a)(x+a)}\n=\\frac{1}{2a}\\left(\\frac{1}{x-a}-\\frac{1}{x+a}\\right).$$\n逐项积分：\n$$\\int\\frac{dx}{x^2-a^2}\n=\\frac{1}{2a}\\left(\\ln|x-a|-\\ln|x+a|\\right)+C\n=\\frac{1}{2a}\\ln\\left|\\frac{x-a}{x+a}\\right|+C.$$\n这里 $a\\ne0$，且积分区间不能跨过 $x=\\pm a$。"
+  },
+  {
+    "id": "c4q11",
+    "chapter": 4,
+    "topic": "多次分部积分",
+    "difficulty": "挑战",
+    "source": "网络改编",
+    "type": "choice",
+    "stem": "$\\displaystyle\\int x^2e^x\\,dx=$（ ）。",
+    "options": [
+      {
+        "id": "A",
+        "text": "$e^x(x^2-2x+2)+C$"
+      },
+      {
+        "id": "B",
+        "text": "$e^x(x^2+2x+2)+C$"
+      },
+      {
+        "id": "C",
+        "text": "$e^x(x^2-2x)+C$"
+      },
+      {
+        "id": "D",
+        "text": "$\\dfrac{x^3}{3}e^x+C$"
+      }
+    ],
+    "answer": "A",
+    "explanation": "连续两次分部积分。首先取 $u=x^2$，$dv=e^x dx$：\n$$\\int x^2e^x dx=x^2e^x-2\\int xe^x dx.$$\n再对 $\\int xe^x dx$ 分部积分：\n$$\\int xe^x dx=xe^x-\\int e^x dx=xe^x-e^x.$$\n代回：\n$$\\int x^2e^x dx\n=x^2e^x-2(xe^x-e^x)+C\n=e^x(x^2-2x+2)+C.$$\n验证：\n$$[e^x(x^2-2x+2)]'\n=e^x(x^2-2x+2)+e^x(2x-2)=x^2e^x.$$"
+  },
+  {
+    "id": "c4q12",
+    "chapter": 4,
+    "topic": "割函数积分",
+    "difficulty": "挑战",
+    "source": "原创",
+    "type": "judge",
+    "stem": "判断：$\\displaystyle\\int\\sec x\\,dx=\\ln|\\sec x+\\tan x|+C$。",
+    "answer": true,
+    "explanation": "正确。对被积函数分子分母同乘 $\\sec x+\\tan x$：\n$$\\int\\sec x\\,dx\n=\\int\\frac{\\sec x(\\sec x+\\tan x)}{\\sec x+\\tan x}\\,dx.$$\n注意\n$$(\\sec x+\\tan x)'=\\sec x\\tan x+\\sec^2x\n=\\sec x(\\sec x+\\tan x).$$\n令 $u=\\sec x+\\tan x$，则\n$$\\int\\frac{du}{u}=\\ln|u|+C\n=\\ln|\\sec x+\\tan x|+C.$$\n另一种常用结果是 $\\ln\\left|\\tan\\left(\\frac x2+\\frac\\pi4\\right)\\right|+C$。"
+  },
+  {
+    "id": "c4q13",
+    "chapter": 4,
+    "topic": "根式换元",
+    "difficulty": "挑战",
+    "source": "网络改编",
+    "type": "solution",
+    "stem": "求 $\\displaystyle\\int\\frac{dx}{1+\\sqrt{x}}$。",
+    "answer": "$2\\sqrt{x}-2\\ln(1+\\sqrt{x})+C$",
+    "explanation": "令 $t=\\sqrt{x}$，则 $x=t^2$，$dx=2t\\,dt$（$t\\ge0$）。代入：\n$$\\int\\frac{dx}{1+\\sqrt{x}}\n=\\int\\frac{2t}{1+t}\\,dt\n=2\\int\\left(1-\\frac{1}{1+t}\\right)dt.$$\n积分得\n$$2t-2\\ln(1+t)+C.$$\n回代 $t=\\sqrt{x}$：\n$$2\\sqrt{x}-2\\ln(1+\\sqrt{x})+C.$$\n因为 $1+\\sqrt{x}>0$，对数不需要绝对值。"
+  },
+  {
+    "id": "c4q14",
+    "chapter": 4,
+    "topic": "循环分部积分",
+    "difficulty": "挑战",
+    "source": "网络改编",
+    "type": "solution",
+    "stem": "求 $\\displaystyle\\int\\sin(\\ln x)\\,dx\\ (x>0)$。",
+    "answer": "$\\dfrac{x}{2}\\left[\\sin(\\ln x)-\\cos(\\ln x)\\right]+C$",
+    "explanation": "令 $t=\\ln x$，则 $x=e^t$，$dx=e^t dt$，原积分化为\n$$I=\\int e^t\\sin t\\,dt.$$\n对 $I$ 分部积分：取 $u=\\sin t$，$dv=e^t dt$，则\n$$I=e^t\\sin t-\\int e^t\\cos t\\,dt.$$\n再对 $\\int e^t\\cos t\\,dt$ 分部积分：\n$$\\int e^t\\cos t\\,dt=e^t\\cos t+\\int e^t\\sin t\\,dt.$$\n因此\n$$I=e^t\\sin t-e^t\\cos t-I,$$\n解得\n$$2I=e^t(\\sin t-\\cos t),$$\n$$I=\\frac{e^t}{2}(\\sin t-\\cos t)+C.$$\n回代 $t=\\ln x$，$e^t=x$：\n$$\\int\\sin(\\ln x)\\,dx\n=\\frac{x}{2}\\left[\\sin(\\ln x)-\\cos(\\ln x)\\right]+C.$$。"
+  },
+  {
+    "id": "c4q15",
+    "chapter": 4,
+    "topic": "有理函数分解",
+    "difficulty": "挑战",
+    "source": "原创",
+    "type": "choice",
+    "stem": "$\\displaystyle\\int\\frac{dx}{x(x^2+1)}=$（ ）。",
+    "options": [
+      {
+        "id": "A",
+        "text": "$\\ln|x|-\\dfrac12\\ln(x^2+1)+C$"
+      },
+      {
+        "id": "B",
+        "text": "$\\ln|x|+\\dfrac12\\ln(x^2+1)+C$"
+      },
+      {
+        "id": "C",
+        "text": "$\\arctan x-\\dfrac1x+C$"
+      },
+      {
+        "id": "D",
+        "text": "$\\ln|x|-\\ln(x^2+1)+C$"
+      }
+    ],
+    "answer": "A",
+    "explanation": "设\n$$\\frac{1}{x(x^2+1)}=\\frac{A}{x}+\\frac{Bx+C}{x^2+1}.$$\n通分得\n$$1=A(x^2+1)+x(Bx+C)=(A+B)x^2+Cx+A.$$\n比较系数：$A=1$，$C=0$，$A+B=0\\Rightarrow B=-1$。所以\n$$\\frac{1}{x(x^2+1)}=\\frac1x-\\frac{x}{x^2+1}.$$\n积分：\n$$\\int\\frac{dx}{x(x^2+1)}\n=\\ln|x|-\\frac12\\ln(x^2+1)+C.$$\n也可把结果合并为 $\\ln\\frac{|x|}{\\sqrt{x^2+1}}+C$；选项 D 少乘了 $\\frac12$，因而是错误的。"
+  },
+  {
+    "id": "c5q01",
+    "chapter": 5,
+    "topic": "定积分的计算",
+    "difficulty": "基础",
+    "source": "原创",
+    "type": "choice",
+    "stem": "$\\displaystyle\\int_0^1 x^2\\,dx=$（ ）。",
+    "options": [
+      {
+        "id": "A",
+        "text": "$\\dfrac13$"
+      },
+      {
+        "id": "B",
+        "text": "$\\dfrac12$"
+      },
+      {
+        "id": "C",
+        "text": "1"
+      },
+      {
+        "id": "D",
+        "text": "$\\dfrac23$"
+      }
+    ],
+    "answer": "A",
+    "explanation": "由牛顿—莱布尼茨公式，先求原函数：\n$$\\int_0^1x^2\\,dx=\\left[\\frac{x^3}{3}\\right]_0^1\n=\\frac{1^3}{3}-\\frac{0^3}{3}=\\frac13.$$\n从面积角度看，曲线 $y=x^2$ 在 $[0,1]$ 下方面积为 $\\frac13$。"
+  },
+  {
+    "id": "c5q02",
+    "chapter": 5,
+    "topic": "定积分的奇偶性",
+    "difficulty": "基础",
+    "source": "原创",
+    "type": "judge",
+    "stem": "判断：若 $f$ 在 $[-a,a]$ 上连续且为奇函数，则 $\\displaystyle\\int_{-a}^{a}f(x)\\,dx=0$。",
+    "answer": true,
+    "explanation": "正确。奇函数满足 $f(-x)=-f(x)$。将区间分成两半：\n$$\\int_{-a}^af(x)\\,dx\n=\\int_{-a}^0f(x)\\,dx+\\int_0^af(x)\\,dx.$$\n在第一项中令 $t=-x$，得\n$$\\int_{-a}^0f(x)\\,dx=\\int_a^0f(-t)(-dt)=\\int_0^a f(t)\\,dt.$$\n但 $f(-t)=-f(t)$，所以第一项为 $-\\int_0^af(t)dt$，与第二项相消。故积分为 $0$。类似地，偶函数在对称区间上的积分为 $2\\int_0^a f(x)dx$。"
+  },
+  {
+    "id": "c5q03",
+    "chapter": 5,
+    "topic": "牛顿—莱布尼茨公式",
+    "difficulty": "基础",
+    "source": "原创",
+    "type": "solution",
+    "stem": "计算 $\\displaystyle\\int_0^\\pi \\sin x\\,dx$。",
+    "answer": "2",
+    "explanation": "$\\sin x$ 的一个原函数是 $-\\cos x$。由牛顿—莱布尼茨公式：\n$$\\int_0^\\pi\\sin x\\,dx\n=\\left[-\\cos x\\right]_0^\\pi\n=(-\\cos\\pi)-(-\\cos0)\n=-(-1)-(-1)=2.$$\n几何上，这是正弦曲线在 $[0,\\pi]$ 与 $x$ 轴围成的面积，结果为 $2$。"
+  },
+  {
+    "id": "c5q04",
+    "chapter": 5,
+    "topic": "变上限积分求导",
+    "difficulty": "基础",
+    "source": "原创",
+    "type": "choice",
+    "stem": "设 $F(x)=\\displaystyle\\int_0^x e^{t^2}\\,dt$，则 $F'(x)=$（ ）。",
+    "options": [
+      {
+        "id": "A",
+        "text": "$e^{x^2}$"
+      },
+      {
+        "id": "B",
+        "text": "$2xe^{x^2}$"
+      },
+      {
+        "id": "C",
+        "text": "$e^{x^2}-1$"
+      },
+      {
+        "id": "D",
+        "text": "$e^{x}$"
+      }
+    ],
+    "answer": "A",
+    "explanation": "由微积分基本定理，若 $f$ 连续，则\n$$\\frac{d}{dx}\\int_0^x f(t)\\,dt=f(x).$$\n这里 $f(t)=e^{t^2}$ 连续，所以\n$$F'(x)=e^{x^2}.$$\n注意上限是 $x$ 而不是 $x^2$；若 $F(x)=\\int_0^{x^2}e^{t^2}dt$，由链式法则才会多出因子 $2x$。"
+  },
+  {
+    "id": "c5q05",
+    "chapter": 5,
+    "topic": "反常积分",
+    "difficulty": "进阶",
+    "source": "原创",
+    "type": "judge",
+    "stem": "判断：$\\displaystyle\\int_0^1\\frac{dx}{x^2}=1$。",
+    "answer": false,
+    "explanation": "错误。被积函数在 $x=0$ 处无界，这是瑕积分。对 $\\varepsilon>0$，\n$$\\int_\\varepsilon^1\\frac{dx}{x^2}\n=\\left[-\\frac1x\\right]_\\varepsilon^1\n=-1+\\frac1\\varepsilon.$$\n当 $\\varepsilon\\to0^+$ 时，$\\frac1\\varepsilon\\to+\\infty$，故积分发散，而不是 $1$。这说明不能盲目套用牛顿—莱布尼茨公式，必须先检查被积函数在积分区间上是否连续、积分是否收敛。"
+  },
+  {
+    "id": "c5q06",
+    "chapter": 5,
+    "topic": "绝对值积分",
+    "difficulty": "基础",
+    "source": "原创",
+    "type": "choice",
+    "stem": "$\\displaystyle\\int_0^2|x-1|\\,dx=$（ ）。",
+    "options": [
+      {
+        "id": "A",
+        "text": "$\\dfrac12$"
+      },
+      {
+        "id": "B",
+        "text": "1"
+      },
+      {
+        "id": "C",
+        "text": "$\\dfrac32$"
+      },
+      {
+        "id": "D",
+        "text": "2"
+      }
+    ],
+    "answer": "B",
+    "explanation": "按 $x=1$ 分段去掉绝对值：\n$$|x-1|=\\begin{cases}1-x,&0\\le x\\le1,\\\\x-1,&1<x\\le2.\\end{cases}$$\n于是\n$$\\int_0^2|x-1|dx\n=\\int_0^1(1-x)dx+\\int_1^2(x-1)dx.$$\n分别计算：\n$$\\int_0^1(1-x)dx=\\left[x-\\frac{x^2}{2}\\right]_0^1=\\frac12,$$\n$$\\int_1^2(x-1)dx=\\left[\\frac{(x-1)^2}{2}\\right]_1^2=\\frac12.$$\n总和为 $1$。几何上是两个腰长为 $1$ 的等腰直角三角形面积之和。"
+  },
+  {
+    "id": "c5q07",
+    "chapter": 5,
+    "topic": "定积分的性质",
+    "difficulty": "进阶",
+    "source": "原创",
+    "type": "judge",
+    "stem": "判断：若 $f$ 在 $[0,1]$ 上连续且 $\\displaystyle\\int_0^1f(x)\\,dx=0$，则 $f(x)\\equiv0$。若认为错误，请举出反例。",
+    "answer": false,
+    "explanation": "错误。定积分为零只说明“正负面积相抵”，不代表函数恒为零。反例：\n$$f(x)=2x-1.$$\n它在 $[0,1]$ 上连续，且\n$$\\int_0^1(2x-1)dx=\\left[x^2-x\\right]_0^1=0,$$\n但 $f$ 并不恒为零。若再加上 $f(x)\\ge0$ 且连续，则由非负连续函数积分为零可推出 $f\\equiv0$。"
+  },
+  {
+    "id": "c5q08",
+    "chapter": 5,
+    "topic": "分部积分计算定积分",
+    "difficulty": "进阶",
+    "source": "网络改编",
+    "type": "solution",
+    "stem": "计算 $\\displaystyle\\int_0^1 xe^{-x}\\,dx$。",
+    "answer": "$1-\\dfrac{2}{e}$",
+    "explanation": "先求不定积分。取 $u=x$，$dv=e^{-x}dx$，则 $du=dx$，$v=-e^{-x}$：\n$$\\int xe^{-x}dx=-xe^{-x}+\\int e^{-x}dx\n=-xe^{-x}-e^{-x}+C.$$\n于是\n$$\\int_0^1xe^{-x}dx\n=\\left[-(x+1)e^{-x}\\right]_0^1\n=-2e^{-1}+1\n=1-\\frac2e.$$\n也可直接分部积分并代入上下限，结果相同。"
+  },
+  {
+    "id": "c5q09",
+    "chapter": 5,
+    "topic": "反常积分计算",
+    "difficulty": "进阶",
+    "source": "网络改编",
+    "type": "choice",
+    "stem": "$\\displaystyle\\int_0^1\\ln x\\,dx=$（ ）。",
+    "options": [
+      {
+        "id": "A",
+        "text": "$-1$"
+      },
+      {
+        "id": "B",
+        "text": "0"
+      },
+      {
+        "id": "C",
+        "text": "1"
+      },
+      {
+        "id": "D",
+        "text": "发散"
+      }
+    ],
+    "answer": "A",
+    "explanation": "$x=0$ 是瑕点。先算\n$$\\int_\\varepsilon^1\\ln x\\,dx\n=\\left[x\\ln x-x\\right]_\\varepsilon^1\n=(-1)-(\\varepsilon\\ln\\varepsilon-\\varepsilon).$$\n当 $\\varepsilon\\to0^+$ 时，$\\varepsilon\\ln\\varepsilon\\to0$，$\\varepsilon\\to0$，故\n$$\\int_0^1\\ln x\\,dx=-1.$$\n虽然 $\\ln x\\to-\\infty$，但奇异程度足够弱，积分收敛。"
+  },
+  {
+    "id": "c5q10",
+    "chapter": 5,
+    "topic": "三角积分",
+    "difficulty": "进阶",
+    "source": "原创",
+    "type": "solution",
+    "stem": "计算 $\\displaystyle\\int_0^{\\pi/2}\\sin^2x\\,dx$。",
+    "answer": "$\\dfrac{\\pi}{4}$",
+    "explanation": "使用降幂公式 $\\sin^2x=\\frac{1-\\cos2x}{2}$：\n$$\\int_0^{\\pi/2}\\sin^2x\\,dx\n=\\frac12\\int_0^{\\pi/2}dx-\\frac12\\int_0^{\\pi/2}\\cos2x\\,dx.$$\n第一项为 $\\frac12\\cdot\\frac\\pi2=\\frac\\pi4$。第二项：\n$$\\int_0^{\\pi/2}\\cos2x\\,dx\n=\\left[\\frac{\\sin2x}{2}\\right]_0^{\\pi/2}\n=\\frac{\\sin\\pi-\\sin0}{2}=0.$$\n因此结果为 $\\frac\\pi4$。也可利用 $\\int_0^{\\pi/2}\\sin^2xdx=\\int_0^{\\pi/2}\\cos^2xdx$ 且两者之和为 $\\frac\\pi2$。"
+  },
+  {
+    "id": "c5q11",
+    "chapter": 5,
+    "topic": "对称性化简定积分",
+    "difficulty": "挑战",
+    "source": "网络改编",
+    "type": "choice",
+    "stem": "$\\displaystyle\\int_0^\\pi\\frac{x\\sin x}{1+\\cos^2x}\\,dx=$（ ）。",
+    "options": [
+      {
+        "id": "A",
+        "text": "$\\dfrac{\\pi}{2}$"
+      },
+      {
+        "id": "B",
+        "text": "$\\dfrac{\\pi^2}{4}$"
+      },
+      {
+        "id": "C",
+        "text": "$\\dfrac{\\pi^2}{2}$"
+      },
+      {
+        "id": "D",
+        "text": "$\\pi^2$"
+      }
+    ],
+    "answer": "B",
+    "explanation": "记\n$$I=\\int_0^\\pi\\frac{x\\sin x}{1+\\cos^2x}dx.$$\n令 $x=\\pi-t$，则 $dx=-dt$，且 $\\sin(\\pi-t)=\\sin t$，$\\cos(\\pi-t)=-\\cos t$。于是\n$$I=\\int_0^\\pi\\frac{(\\pi-t)\\sin t}{1+\\cos^2t}dt\n=\\pi\\int_0^\\pi\\frac{\\sin t}{1+\\cos^2t}dt-I.$$\n所以\n$$2I=\\pi\\int_0^\\pi\\frac{\\sin x}{1+\\cos^2x}dx.$$\n令 $u=\\cos x$，$du=-\\sin x dx$，得\n$$\\int_0^\\pi\\frac{\\sin x}{1+\\cos^2x}dx\n=\\int_{-1}^1\\frac{du}{1+u^2}\n=\\arctan u\\Big|_{-1}^1=\\frac\\pi2.$$\n因此 $2I=\\frac{\\pi^2}{2}$，$I=\\frac{\\pi^2}{4}$。"
+  },
+  {
+    "id": "c5q12",
+    "chapter": 5,
+    "topic": "非负函数积分",
+    "difficulty": "挑战",
+    "source": "原创",
+    "type": "judge",
+    "stem": "判断：若 $f$ 在 $[0,1]$ 上连续，$f(x)\\ge0$，且 $\\displaystyle\\int_0^1f(x)\\,dx=0$，则 $f(x)\\equiv0$。",
+    "answer": true,
+    "explanation": "正确。反设存在 $x_0\\in[0,1]$ 使 $f(x_0)>0$。由连续性，存在包含 $x_0$ 的小区间（若 $x_0$ 在端点则取单侧邻域）$J$ 及常数 $m>0$，使在 $J$ 上 $f(x)\\ge m$。该小区间长度为 $\\delta>0$，于是\n$$\\int_0^1f(x)dx\\ge \\int_Jf(x)dx\\ge m\\delta>0,$$\n与积分为零矛盾。因此不可能有 $f(x_0)>0$；又 $f\\ge0$，故 $f\\equiv0$。"
+  },
+  {
+    "id": "c5q13",
+    "chapter": 5,
+    "topic": "换元法计算定积分",
+    "difficulty": "挑战",
+    "source": "网络改编",
+    "type": "solution",
+    "stem": "计算 $\\displaystyle\\int_0^{\\ln2}\\sqrt{e^x-1}\\,dx$。",
+    "answer": "$2-\\dfrac{\\pi}{2}$",
+    "explanation": "令 $t=\\sqrt{e^x-1}$，则 $t\\ge0$ 且\n$$e^x=1+t^2,\\qquad x=\\ln(1+t^2),\\qquad dx=\\frac{2t}{1+t^2}dt.$$\n当 $x=0$ 时 $t=0$；当 $x=\\ln2$ 时 $t=1$。于是\n$$\\int_0^{\\ln2}\\sqrt{e^x-1}dx\n=\\int_0^1 t\\cdot\\frac{2t}{1+t^2}dt\n=2\\int_0^1\\frac{t^2}{1+t^2}dt.$$\n而\n$$\\frac{t^2}{1+t^2}=1-\\frac1{1+t^2},$$\n所以\n$$2\\int_0^1\\left(1-\\frac1{1+t^2}\\right)dt\n=2\\left[t-\\arctan t\\right]_0^1\n=2\\left(1-\\frac\\pi4\\right)\n=2-\\frac\\pi2.$$"
+  },
+  {
+    "id": "c5q14",
+    "chapter": 5,
+    "topic": "递推与 Beta 积分",
+    "difficulty": "挑战",
+    "source": "网络改编",
+    "type": "solution",
+    "stem": "设 $m,n$ 为非负整数，证明：\n$$\\int_0^1x^m(1-x)^n\\,dx=\\frac{m!\\,n!}{(m+n+1)!}.$$",
+    "answer": "证明见解析",
+    "explanation": "记 $I_{m,n}=\\int_0^1x^m(1-x)^n dx$。对 $n\\ge1$ 用分部积分，取\n$$u=(1-x)^n,\\qquad dv=x^m dx,$$\n则 $du=-n(1-x)^{n-1}dx$，$v=\\frac{x^{m+1}}{m+1}$。于是\n$$I_{m,n}\n=\\left[\\frac{x^{m+1}(1-x)^n}{m+1}\\right]_0^1\n+\\frac{n}{m+1}\\int_0^1x^{m+1}(1-x)^{n-1}dx.$$\n边界项在 $x=0$ 与 $x=1$ 处均为 $0$，故\n$$I_{m,n}=\\frac{n}{m+1}I_{m+1,n-1}.$$\n连续使用 $n$ 次：\n$$I_{m,n}\n=\\frac{n!}{(m+1)(m+2)\\cdots(m+n)}I_{m+n,0}.$$\n而\n$$I_{m+n,0}=\\int_0^1x^{m+n}dx=\\frac{1}{m+n+1}.$$\n因此\n$$I_{m,n}\n=\\frac{n!}{(m+1)(m+2)\\cdots(m+n)(m+n+1)}\n=\\frac{m!\\,n!}{(m+n+1)!}.$$\n最后一步用了 $(m+n+1)!=(m+n+1)m!(m+1)\\cdots(m+n)/m!$ 的整理，或者直接通分验证。"
+  },
+  {
+    "id": "c5q15",
+    "chapter": 5,
+    "topic": "变上限积分与链式法则",
+    "difficulty": "挑战",
+    "source": "原创",
+    "type": "choice",
+    "stem": "设 $f$ 连续，$F(x)=\\displaystyle\\int_0^{x^2}f(t)\\,dt$，则 $F'(x)=$（ ）。",
+    "options": [
+      {
+        "id": "A",
+        "text": "$f(x^2)$"
+      },
+      {
+        "id": "B",
+        "text": "$2xf(x^2)$"
+      },
+      {
+        "id": "C",
+        "text": "$2xf(x)$"
+      },
+      {
+        "id": "D",
+        "text": "$f(2x)$"
+      }
+    ],
+    "answer": "B",
+    "explanation": "令 $u=x^2$，则 $F(x)=\\int_0^uf(t)dt$。由微积分基本定理与链式法则：\n$$F'(x)=\\frac{d}{du}\\left(\\int_0^uf(t)dt\\right)\\cdot u'\n=f(u)\\cdot 2x=2xf(x^2).$$\n注意上限是复合函数 $x^2$，不能只把 $t$ 换成 $x$。"
+  },
+  {
+    "id": "c6q01",
+    "chapter": 6,
+    "topic": "平面图形面积",
+    "difficulty": "基础",
+    "source": "原创",
+    "type": "choice",
+    "stem": "曲线 $y=x$ 与 $y=x^2$ 在 $[0,1]$ 上所围图形的面积为（ ）。",
+    "options": [
+      {
+        "id": "A",
+        "text": "$\\dfrac16$"
+      },
+      {
+        "id": "B",
+        "text": "$\\dfrac13$"
+      },
+      {
+        "id": "C",
+        "text": "$\\dfrac12$"
+      },
+      {
+        "id": "D",
+        "text": "1"
+      }
+    ],
+    "answer": "A",
+    "explanation": "在 $[0,1]$ 上，$x\\ge x^2$，所以上边界为 $y=x$，下边界为 $y=x^2$。面积\n$$S=\\int_0^1(x-x^2)dx\n=\\left[\\frac{x^2}{2}-\\frac{x^3}{3}\\right]_0^1\n=\\frac12-\\frac13=\\frac16.$$\n两条曲线在 $x=0,1$ 处相交，交点横坐标正好是积分端点。"
+  },
+  {
+    "id": "c6q02",
+    "chapter": 6,
+    "topic": "旋转体体积",
+    "difficulty": "基础",
+    "source": "原创",
+    "type": "judge",
+    "stem": "判断：直线 $y=x$ 在 $[0,1]$ 段绕 $x$ 轴旋转所得旋转体的体积为 $\\dfrac{\\pi}{3}$。",
+    "answer": true,
+    "explanation": "用圆盘法。旋转半径 $r(x)=y=x$，体积微元 $dV=\\pi r^2dx$。于是\n$$V=\\pi\\int_0^1x^2dx\n=\\pi\\left[\\frac{x^3}{3}\\right]_0^1=\\frac\\pi3.$$\n几何上这是一个底面半径为 $1$、高为 $1$ 的圆锥，圆锥体积公式 $\\frac13\\pi r^2h=\\frac\\pi3$，结果一致。"
+  },
+  {
+    "id": "c6q03",
+    "chapter": 6,
+    "topic": "两曲线围成面积",
+    "difficulty": "基础",
+    "source": "原创",
+    "type": "solution",
+    "stem": "求曲线 $y=x^2$ 与 $y=2-x^2$ 所围平面图形的面积。",
+    "answer": "$\\dfrac{8}{3}$",
+    "explanation": "先求交点：\n$$x^2=2-x^2\\implies 2x^2=2\\implies x=\\pm1.$$\n在 $[-1,1]$ 上，$2-x^2\\ge x^2$，所以上边界为 $y=2-x^2$，下边界为 $y=x^2$。面积\n$$S=\\int_{-1}^1\\left[(2-x^2)-x^2\\right]dx\n=\\int_{-1}^1(2-2x^2)dx.$$\n由偶函数对称性，\n$$S=2\\int_0^1(2-2x^2)dx\n=2\\left[2x-\\frac{2x^3}{3}\\right]_0^1\n=2\\left(2-\\frac23\\right)\n=2\\cdot\\frac43=\\frac83.$$"
+  },
+  {
+    "id": "c6q04",
+    "chapter": 6,
+    "topic": "弧长",
+    "difficulty": "基础",
+    "source": "原创",
+    "type": "choice",
+    "stem": "曲线 $y=2x$ 在 $0\\le x\\le1$ 上的弧长为（ ）。",
+    "options": [
+      {
+        "id": "A",
+        "text": "$1$"
+      },
+      {
+        "id": "B",
+        "text": "$\\sqrt5$"
+      },
+      {
+        "id": "C",
+        "text": "$2\\sqrt5$"
+      },
+      {
+        "id": "D",
+        "text": "$\\sqrt{1+2^2}\\cdot2$"
+      }
+    ],
+    "answer": "B",
+    "explanation": "平面曲线 $y=f(x)$ 的弧长公式为\n$$L=\\int_a^b\\sqrt{1+[f'(x)]^2}\\,dx.$$\n这里 $f'(x)=2$，所以\n$$L=\\int_0^1\\sqrt{1+4}\\,dx=\\sqrt5.$$\n几何上，这是从 $(0,0)$ 到 $(1,2)$ 的线段，长度由两点距离公式\n$$\\sqrt{(1-0)^2+(2-0)^2}=\\sqrt5$$\n也能验证。"
+  },
+  {
+    "id": "c6q05",
+    "chapter": 6,
+    "topic": "曲边梯形面积",
+    "difficulty": "进阶",
+    "source": "原创",
+    "type": "judge",
+    "stem": "判断：曲线 $y=\\dfrac1x$ 与直线 $x=1$、$x=e$ 及 $x$ 轴所围图形的面积为 $1$。",
+    "answer": true,
+    "explanation": "在 $[1,e]$ 上 $\\frac1x>0$，面积\n$$S=\\int_1^e\\frac1x dx\n=\\left[\\ln x\\right]_1^e\n=\\ln e-\\ln1=1.$$\n这里的“与 $x$ 轴围成”应理解为 $x$ 轴、两条竖直线和曲线之间的区域。"
+  },
+  {
+    "id": "c6q06",
+    "chapter": 6,
+    "topic": "旋转体体积",
+    "difficulty": "基础",
+    "source": "原创",
+    "type": "choice",
+    "stem": "曲线 $y=\\sqrt{x}$ 在 $0\\le x\\le4$ 段绕 $x$ 轴旋转所得旋转体的体积为（ ）。",
+    "options": [
+      {
+        "id": "A",
+        "text": "$4\\pi$"
+      },
+      {
+        "id": "B",
+        "text": "$8\\pi$"
+      },
+      {
+        "id": "C",
+        "text": "$16\\pi$"
+      },
+      {
+        "id": "D",
+        "text": "$\\dfrac{16\\pi}{3}$"
+      }
+    ],
+    "answer": "B",
+    "explanation": "圆盘法：旋转半径为 $y=\\sqrt{x}$，故 $r^2=x$。于是\n$$V=\\pi\\int_0^4(\\sqrt{x})^2dx\n=\\pi\\int_0^4x\\,dx\n=\\pi\\left[\\frac{x^2}{2}\\right]_0^4\n=\\pi\\cdot\\frac{16}{2}=8\\pi.$$"
+  },
+  {
+    "id": "c6q07",
+    "chapter": 6,
+    "topic": "函数平均值",
+    "difficulty": "进阶",
+    "source": "原创",
+    "type": "judge",
+    "stem": "判断：函数 $f(x)=x^2$ 在区间 $[0,3]$ 上的平均值为 $3$。",
+    "answer": true,
+    "explanation": "连续函数在 $[a,b]$ 上的平均值定义为\n$$\\bar f=\\frac{1}{b-a}\\int_a^bf(x)dx.$$\n这里\n$$\\bar f=\\frac13\\int_0^3x^2dx\n=\\frac13\\left[\\frac{x^3}{3}\\right]_0^3\n=\\frac13\\cdot\\frac{27}{3}=3.$$\n所以平均值为 $3$。注意平均值不是端点函数值的算术平均。"
+  },
+  {
+    "id": "c6q08",
+    "chapter": 6,
+    "topic": "垫圈法求体积",
+    "difficulty": "进阶",
+    "source": "网络改编",
+    "type": "solution",
+    "stem": "设平面图形由 $y=x^2$ 与 $y=x$ 围成，求该图形绕 $x$ 轴旋转所得旋转体的体积。",
+    "answer": "$\\dfrac{2\\pi}{15}$",
+    "explanation": "交点由 $x^2=x$ 得 $x=0,1$。在 $(0,1)$ 上 $x>x^2$，绕 $x$ 轴旋转时形成垫圈：外半径 $R=x$，内半径 $r=x^2$。体积\n$$V=\\pi\\int_0^1\\left(R^2-r^2\\right)dx\n=\\pi\\int_0^1\\left(x^2-x^4\\right)dx.$$\n计算：\n$$V=\\pi\\left[\\frac{x^3}{3}-\\frac{x^5}{5}\\right]_0^1\n=\\pi\\left(\\frac13-\\frac15\\right)\n=\\pi\\cdot\\frac{2}{15}\n=\\frac{2\\pi}{15}.$$"
+  },
+  {
+    "id": "c6q09",
+    "chapter": 6,
+    "topic": "变力做功",
+    "difficulty": "进阶",
+    "source": "原创",
+    "type": "choice",
+    "stem": "一弹簧的劲度系数为 $2\\ \\mathrm{N/m}$，将其从自然长度拉伸 $3\\ \\mathrm m$，克服弹力所做的功为（ ）。",
+    "options": [
+      {
+        "id": "A",
+        "text": "$3\\ \\mathrm J$"
+      },
+      {
+        "id": "B",
+        "text": "$6\\ \\mathrm J$"
+      },
+      {
+        "id": "C",
+        "text": "$9\\ \\mathrm J$"
+      },
+      {
+        "id": "D",
+        "text": "$18\\ \\mathrm J$"
+      }
+    ],
+    "answer": "C",
+    "explanation": "由胡克定律，弹簧伸长 $x$ 米时的弹力大小为 $F=kx=2x$ 牛顿，方向与伸长方向相反。克服弹力做功为\n$$W=\\int_0^3 2x\\,dx\n=\\left[x^2\\right]_0^3=9\\ \\mathrm J.$$\n注意若用平均力 $\\frac{0+2\\cdot3}{2}=3\\ \\mathrm N$ 乘位移 $3\\ \\mathrm m$，也得到 $9\\ \\mathrm J$，但积分法更通用。"
+  },
+  {
+    "id": "c6q10",
+    "chapter": 6,
+    "topic": "弧长计算",
+    "difficulty": "进阶",
+    "source": "网络改编",
+    "type": "solution",
+    "stem": "求曲线 $y=\\dfrac23x^{3/2}$ 在 $0\\le x\\le3$ 上的弧长。",
+    "answer": "$\\dfrac{14}{3}$",
+    "explanation": "求导：\n$$y'=\\frac23\\cdot\\frac32x^{1/2}=x^{1/2}=\\sqrt{x}.$$\n弧长\n$$L=\\int_0^3\\sqrt{1+(y')^2}\\,dx\n=\\int_0^3\\sqrt{1+x}\\,dx.$$\n令 $u=1+x$，$du=dx$，积分限从 $1$ 到 $4$：\n$$L=\\int_1^4u^{1/2}du\n=\\left[\\frac23u^{3/2}\\right]_1^4\n=\\frac23(4^{3/2}-1^{3/2})\n=\\frac23(8-1)=\\frac{14}{3}.$$。"
+  },
+  {
+    "id": "c6q11",
+    "chapter": 6,
+    "topic": "两曲线围成面积",
+    "difficulty": "挑战",
+    "source": "网络改编",
+    "type": "choice",
+    "stem": "曲线 $y=\\sin x$ 与 $y=\\cos x$ 在 $[0,\\pi/2]$ 上所围图形的面积为（ ）。",
+    "options": [
+      {
+        "id": "A",
+        "text": "$2\\sqrt2-2$"
+      },
+      {
+        "id": "B",
+        "text": "$\\sqrt2$"
+      },
+      {
+        "id": "C",
+        "text": "$2-\\sqrt2$"
+      },
+      {
+        "id": "D",
+        "text": "$2\\sqrt2$"
+      }
+    ],
+    "answer": "A",
+    "explanation": "交点满足 $\\sin x=\\cos x$，即 $\\tan x=1$，在 $[0,\\pi/2]$ 内 $x=\\pi/4$。\n在 $[0,\\pi/4]$ 上 $\\cos x\\ge\\sin x$，在 $[\\pi/4,\\pi/2]$ 上 $\\sin x\\ge\\cos x$。面积\n$$S=\\int_0^{\\pi/2}|\\sin x-\\cos x|dx\n=\\int_0^{\\pi/4}(\\cos x-\\sin x)dx\n+\\int_{\\pi/4}^{\\pi/2}(\\sin x-\\cos x)dx.$$\n分别计算：\n$$\\int_0^{\\pi/4}(\\cos x-\\sin x)dx\n=[\\sin x+\\cos x]_0^{\\pi/4}\n=\\sqrt2-1,$$\n$$\\int_{\\pi/4}^{\\pi/2}(\\sin x-\\cos x)dx\n=[-\\cos x-\\sin x]_{\\pi/4}^{\\pi/2}\n=(-1)-(-\\sqrt2)=\\sqrt2-1.$$\n所以 $S=2\\sqrt2-2$。"
+  },
+  {
+    "id": "c6q12",
+    "chapter": 6,
+    "topic": "反常积分面积",
+    "difficulty": "挑战",
+    "source": "原创",
+    "type": "judge",
+    "stem": "判断：曲线 $y=e^{-x}$ 与坐标轴在 $x\\ge0$ 范围内围成的无界区域面积为 $1$。",
+    "answer": true,
+    "explanation": "区域位于第一象限，面积为反常积分\n$$S=\\int_0^{+\\infty}e^{-x}dx\n=\\lim_{b\\to+\\infty}\\int_0^be^{-x}dx\n=\\lim_{b\\to+\\infty}\\left[-e^{-x}\\right]_0^b\n=\\lim_{b\\to+\\infty}\\left(1-e^{-b}\\right)=1.$$\n虽然区域向 $x$ 轴正方向无限延伸，但高度衰减得足够快（指数衰减），所以面积有限。"
+  },
+  {
+    "id": "c6q13",
+    "chapter": 6,
+    "topic": "已知截面面积求体积",
+    "difficulty": "挑战",
+    "source": "网络改编",
+    "type": "solution",
+    "stem": "一立体的底面是单位圆 $x^2+y^2\\le1$。垂直于 $x$ 轴的所有截面都是等边三角形，求该立体的体积。",
+    "answer": "$\\dfrac{4\\sqrt3}{3}$",
+    "explanation": "固定 $x\\in[-1,1]$，底面圆的截线满足\n$$y^2\\le1-x^2,$$\n即 $|y|\\le\\sqrt{1-x^2}$。这条截线是等边三角形的底边，边长为\n$$s(x)=2\\sqrt{1-x^2}.$$\n等边三角形面积\n$$A(x)=\\frac{\\sqrt3}{4}s^2\n=\\frac{\\sqrt3}{4}\\cdot4(1-x^2)\n=\\sqrt3(1-x^2).$$\n于是体积\n$$V=\\int_{-1}^1A(x)dx\n=\\sqrt3\\int_{-1}^1(1-x^2)dx\n=2\\sqrt3\\int_0^1(1-x^2)dx.$$\n计算：\n$$V=2\\sqrt3\\left[x-\\frac{x^3}{3}\\right]_0^1\n=2\\sqrt3\\cdot\\frac23\n=\\frac{4\\sqrt3}{3}.$$"
+  },
+  {
+    "id": "c6q14",
+    "chapter": 6,
+    "topic": "积分中值定理",
+    "difficulty": "挑战",
+    "source": "网络改编",
+    "type": "solution",
+    "stem": "求 $f(x)=\\sin^2x$ 在 $[0,\\pi]$ 上的平均值，并求 $[0,\\pi]$ 内使 $f(c)$ 等于该平均值的所有 $c$。",
+    "answer": "平均值为 $\\dfrac12$；$c=\\dfrac{\\pi}{4}$ 或 $\\dfrac{3\\pi}{4}$",
+    "explanation": "平均值为\n$$\\bar f=\\frac{1}{\\pi-0}\\int_0^\\pi\\sin^2x\\,dx.$$\n利用 $\\sin^2x=\\frac{1-\\cos2x}{2}$：\n$$\\int_0^\\pi\\sin^2x\\,dx\n=\\frac12\\int_0^\\pi dx-\\frac12\\int_0^\\pi\\cos2x\\,dx\n=\\frac{\\pi}{2}-0=\\frac{\\pi}{2}.$$\n所以\n$$\\bar f=\\frac{1}{\\pi}\\cdot\\frac{\\pi}{2}=\\frac12.$$\n令 $\\sin^2c=\\frac12$，即 $|\\sin c|=\\frac{\\sqrt2}{2}$。在 $[0,\\pi]$ 内，\n$$c=\\frac{\\pi}{4}\\quad\\text{或}\\quad c=\\frac{3\\pi}{4}.$$\n这两个点都满足积分中值定理的结论。"
+  },
+  {
+    "id": "c6q15",
+    "chapter": 6,
+    "topic": "参数曲线弧长",
+    "difficulty": "挑战",
+    "source": "网络改编",
+    "type": "choice",
+    "stem": "星形线 $\\begin{cases}x=\\cos^3t,\\\\y=\\sin^3t\\end{cases}$ 的全长为（ ）。",
+    "options": [
+      {
+        "id": "A",
+        "text": "$3$"
+      },
+      {
+        "id": "B",
+        "text": "$4$"
+      },
+      {
+        "id": "C",
+        "text": "$6$"
+      },
+      {
+        "id": "D",
+        "text": "$8$"
+      }
+    ],
+    "answer": "C",
+    "explanation": "先求第一象限部分 $0\\le t\\le\\frac\\pi2$ 的弧长。参数曲线弧长微元\n$$ds=\\sqrt{\\left(\\frac{dx}{dt}\\right)^2+\\left(\\frac{dy}{dt}\\right)^2}dt.$$\n这里\n$$\\frac{dx}{dt}=-3\\cos^2t\\sin t,\\qquad\n\\frac{dy}{dt}=3\\sin^2t\\cos t.$$\n于是\n$$ds=3\\sin t\\cos t\\sqrt{\\cos^2t+\\sin^2t}\\,dt\n=3\\sin t\\cos t\\,dt.$$\n第一象限弧长\n$$L_1=\\int_0^{\\pi/2}3\\sin t\\cos t\\,dt\n=\\frac32\\int_0^{\\pi/2}\\sin2t\\,dt\n=\\frac32.$$\n由对称性，全长 $L=4L_1=6$。"
+  },
+  {
+    "id": "c7q01",
+    "chapter": 7,
+    "topic": "微分方程的基本概念",
+    "difficulty": "基础",
+    "source": "原创",
+    "type": "choice",
+    "stem": "微分方程 $y'''+2y''+y=0$ 的阶数为（ ）。",
+    "options": [
+      {
+        "id": "A",
+        "text": "1"
+      },
+      {
+        "id": "B",
+        "text": "2"
+      },
+      {
+        "id": "C",
+        "text": "3"
+      },
+      {
+        "id": "D",
+        "text": "4"
+      }
+    ],
+    "answer": "C",
+    "explanation": "微分方程的阶数等于方程中出现的最高阶导数的阶数。方程中出现 $y'''$、$y''$、$y$，最高阶为三阶导数 $y'''$，所以是**三阶**微分方程。它不是线性常系数齐次方程中最高次幂的次数，而是导数阶数。"
+  },
+  {
+    "id": "c7q02",
+    "chapter": 7,
+    "topic": "可分离变量方程",
+    "difficulty": "基础",
+    "source": "原创",
+    "type": "judge",
+    "stem": "判断：$y=Ce^{2x}$（$C$ 为任意常数）是微分方程 $y'=2y$ 的通解。",
+    "answer": true,
+    "explanation": "求导：\n$$y'=2Ce^{2x}=2y.$$\n所以对任意常数 $C$，$y=Ce^{2x}$ 都满足方程。又这是一阶线性齐次方程，通解含一个任意常数，而 $y=Ce^{2x}$ 正好是一族解，故为通解。若给定初始条件 $y(0)=y_0$，则 $C=y_0$，得到特解。"
+  },
+  {
+    "id": "c7q03",
+    "chapter": 7,
+    "topic": "初值问题",
+    "difficulty": "基础",
+    "source": "原创",
+    "type": "solution",
+    "stem": "求初值问题 $\\dfrac{dy}{dx}=2xy,\\ y(0)=1$ 的解。",
+    "answer": "$y=e^{x^2}$",
+    "explanation": "这是可分离变量方程。分离：\n$$\\frac{dy}{y}=2x\\,dx\\quad(y\\ne0).$$\n两边积分：\n$$\\ln|y|=x^2+C_1.$$\n于是\n$$|y|=e^{C_1}e^{x^2},$$\n可写成\n$$y=Ce^{x^2}\\quad(C\\ne0).$$\n代入 $y(0)=1$，得 $C=1$。因此\n$$y=e^{x^2}.$$\n该解在 $\\mathbb R$ 上恒正，满足原方程。"
+  },
+  {
+    "id": "c7q04",
+    "chapter": 7,
+    "topic": "二阶常系数齐次方程",
+    "difficulty": "基础",
+    "source": "原创",
+    "type": "choice",
+    "stem": "微分方程 $y''+y=0$ 的通解为（ ）。",
+    "options": [
+      {
+        "id": "A",
+        "text": "$y=C_1e^x+C_2e^{-x}$"
+      },
+      {
+        "id": "B",
+        "text": "$y=C_1\\cos x+C_2\\sin x$"
+      },
+      {
+        "id": "C",
+        "text": "$y=C_1+C_2x$"
+      },
+      {
+        "id": "D",
+        "text": "$y=e^x(C_1\\cos x+C_2\\sin x)$"
+      }
+    ],
+    "answer": "B",
+    "explanation": "特征方程为\n$$r^2+1=0,$$\n特征根 $r=\\pm i$（一对共轭纯虚根，实部 $0$、虚部 $1$）。因此通解为\n$$y=e^{0\\cdot x}(C_1\\cos x+C_2\\sin x)\n=C_1\\cos x+C_2\\sin x.$$\n验证：$y''=-C_1\\cos x-C_2\\sin x=-y$，满足方程。"
+  },
+  {
+    "id": "c7q05",
+    "chapter": 7,
+    "topic": "重特征根",
+    "difficulty": "进阶",
+    "source": "原创",
+    "type": "judge",
+    "stem": "判断：微分方程 $y''+2y'+y=0$ 的通解为 $y=(C_1+C_2x)e^{-x}$。",
+    "answer": true,
+    "explanation": "特征方程\n$$r^2+2r+1=(r+1)^2=0,$$\n有二重特征根 $r=-1$。当特征根为重根 $r$ 时，通解为\n$$y=(C_1+C_2x)e^{rx}.$$\n代入 $r=-1$，得\n$$y=(C_1+C_2x)e^{-x}.$$\n验证：令 $y=e^{-x}u$，则 $y''+2y'+y=e^{-x}u''$，方程化为 $u''=0$，故 $u=C_1+C_2x$，结果一致。"
+  },
+  {
+    "id": "c7q06",
+    "chapter": 7,
+    "topic": "可分离变量方程",
+    "difficulty": "基础",
+    "source": "原创",
+    "type": "choice",
+    "stem": "微分方程 $\\dfrac{dy}{dx}=\\dfrac{y}{x}$（$x\\ne0$）的通解为（ ）。",
+    "options": [
+      {
+        "id": "A",
+        "text": "$y=Cx$"
+      },
+      {
+        "id": "B",
+        "text": "$y=Ce^x$"
+      },
+      {
+        "id": "C",
+        "text": "$y=C/x$"
+      },
+      {
+        "id": "D",
+        "text": "$y=x+C$"
+      }
+    ],
+    "answer": "A",
+    "explanation": "分离变量：\n$$\\frac{dy}{y}=\\frac{dx}{x}\\quad(y\\ne0),$$\n积分得\n$$\\ln|y|=\\ln|x|+C_1.$$\n于是\n$$|y|=e^{C_1}|x|,$$\n即\n$$y=Cx\\quad(C\\ne0).$$\n另外 $y\\equiv0$ 也是解，对应 $C=0$。所以通解可写为 $y=Cx$，$C$ 为任意常数。"
+  },
+  {
+    "id": "c7q07",
+    "chapter": 7,
+    "topic": "一阶线性方程",
+    "difficulty": "进阶",
+    "source": "原创",
+    "type": "judge",
+    "stem": "判断：一阶线性方程 $y'+P(x)y=Q(x)$ 的积分因子为 $e^{\\int P(x)dx}$。",
+    "answer": true,
+    "explanation": "正确。将方程两边乘以 $\\mu=e^{\\int P dx}$，则\n$$\\mu y'+\\mu P y=\\mu Q.$$\n因为 $\\mu'=P\\mu$，左边恰为\n$$(\\mu y)'=\\mu y'+\\mu P y.$$\n于是\n$$(\\mu y)'=\\mu Q,$$\n两边积分得\n$$\\mu y=\\int \\mu Q\\,dx+C,$$\n从而\n$$y=e^{-\\int Pdx}\\left(\\int Q e^{\\int Pdx}dx+C\\right).$$\n积分因子把方程转化为可直接积分的全导数形式。"
+  },
+  {
+    "id": "c7q08",
+    "chapter": 7,
+    "topic": "一阶线性方程初值问题",
+    "difficulty": "进阶",
+    "source": "网络改编",
+    "type": "solution",
+    "stem": "求初值问题 $y'+y=e^x,\\ y(0)=0$ 的解。",
+    "answer": "$y=\\dfrac{e^x-e^{-x}}{2}=\\sinh x$",
+    "explanation": "这是一阶线性方程，$P(x)=1$，积分因子\n$$\\mu(x)=e^{\\int1\\,dx}=e^x.$$\n两边乘以 $e^x$：\n$$e^xy'+e^xy=e^{2x}\\implies (e^xy)'=e^{2x}.$$\n积分：\n$$e^xy=\\frac12e^{2x}+C.$$\n因此\n$$y=\\frac12e^x+Ce^{-x}.$$\n代入 $y(0)=0$：\n$$0=\\frac12+C\\implies C=-\\frac12.$$\n所以\n$$y=\\frac12(e^x-e^{-x})=\\sinh x.$$。"
+  },
+  {
+    "id": "c7q09",
+    "chapter": 7,
+    "topic": "二阶常系数齐次方程",
+    "difficulty": "进阶",
+    "source": "原创",
+    "type": "choice",
+    "stem": "微分方程 $y''-3y'+2y=0$ 的通解为（ ）。",
+    "options": [
+      {
+        "id": "A",
+        "text": "$y=C_1e^x+C_2e^{2x}$"
+      },
+      {
+        "id": "B",
+        "text": "$y=C_1e^{-x}+C_2e^{-2x}$"
+      },
+      {
+        "id": "C",
+        "text": "$y=(C_1+C_2x)e^x$"
+      },
+      {
+        "id": "D",
+        "text": "$y=e^{3x}(C_1\\cos x+C_2\\sin x)$"
+      }
+    ],
+    "answer": "A",
+    "explanation": "特征方程\n$$r^2-3r+2=0,$$\n因式分解：\n$$(r-1)(r-2)=0,$$\n特征根 $r_1=1$，$r_2=2$。两个互异实根对应通解\n$$y=C_1e^{x}+C_2e^{2x}.$$\n验证：将 $e^{rx}$ 代入得 $(r^2-3r+2)e^{rx}=0$，故两个线性无关解 $e^x,e^{2x}$ 都满足。"
+  },
+  {
+    "id": "c7q10",
+    "chapter": 7,
+    "topic": "二阶常系数方程初值问题",
+    "difficulty": "进阶",
+    "source": "原创",
+    "type": "solution",
+    "stem": "求初值问题 $y''+4y=0,\\ y(0)=1,\\ y'(0)=2$ 的解。",
+    "answer": "$y=\\cos2x+\\sin2x$",
+    "explanation": "特征方程\n$$r^2+4=0\\implies r=\\pm2i.$$\n通解为\n$$y=C_1\\cos2x+C_2\\sin2x.$$\n代入 $y(0)=1$：\n$$C_1=1.$$\n求导：\n$$y'=-2C_1\\sin2x+2C_2\\cos2x.$$\n代入 $y'(0)=2$：\n$$2C_2=2\\implies C_2=1.$$\n因此\n$$y=\\cos2x+\\sin2x.$$。"
+  },
+  {
+    "id": "c7q11",
+    "chapter": 7,
+    "topic": "非齐次方程特解",
+    "difficulty": "挑战",
+    "source": "网络改编",
+    "type": "choice",
+    "stem": "微分方程 $y''-y=e^x$ 的一个特解为（ ）。",
+    "options": [
+      {
+        "id": "A",
+        "text": "$y_p=e^x$"
+      },
+      {
+        "id": "B",
+        "text": "$y_p=xe^x$"
+      },
+      {
+        "id": "C",
+        "text": "$y_p=\\dfrac12xe^x$"
+      },
+      {
+        "id": "D",
+        "text": "$y_p=\\dfrac12e^x$"
+      }
+    ],
+    "answer": "C",
+    "explanation": "对应齐次方程特征方程 $r^2-1=0$，根 $r=\\pm1$。右端 $e^x$ 对应的指数 $1$ 恰是特征根（单根），所以应设特解\n$$y_p=Axe^x.$$\n求导：\n$$y_p'=A(x+1)e^x,\\qquad y_p''=A(x+2)e^x.$$\n代入 $y''-y=e^x$：\n$$A(x+2)e^x-Axe^x=2Ae^x=e^x.$$\n故 $2A=1$，$A=\\frac12$，特解为\n$$y_p=\\frac12xe^x.$$\n直接设 $y_p=Ae^x$ 会得到 $0=e^x$，因为 $e^x$ 是齐次解，所以必须乘 $x$。"
+  },
+  {
+    "id": "c7q12",
+    "chapter": 7,
+    "topic": "解的存在区间",
+    "difficulty": "挑战",
+    "source": "原创",
+    "type": "judge",
+    "stem": "判断：初值问题 $y'=y^2,\\ y(0)=1$ 的解在 $(-\\infty,+\\infty)$ 上存在。若认为错误，请说明原因或给出解。",
+    "answer": false,
+    "explanation": "错误。分离变量：\n$$\\frac{dy}{y^2}=dx\\implies-\\frac1y=x+C.$$\n代入 $y(0)=1$：$-1=C$，所以\n$$-\\frac1y=x-1\\implies y=\\frac{1}{1-x}.$$\n该解在 $x=1$ 处无定义，且当 $x\\to1^-$ 时 $y\\to+\\infty$。包含初始点 $x=0$ 的最大存在区间是 $(-\\infty,1)$，不是整个实数轴。这说明即使右端函数很光滑，解也可能在有限时间内爆破。"
+  },
+  {
+    "id": "c7q13",
+    "chapter": 7,
+    "topic": "全微分方程",
+    "difficulty": "挑战",
+    "source": "网络改编",
+    "type": "solution",
+    "stem": "求初值问题 $(x+y)\\,dx+(x-y)\\,dy=0,\\ y(1)=0$ 的解。",
+    "answer": "$x^2+2xy-y^2=1$",
+    "explanation": "令\n$$M(x,y)=x+y,\\qquad N(x,y)=x-y.$$\n则\n$$\\frac{\\partial M}{\\partial y}=1,\\qquad\n\\frac{\\partial N}{\\partial x}=1,$$\n所以方程是全微分方程，存在势函数 $u(x,y)$ 使 $du=M dx+N dy$。\n\n由 $u_x=x+y$，对 $x$ 积分：\n$$u=\\frac{x^2}{2}+xy+\\varphi(y).$$\n再由 $u_y=x-y$，有\n$$x+\\varphi'(y)=x-y\\implies\\varphi'(y)=-y,$$\n故 $\\varphi(y)=-\\frac{y^2}{2}+C$。因此\n$$u=\\frac{x^2}{2}+xy-\\frac{y^2}{2}=C.$$\n通解为\n$$x^2+2xy-y^2=C.$$\n代入 $y(1)=0$：\n$$1+0-0=1,$$\n故 $C=1$，特解为\n$$x^2+2xy-y^2=1.$$"
+  },
+  {
+    "id": "c7q14",
+    "chapter": 7,
+    "topic": "共轭复根初值问题",
+    "difficulty": "挑战",
+    "source": "网络改编",
+    "type": "solution",
+    "stem": "求初值问题 $y''+2y'+5y=0,\\ y(0)=1,\\ y'(0)=0$ 的解。",
+    "answer": "$y=e^{-x}\\left(\\cos2x+\\dfrac12\\sin2x\\right)$",
+    "explanation": "特征方程\n$$r^2+2r+5=0.$$\n配方：\n$$(r+1)^2+4=0\\implies r=-1\\pm2i.$$\n因此通解为\n$$y=e^{-x}(C_1\\cos2x+C_2\\sin2x).$$\n由 $y(0)=1$：\n$$C_1=1.$$\n求导：\n$$y'=-e^{-x}(C_1\\cos2x+C_2\\sin2x)\n+e^{-x}(-2C_1\\sin2x+2C_2\\cos2x).$$\n在 $x=0$ 处，\n$$y'(0)=-C_1+2C_2=0.$$\n代入 $C_1=1$，得 $C_2=\\frac12$。所以\n$$y=e^{-x}\\left(\\cos2x+\\frac12\\sin2x\\right).$$"
+  },
+  {
+    "id": "c7q15",
+    "chapter": 7,
+    "topic": "伯努利方程代换",
+    "difficulty": "挑战",
+    "source": "原创",
+    "type": "choice",
+    "stem": "对伯努利方程 $y'+y=xy^2$，令 $v=y^{-1}$，则方程化为（ ）。",
+    "options": [
+      {
+        "id": "A",
+        "text": "$v'-v=-x$"
+      },
+      {
+        "id": "B",
+        "text": "$v'+v=-x$"
+      },
+      {
+        "id": "C",
+        "text": "$v'-v=x$"
+      },
+      {
+        "id": "D",
+        "text": "$v'+v=x$"
+      }
+    ],
+    "answer": "A",
+    "explanation": "由 $v=y^{-1}$，有\n$$v'=-y^{-2}y'.$$\n将原方程 $y'+y=xy^2$ 两边除以 $y^2$（$y\\ne0$）：\n$$y^{-2}y'+y^{-1}=x.$$\n代入 $y^{-2}y'=-v'$ 与 $y^{-1}=v$：\n$$-v'+v=x.$$\n两边乘以 $-1$：\n$$v'-v=-x.$$\n这是一阶线性方程，可用积分因子 $e^{-x}$ 求解。注意 $y=0$ 也是原方程的解。"
+  }
+]
