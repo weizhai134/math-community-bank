@@ -385,7 +385,11 @@ function FinalResultView({
 
       <section className="result-hero">
         <div className="result-eyebrow">
-          {attempt.isTrial ? '错题试炼结算' : `${TIER_LABEL[attempt.tier]} · 第 ${attempt.chapter} 章`}
+          {attempt.isTrial
+            ? attempt.levelId.startsWith('targeted-')
+              ? '靶向突破结算'
+              : '错题试炼结算'
+            : `${TIER_LABEL[attempt.tier]} · 第 ${attempt.chapter} 章`}
         </div>
         <div className="result-stars" aria-label={`本次 ${attempt.stars} 星`}>
           {[1, 2, 3].map((index) => (

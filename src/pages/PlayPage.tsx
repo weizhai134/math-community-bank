@@ -177,6 +177,7 @@ export function PlayPage(): JSX.Element {
   const currentIndex = activeRun.currentIndex;
   const totalQuestions = activeRun.questionIds.length;
   const isLast = currentIndex === totalQuestions - 1;
+  const isTargeted = activeRun.levelId.startsWith('targeted-');
   const elapsedCurrent = submitted
     ? currentAnswer.timeSpentSec
     : Math.max(0, (now - activeRun.questionStartedAt) / 1000);
@@ -294,11 +295,13 @@ export function PlayPage(): JSX.Element {
           ← 退出
         </button>
         <div className="play-title">
-          <span>{activeRun.isTrial ? '错题试炼' : TIER_LABEL[activeRun.tier]}</span>
+          <span>{isTargeted ? '靶向突破' : activeRun.isTrial ? '错题试炼' : TIER_LABEL[activeRun.tier]}</span>
           <strong>
-            {activeRun.isTrial
-              ? `${activeRun.questionIds.length} 题复习`
-              : activeRun.levelName}
+            {isTargeted
+              ? activeRun.levelName.replace(/^靶向突破 · /, '')
+              : activeRun.isTrial
+                ? `${activeRun.questionIds.length} 题复习`
+                : activeRun.levelName}
           </strong>
         </div>
         <div className="play-header-right">

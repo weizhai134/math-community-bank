@@ -1,4 +1,4 @@
-import { useState, type CSSProperties } from 'react';
+import { useEffect, useState, type CSSProperties } from 'react';
 import {
   CHAPTERS,
   MAX_CHAPTER_STARS,
@@ -17,6 +17,8 @@ import {
 import { formatDateTime } from '../lib/date';
 import { navigate } from '../lib/router';
 import { useAppStore } from '../store/useAppStore';
+import { getSetting } from '../db/db';
+import { TARGETED_TOPICS_KEY } from '../services/appService';
 import { DifficultyBadge, ProgressBar, Stars } from '../components/ui';
 import { Modal } from '../components/Modal';
 
@@ -31,12 +33,29 @@ export function MapPage(): JSX.Element {
   const levels = useAppStore((state) => state.levels);
   const attempts = useAppStore((state) => state.attempts);
   const wrongItems = useAppStore((state) => state.wrongItems);
+  const startTargeted = useAppStore((state) => state.startTargeted);
   const unlockChapter = useAppStore((state) => state.unlockChapter);
   const showToast = useAppStore((state) => state.showToast);
+  const [startedTopics, setStartedTopics] = useState<string[]>([]);
+  const [targetBusy, setTargetBusy] = useState<string | null>(null);
   const [lockedSelection, setLockedSelection] = useState<{ level: Level; reason: string } | null>(
     null,
   );
   const [unlocking, setUnlocking] = useState<number | null>(null);
+
+  useEffect(() => {
+    let active = true;
+    void getSetting<string[]>(TARGETED_TOPICS_KEY)
+      .then((topics) => {
+        if (active) setStartedTopics(topics ?? []);
+      })
+      .catch(() => {
+        if (active) setStartedTopics([]);
+      });
+    return () => {
+      active = false;
+    };
+  }, []);
 
   if (!profile) return <div className="empty-state">正在载入章节地图…</div>;
 
@@ -47,6 +66,31 @@ export function MapPage(): JSX.Element {
   const nextReview = [...wrongItems]
     .filter((item) => !item.archived)
     .sort((a, b) => a.nextReviewAt - b.nextReviewAt)[0];
+  const activeWrong = wrongItems.filter((item) => !item.archived);
+  const topicMap = new Map<string, { topic: string; chapter: number; count: number }>();
+  for (const item of activeWrong) {
+    const existing = topicMap.get(item.topic);
+    if (existing) {
+      existing.count += 1;
+    } else {
+      topicMap.set(item.topic, { topic: item.topic, chapter: item.chapter, count: 1 });
+    }
+  }
+  const targetedTopics = [...topicMap.values()]
+    .filter((item) => item.count >= 3 || (item.count > 0 && startedTopics.includes(item.topic)))
+    .sort((a, b) => b.count - a.count);
+
+  const handleTargeted = async (topic: string) => {
+    setTargetBusy(topic);
+    try {
+      await startTargeted(topic);
+      navigate('/play');
+    } catch (error) {
+      showToast(error instanceof Error ? error.message : '无法开始靶向突破');
+    } finally {
+      setTargetBusy(null);
+    }
+  };
 
   const handleNode = (level: Level) => {
     if (!isLevelUnlocked(level, profile, levels, best)) {
@@ -104,6 +148,41 @@ export function MapPage(): JSX.Element {
           进入社区题库 →
         </button>
       </section>
+
+      {targetedTopics.length > 0 ? (
+        <section className="targeted-zone">
+          <div className="targeted-heading">
+            <div>
+              <span className="card-eyebrow">靶向突破 · 由错题动态生成</span>
+              <h2>把同一个知识点的错题一次打穿</h2>
+              <p>
+                当某个知识点的未归档错题达到 3 道，这里会出现靶向关；优先抽该知识点的错题，
+                不足 5 题用同章节题补足。全部归档后节点自动消失。
+              </p>
+            </div>
+            <span className="targeted-count">{targetedTopics.length} 个知识点</span>
+          </div>
+          <div className="targeted-grid">
+            {targetedTopics.map((target) => (
+              <article className="targeted-card" key={target.topic}>
+                <div className="targeted-card-top">
+                  <span>第 {target.chapter} 章</span>
+                  <span>{target.count} 道未归档</span>
+                </div>
+                <h3>{target.topic}</h3>
+                <p>不计入主线星级，按错题试炼规则结算 XP。</p>
+                <button
+                  className="button primary small"
+                  disabled={targetBusy !== null}
+                  onClick={() => void handleTargeted(target.topic)}
+                >
+                  {targetBusy === target.topic ? '正在组卷…' : '进入靶向关 →'}
+                </button>
+              </article>
+            ))}
+          </div>
+        </section>
+      ) : null}
 
       {profile.pendingUnlocks.length > 0 ? (
         <section className="unlock-banner">

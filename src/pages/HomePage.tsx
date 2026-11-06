@@ -14,6 +14,7 @@ import {
   recommendNextLevel,
 } from '../domain/rules';
 import { FLASHCARDS } from '../data/flashcards';
+import { EXAM_DURATION_MINUTES, EXAM_TOTAL_QUESTIONS } from '../domain/exam';
 import { formatDateTime, formatDuration, localDateKey } from '../lib/date';
 import { navigate } from '../lib/router';
 import { useAppStore } from '../store/useAppStore';
@@ -257,6 +258,24 @@ export function HomePage(): JSX.Element {
             <span className="button-arrow">→</span>
           </button>
           <span className="small-note">本地 SM-2 · 不上传</span>
+        </div>
+      </section>
+
+      <section className="home-exam">
+        <div>
+          <span className="card-eyebrow">期末模拟考场 · 独立于主线</span>
+          <h2>{EXAM_TOTAL_QUESTIONS} 题，{EXAM_DURATION_MINUTES} 分钟，一次完整预测</h2>
+          <p>
+            5 选择 + 5 判断 + 6 解答，按简单/中等/难三档随机组卷；考试中不显示对错与解析，
+            交卷后生成总分、正确率、用时和错题报告。答错题进入错题本，不改变章节星级。
+          </p>
+        </div>
+        <div className="home-exam-actions">
+          <button className="button primary" onClick={() => navigate('/exam')}>
+            进入模拟考场
+            <span className="button-arrow">→</span>
+          </button>
+          <span className="small-note">支持自由跳题 / 自动交卷</span>
         </div>
       </section>
 

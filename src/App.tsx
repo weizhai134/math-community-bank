@@ -11,6 +11,9 @@ import { LevelDetailPage } from './pages/LevelDetailPage';
 import { ResultPage } from './pages/ResultPage';
 import { WrongBookPage } from './pages/WrongBookPage';
 import { FlashcardsPage } from './pages/FlashcardsPage';
+import { ExamPage } from './pages/ExamPage';
+import { ExamPlayPage } from './pages/ExamPlayPage';
+import { ExamResultPage } from './pages/ExamResultPage';
 import { CommunityListPage } from './pages/CommunityListPage';
 import { CommunityUploadPage } from './pages/CommunityUploadPage';
 import { CommunityPlayPage } from './pages/CommunityPlayPage';
@@ -123,6 +126,12 @@ function RouteView({ route }: { route: Route }): JSX.Element {
       return <WrongBookPage />;
     case 'flashcards':
       return <FlashcardsPage />;
+    case 'exam':
+      return <ExamPage />;
+    case 'examPlay':
+      return <ExamPlayPage />;
+    case 'examResult':
+      return <ExamResultPage />;
     case 'community':
       return <CommunityListPage />;
     case 'communityUpload':
@@ -177,7 +186,7 @@ export default function App(): JSX.Element {
     );
   }
 
-  if (route.name === 'play' || route.name === 'communityPlay') {
+  if (route.name === 'play' || route.name === 'communityPlay' || route.name === 'examPlay') {
     return (
       <>
         <RouteView route={route} />

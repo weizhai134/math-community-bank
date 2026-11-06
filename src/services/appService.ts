@@ -1,4 +1,4 @@
-import { db } from '../db/db';
+import { db, getSetting, setSetting } from '../db/db';
 import { seedDatabase } from '../db/seed';
 import { CHAPTERS, STORAGE_KEYS, TIER_ORDER } from '../domain/constants';
 import {
@@ -250,6 +250,74 @@ export function trialLevel(questions: Question[]): Level {
     targetSec: 600,
     brief: '从错题本抽取的复习关卡',
   };
+}
+
+export const TARGETED_TOPICS_KEY = 'targetedTopics';
+
+/**
+ * 靶向突破：优先取该 topic 的活跃错题；不足 5 题时用同章节题目补足。
+ * 返回的 items 只包含真正来自错题本的题，避免把变式题误当成错题结算。
+ */
+export function buildTargetedInput(
+  wrongItems: WrongItem[],
+  questions: Question[],
+  topic: string,
+): { level: Level; questions: Question[]; items: WrongItem[] } {
+  const active = wrongItems
+    .filter((item) => !item.archived && item.topic === topic)
+    .sort((a, b) => a.nextReviewAt - b.nextReviewAt);
+  const questionMap = new Map(questions.map((question) => [question.id, question]));
+  const picked: Question[] = [];
+  const pickedWrong: WrongItem[] = [];
+  for (const item of active) {
+    if (picked.length >= 5) break;
+    const question = questionMap.get(item.questionId) ?? item.questionSnapshot;
+    if (picked.some((existing) => existing.id === question.id)) continue;
+    picked.push(question);
+    pickedWrong.push(item);
+  }
+
+  const chapter = picked[0]?.chapter ?? active[0]?.chapter ?? 1;
+  const selectedIds = new Set(picked.map((question) => question.id));
+  const sameChapter = questions.filter(
+    (question) => question.chapter === chapter && !selectedIds.has(question.id),
+  );
+  const variants = [
+    ...shuffle(sameChapter.filter((question) => question.topic === topic)),
+    ...shuffle(sameChapter.filter((question) => question.topic !== topic)),
+  ];
+  for (const question of variants) {
+    if (picked.length >= 5) break;
+    if (selectedIds.has(question.id)) continue;
+    picked.push(question);
+    selectedIds.add(question.id);
+  }
+  if (picked.length < 5) {
+    for (const question of shuffle(questions)) {
+      if (picked.length >= 5) break;
+      if (selectedIds.has(question.id)) continue;
+      picked.push(question);
+      selectedIds.add(question.id);
+    }
+  }
+  if (picked.length === 0) throw new Error('这个知识点暂时没有可抽取的题目');
+
+  const level: Level = {
+    id: `targeted-${chapter}-${topic}`,
+    chapter,
+    tier: 'trial',
+    name: `靶向突破 · ${topic}`,
+    questionIds: picked.map((question) => question.id),
+    targetSec: 600,
+    brief: '由当前知识点的错题动态重组',
+  };
+  return { level, questions: picked, items: pickedWrong };
+}
+
+export async function markTargetedStarted(topic: string): Promise<void> {
+  const current = (await getSetting<string[]>(TARGETED_TOPICS_KEY)) ?? [];
+  if (current.includes(topic)) return;
+  await setSetting(TARGETED_TOPICS_KEY, [...current, topic]);
 }
 
 export interface FinalizeResult {
@@ -505,6 +573,8 @@ export async function finalizeRun(
           scratchImage && item.earned < 1 ? { ...next, scratchImage } : next;
         if (isTrial) {
           if (!wrong) {
+            // 靶向突破会混入同章节变式题；答对的变式题不应该凭空进入错题本。
+            if (item.earned === 1) continue;
             const created = applyReview(createWrongItem(item.question, now), item.earned === 1 ? 5 : item.earned === 0.5 ? 3 : 1, now);
             updatedWrongItems.push(withScratch(created));
             continue;

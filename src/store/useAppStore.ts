@@ -15,11 +15,13 @@ import {
   abandonRun,
   advanceRun,
   applyAnswer,
+  buildTargetedInput,
   buildTrialCandidate,
   confirmChapterUnlock,
   createRun,
   finalizeRun,
   loadSnapshot,
+  markTargetedStarted,
   persistActiveRun,
   reviewWrongItem,
   savePendingReview,
@@ -51,6 +53,7 @@ interface AppStore {
   showToast: (message: string) => void;
   startLevel: (levelId: string) => Promise<ActiveRun>;
   startTrial: () => Promise<ActiveRun>;
+  startTargeted: (topic: string) => Promise<ActiveRun>;
   submitCurrent: (response: string | boolean) => Promise<number | null>;
   nextQuestion: () => Promise<void>;
   resetQuestionTimer: () => Promise<void>;
@@ -135,6 +138,18 @@ export const useAppStore = create<AppStore>((set, get) => ({
     if (candidate.questions.length === 0) throw new Error('错题本中暂无可试炼的题目');
     const level = trialLevel(candidate.questions);
     const run = await createRun(level, candidate.questions, candidate.items);
+    set({ activeRun: run });
+    return run;
+  },
+
+  startTargeted: async (topic) => {
+    const { questions, wrongItems, activeRun, pendingReview } = get();
+    if (pendingReview) throw new Error('还有待结算的关卡，请先完成结算');
+    if (activeRun) throw new Error('已有未完成关卡，请先继续或退出当前关卡');
+    const input = buildTargetedInput(wrongItems, questions, topic);
+    if (input.items.length === 0) throw new Error('这个知识点的错题已经清空');
+    const run = await createRun(input.level, input.questions, input.items);
+    await markTargetedStarted(topic);
     set({ activeRun: run });
     return run;
   },
