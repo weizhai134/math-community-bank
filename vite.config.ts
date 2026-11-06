@@ -153,6 +153,8 @@ export default defineConfig(() => {
             if (!id.includes('node_modules')) return undefined;
             if (id.includes('katex')) return 'katex';
             if (id.includes('dexie')) return 'dexie';
+            // PDF 依赖由 wrongBookExport 动态 import，交给 Rollup 单独切异步 chunk。
+            if (id.includes('html2canvas') || id.includes('jspdf')) return undefined;
             if (
               id.includes('react') ||
               id.includes('scheduler') ||

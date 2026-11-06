@@ -7,6 +7,7 @@ import { useAppStore } from '../store/useAppStore';
 import { MathText } from '../components/MathText';
 import { ChoiceOptions, JudgeButtons, SolutionInput } from '../components/AnswerInputs';
 import { ConfirmDialog } from '../components/Modal';
+import { FormulaCheatSheet } from '../components/FormulaCheatSheet';
 import { Scratchpad, type ScratchpadHandle } from '../components/Scratchpad';
 import { DifficultyBadge } from '../components/ui';
 
@@ -108,6 +109,7 @@ export function PlayPage(): JSX.Element {
   const [exitOpen, setExitOpen] = useState(false);
   const [earlyOpen, setEarlyOpen] = useState(false);
   const [scratchOpen, setScratchOpen] = useState(false);
+  const [cheatOpen, setCheatOpen] = useState(false);
   const scratchRef = useRef<ScratchpadHandle>(null);
   const resetKey = useRef<string>('');
 
@@ -299,8 +301,18 @@ export function PlayPage(): JSX.Element {
               : activeRun.levelName}
           </strong>
         </div>
-        <div className="play-progress-text">
-          第 {currentIndex + 1} / {totalQuestions} 题
+        <div className="play-header-right">
+          <div className="play-progress-text">
+            第 {currentIndex + 1} / {totalQuestions} 题
+          </div>
+          <button
+            type="button"
+            className="formula-trigger"
+            onClick={() => setCheatOpen(true)}
+            aria-label="打开公式本"
+          >
+            ∑ 公式本
+          </button>
         </div>
       </header>
 
@@ -454,6 +466,8 @@ export function PlayPage(): JSX.Element {
           void saveScratchImage(currentQuestion.id, dataUrl);
         }}
       />
+
+      <FormulaCheatSheet open={cheatOpen} onClose={() => setCheatOpen(false)} />
     </div>
   );
 }

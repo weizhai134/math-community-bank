@@ -1,4 +1,6 @@
+import { useRef } from 'react';
 import type { QuestionOption } from '../domain/types';
+import { MathKeyboard } from './MathKeyboard';
 import { MathText } from './MathText';
 
 export function ChoiceOptions({
@@ -86,10 +88,28 @@ export function SolutionInput({
   inputId?: string;
   placeholder?: string;
 }): JSX.Element {
+  const textareaRef = useRef<HTMLTextAreaElement>(null);
+
+  const handleInsert = (text: string, caret: number) => {
+    const textarea = textareaRef.current;
+    const start = textarea?.selectionStart ?? value.length;
+    const end = textarea?.selectionEnd ?? start;
+    const next = `${value.slice(0, start)}${text}${value.slice(end)}`;
+    onChange(next);
+    requestAnimationFrame(() => {
+      const element = textareaRef.current;
+      if (!element) return;
+      element.focus();
+      const position = start + caret;
+      element.setSelectionRange(position, position);
+    });
+  };
+
   return (
     <div className="solution-area">
       <label htmlFor={inputId}>你的解答</label>
       <textarea
+        ref={textareaRef}
         id={inputId}
         value={value}
         onChange={(event) => onChange(event.target.value)}
@@ -97,7 +117,18 @@ export function SolutionInput({
         disabled={disabled}
         rows={8}
       />
-      <span className="input-hint">支持键盘输入；Ctrl / ⌘ + Enter 提交。Enter 在文本框内换行。</span>
+      <span className="input-hint">
+        支持键盘输入；Ctrl / ⌘ + Enter 提交。Enter 在文本框内换行。
+      </span>
+      <MathKeyboard onInsert={handleInsert} disabled={disabled} />
+      {value.includes('$') ? (
+        <div className="solution-preview">
+          <span className="solution-preview-label">公式预览</span>
+          <MathText as="div" className="solution-preview-body">
+            {value}
+          </MathText>
+        </div>
+      ) : null}
     </div>
   );
 }

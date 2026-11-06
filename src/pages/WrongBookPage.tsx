@@ -8,6 +8,7 @@ import { useAppStore } from '../store/useAppStore';
 import { MathText } from '../components/MathText';
 import { Modal } from '../components/Modal';
 import { DifficultyBadge, ProgressBar } from '../components/ui';
+import { exportWrongBookPdf } from '../services/wrongBookExport';
 
 function intervalText(days: number): string {
   if (days < 1 / 24) return `${Math.max(1, Math.round(days * 24 * 60))} 分钟`;
@@ -41,6 +42,7 @@ export function WrongBookPage(): JSX.Element {
   const [tab, setTab] = useState<'active' | 'archived'>('active');
   const [busyId, setBusyId] = useState<string | null>(null);
   const [scratchItem, setScratchItem] = useState<WrongItem | null>(null);
+  const [exporting, setExporting] = useState(false);
 
   useEffect(() => {
     // 社区练习会直接写入错题本；进入页面时重新读一次，避免看到启动时的旧快照。
@@ -102,6 +104,22 @@ export function WrongBookPage(): JSX.Element {
       navigate('/play');
     } catch (error) {
       showToast(error instanceof Error ? error.message : '无法开始错题试炼');
+    }
+  };
+
+  const handleExport = async () => {
+    if (filtered.length === 0 || exporting) return;
+    setExporting(true);
+    try {
+      const scope = `${tab === 'active' ? '复习中' : '已归档'} · ${
+        chapterFilter === 'all' ? '全部章节' : `第 ${chapterFilter} 章`
+      }`;
+      await exportWrongBookPdf(filtered, scope);
+      showToast(`已导出 ${filtered.length} 道错题 PDF`);
+    } catch (error) {
+      showToast(error instanceof Error ? error.message : 'PDF 导出失败');
+    } finally {
+      setExporting(false);
     }
   };
 
@@ -216,6 +234,14 @@ export function WrongBookPage(): JSX.Element {
             已归档
           </button>
         </div>
+        <button
+          type="button"
+          className="button ghost wrong-export"
+          disabled={filtered.length === 0 || exporting}
+          onClick={() => void handleExport()}
+        >
+          {exporting ? '正在生成 PDF…' : `导出当前错题 (${filtered.length})`}
+        </button>
       </div>
 
       {filtered.length === 0 ? (

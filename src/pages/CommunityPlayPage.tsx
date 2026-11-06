@@ -21,6 +21,7 @@ import { useAppStore } from '../store/useAppStore';
 import { MathText } from '../components/MathText';
 import { ChoiceOptions, JudgeButtons, SolutionInput } from '../components/AnswerInputs';
 import { ConfirmDialog } from '../components/Modal';
+import { FormulaCheatSheet } from '../components/FormulaCheatSheet';
 import { Scratchpad, type ScratchpadHandle } from '../components/Scratchpad';
 import { DifficultyBadge } from '../components/ui';
 
@@ -41,6 +42,7 @@ export function CommunityPlayPage(): JSX.Element {
   const [notice, setNotice] = useState<string | null>(null);
   const [exitOpen, setExitOpen] = useState(false);
   const [scratchOpen, setScratchOpen] = useState(false);
+  const [cheatOpen, setCheatOpen] = useState(false);
   const timerKey = useRef('');
   const runRef = useRef<CommunityRun | null>(null);
   const scratchRef = useRef<ScratchpadHandle>(null);
@@ -333,8 +335,18 @@ export function CommunityPlayPage(): JSX.Element {
           <span>社区题 · 独立练习</span>
           <strong>随机 5 题</strong>
         </div>
-        <div className="play-progress-text">
-          第 {run.index + 1} / {run.questionIds.length} 题
+        <div className="play-header-right">
+          <div className="play-progress-text">
+            第 {run.index + 1} / {run.questionIds.length} 题
+          </div>
+          <button
+            type="button"
+            className="formula-trigger"
+            onClick={() => setCheatOpen(true)}
+            aria-label="打开公式本"
+          >
+            ∑ 公式本
+          </button>
         </div>
       </header>
 
@@ -448,6 +460,8 @@ export function CommunityPlayPage(): JSX.Element {
           void saveScratch(currentQuestion.id, dataUrl);
         }}
       />
+
+      <FormulaCheatSheet open={cheatOpen} onClose={() => setCheatOpen(false)} />
     </div>
   );
 }
