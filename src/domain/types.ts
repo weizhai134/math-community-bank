@@ -59,6 +59,8 @@ export interface ActiveRun {
   currentIndex: number;
   startedAt: number;
   answers: Record<string, RunAnswer>;
+  /** 题目 id -> 当时草稿画布的 Base64 PNG。仅在用户真正画过时存在。 */
+  scratchImages?: Record<string, string>;
   combo: number;
   maxCombo: number;
   questionStartedAt: number;
@@ -115,6 +117,8 @@ export interface LevelAnswer {
   earned: number;
   timeSpentSec: number;
   questionSnapshot: Question;
+  /** 做错/部分对时保存的草稿画布，Base64 PNG；做对不保存。 */
+  scratchImage?: string;
 }
 
 export interface WrongItem {
@@ -140,6 +144,8 @@ export interface WrongItem {
   source?: 'mainline' | 'community';
   /** 社区错题对应的远端 community_questions.id。 */
   communityId?: number;
+  /** 这道错题最近一次作答时保存的草稿画布，Base64 PNG。 */
+  scratchImage?: string;
 }
 
 export interface Profile {

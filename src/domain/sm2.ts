@@ -20,6 +20,12 @@ export const QUALITY_LABEL: Record<ReviewQuality, string> = {
   5: '记住',
 };
 
+/** 简化 SM-2 的难度系数更新；错题本和公式闪卡共用同一套评分公式。 */
+export function nextEaseFactor(easeFactor: number, quality: ReviewQuality): number {
+  const delta = 0.1 - (5 - quality) * (0.08 + (5 - quality) * 0.02);
+  return Math.max(1.3, easeFactor + delta);
+}
+
 export function initialWrongMinutes(type: Question['type']): number {
   return INITIAL_MINUTES[type];
 }
@@ -66,8 +72,7 @@ export function applyReview(
   now = Date.now(),
 ): WrongItem {
   const q = quality;
-  const easeDelta = 0.1 - (5 - q) * (0.08 + (5 - q) * 0.02);
-  const easeFactor = Math.max(1.3, item.easeFactor + easeDelta);
+  const easeFactor = nextEaseFactor(item.easeFactor, q);
 
   let interval: number;
   if (q < 3) {

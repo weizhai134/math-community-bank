@@ -1,5 +1,6 @@
 import Dexie, { type EntityTable } from 'dexie';
 import type { CommunityCacheRecord } from '../domain/communityTypes';
+import type { FlashcardState } from '../domain/flashcards';
 import type {
   Level,
   LevelAnswer,
@@ -19,6 +20,7 @@ export class GaoshuDatabase extends Dexie {
   profile!: EntityTable<Profile, 'id'>;
   settings!: EntityTable<SettingRecord, 'key'>;
   communityQuestions!: EntityTable<CommunityCacheRecord, 'id'>;
+  flashcardStates!: EntityTable<FlashcardState, 'id'>;
 
   constructor() {
     super('gaoshu-quest');
@@ -36,6 +38,10 @@ export class GaoshuDatabase extends Dexie {
     // 第二阶段：只新增社区题缓存表，主线表结构不变。
     this.version(2).stores({
       communityQuestions: 'id, chapter, difficulty, type, fetchedAt',
+    });
+    // 第三阶段：公式闪卡的本地 SM-2 状态；只加表，不改已有表。
+    this.version(3).stores({
+      flashcardStates: 'id, nextReviewAt',
     });
   }
 }

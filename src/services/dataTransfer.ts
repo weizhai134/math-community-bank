@@ -2,6 +2,7 @@ import { validateBank } from '../data';
 import { db } from '../db/db';
 import { STORAGE_KEYS, TIER_ORDER } from '../domain/constants';
 import type { CommunityCacheRecord } from '../domain/communityTypes';
+import type { FlashcardState } from '../domain/flashcards';
 import type {
   Level,
   LevelAnswer,
@@ -35,6 +36,8 @@ interface BackupPayload {
     settings: SettingRecord[];
     /** 第二阶段新增；旧备份没有该字段也能恢复。 */
     communityQuestions?: CommunityCacheRecord[];
+    /** 第三阶段新增；旧备份没有该字段也能恢复。 */
+    flashcardStates?: FlashcardState[];
   };
 }
 
@@ -86,17 +89,27 @@ export function buildBackup(data: BackupPayload['data']): BackupPayload {
 }
 
 export async function loadBackupData(): Promise<BackupPayload['data']> {
-  const [questions, levels, levelAttempts, levelAnswers, wrongItems, profile, settings, communityQuestions] =
-    await Promise.all([
-      db.questions.toArray(),
-      db.levels.toArray(),
-      db.levelAttempts.toArray(),
-      db.levelAnswers.toArray(),
-      db.wrongItems.toArray(),
-      db.profile.get('me'),
-      db.settings.toArray(),
-      db.communityQuestions.toArray(),
-    ]);
+  const [
+    questions,
+    levels,
+    levelAttempts,
+    levelAnswers,
+    wrongItems,
+    profile,
+    settings,
+    communityQuestions,
+    flashcardStates,
+  ] = await Promise.all([
+    db.questions.toArray(),
+    db.levels.toArray(),
+    db.levelAttempts.toArray(),
+    db.levelAnswers.toArray(),
+    db.wrongItems.toArray(),
+    db.profile.get('me'),
+    db.settings.toArray(),
+    db.communityQuestions.toArray(),
+    db.flashcardStates.toArray(),
+  ]);
   if (!profile) throw new Error('用户档案不存在，无法导出备份');
   return {
     questions,
@@ -107,6 +120,7 @@ export async function loadBackupData(): Promise<BackupPayload['data']> {
     profile,
     settings,
     communityQuestions,
+    flashcardStates,
   };
 }
 
@@ -173,6 +187,9 @@ export async function restoreBackup(raw: unknown): Promise<void> {
   const communityQuestions = Array.isArray(data.communityQuestions)
     ? (data.communityQuestions as CommunityCacheRecord[])
     : [];
+  const flashcardStates = Array.isArray(data.flashcardStates)
+    ? (data.flashcardStates as FlashcardState[])
+    : [];
 
   await db.transaction(
     'rw',
@@ -185,6 +202,7 @@ export async function restoreBackup(raw: unknown): Promise<void> {
       db.profile,
       db.settings,
       db.communityQuestions,
+      db.flashcardStates,
     ],
     async () => {
       await Promise.all([
@@ -196,6 +214,7 @@ export async function restoreBackup(raw: unknown): Promise<void> {
         db.profile.clear(),
         db.settings.clear(),
         db.communityQuestions.clear(),
+        db.flashcardStates.clear(),
       ]);
       await db.questions.bulkPut(questions);
       await db.levels.bulkPut(levels);
@@ -205,6 +224,7 @@ export async function restoreBackup(raw: unknown): Promise<void> {
       await db.profile.put({ ...profile, updatedAt: Date.now() });
       if (settings.length > 0) await db.settings.bulkPut(settings);
       if (communityQuestions.length > 0) await db.communityQuestions.bulkPut(communityQuestions);
+      if (flashcardStates.length > 0) await db.flashcardStates.bulkPut(flashcardStates);
     },
   );
   // 防止备份中的日期格式与当前实现不一致。

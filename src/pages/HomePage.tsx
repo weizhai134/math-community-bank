@@ -13,6 +13,7 @@ import {
   recentAttempt,
   recommendNextLevel,
 } from '../domain/rules';
+import { FLASHCARDS } from '../data/flashcards';
 import { formatDateTime, formatDuration, localDateKey } from '../lib/date';
 import { navigate } from '../lib/router';
 import { useAppStore } from '../store/useAppStore';
@@ -239,6 +240,24 @@ export function HomePage(): JSX.Element {
             </>
           )}
         </article>
+      </section>
+
+      <section className="home-flashcards">
+        <div>
+          <span className="card-eyebrow">公式闪卡 · 每天 5 分钟</span>
+          <h2>把公式翻过来，才算真的记住</h2>
+          <p>
+            内置 {FLASHCARDS.length} 张高数上册核心公式卡：等价无穷小、导数表、积分表、
+            泰勒展开与中值定理条件。点卡片翻面，按“没记住 / 记住了”自动安排下次复习。
+          </p>
+        </div>
+        <div className="home-flashcards-actions">
+          <button className="button primary" onClick={() => navigate('/flashcards')}>
+            开始公式闪卡
+            <span className="button-arrow">→</span>
+          </button>
+          <span className="small-note">本地 SM-2 · 不上传</span>
+        </div>
       </section>
 
       <section className="home-community">

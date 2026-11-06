@@ -10,6 +10,7 @@ import { MapPage } from './pages/MapPage';
 import { LevelDetailPage } from './pages/LevelDetailPage';
 import { ResultPage } from './pages/ResultPage';
 import { WrongBookPage } from './pages/WrongBookPage';
+import { FlashcardsPage } from './pages/FlashcardsPage';
 import { CommunityListPage } from './pages/CommunityListPage';
 import { CommunityUploadPage } from './pages/CommunityUploadPage';
 import { CommunityPlayPage } from './pages/CommunityPlayPage';
@@ -24,6 +25,7 @@ function Header({ route }: { route: Route }): JSX.Element {
   const rank = profile ? rankForXp(profile.totalXp) : null;
   const mapActive = route.name === 'map' || route.name === 'level';
   const wrongActive = route.name === 'wrong';
+  const flashcardsActive = route.name === 'flashcards';
   const communityActive = route.name.startsWith('community');
 
   return (
@@ -46,6 +48,12 @@ function Header({ route }: { route: Route }): JSX.Element {
           <button className={wrongActive ? 'active' : ''} onClick={() => navigate('/wrong')}>
             错题本
             {due > 0 ? <span className="nav-dot" aria-label={`${due} 道到期`} /> : null}
+          </button>
+          <button
+            className={flashcardsActive ? 'active' : ''}
+            onClick={() => navigate('/flashcards')}
+          >
+            闪卡
           </button>
           <button
             className={communityActive ? 'active' : ''}
@@ -113,6 +121,8 @@ function RouteView({ route }: { route: Route }): JSX.Element {
       return <ResultPage id={route.id} />;
     case 'wrong':
       return <WrongBookPage />;
+    case 'flashcards':
+      return <FlashcardsPage />;
     case 'community':
       return <CommunityListPage />;
     case 'communityUpload':

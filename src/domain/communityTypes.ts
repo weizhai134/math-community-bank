@@ -61,6 +61,8 @@ export interface CommunityRunAnswer {
   timeSpentSec: number;
   autoCorrect: boolean | null;
   selfGrade: Grade | null;
+  /** 做错/部分对时保存的草稿画布，Base64 PNG。 */
+  scratchImage?: string;
 }
 
 export interface CommunityRun {
@@ -87,6 +89,7 @@ export interface CommunityResultItem {
   autoCorrect: boolean | null;
   timeSpentSec: number;
   optionsOrder: string[];
+  scratchImage?: string;
 }
 
 export interface CommunityResult {

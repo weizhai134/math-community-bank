@@ -54,6 +54,7 @@ interface AppStore {
   submitCurrent: (response: string | boolean) => Promise<number | null>;
   nextQuestion: () => Promise<void>;
   resetQuestionTimer: () => Promise<void>;
+  saveScratchImage: (questionId: string, dataUrl: string | null) => Promise<void>;
   prepareSettlement: () => Promise<SettlementReady>;
   finalizePending: (grades: Record<string, Grade>) => Promise<string>;
   abandonActive: () => Promise<string>;
@@ -166,6 +167,17 @@ export const useAppStore = create<AppStore>((set, get) => ({
     const current = activeRun.answers[activeRun.questionIds[activeRun.currentIndex]];
     if (current?.submitted) return;
     const updated = { ...activeRun, questionStartedAt: Date.now() };
+    await persistActiveRun(updated);
+    set({ activeRun: updated });
+  },
+
+  saveScratchImage: async (questionId, dataUrl) => {
+    const activeRun = get().activeRun;
+    if (!activeRun) return;
+    const scratchImages = { ...(activeRun.scratchImages ?? {}) };
+    if (dataUrl) scratchImages[questionId] = dataUrl;
+    else delete scratchImages[questionId];
+    const updated = { ...activeRun, scratchImages };
     await persistActiveRun(updated);
     set({ activeRun: updated });
   },

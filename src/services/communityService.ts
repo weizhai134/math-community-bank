@@ -407,6 +407,20 @@ export function setCommunitySelfGrade(run: CommunityRun, questionId: number, gra
   };
 }
 
+export function setCommunityScratch(
+  run: CommunityRun,
+  questionId: number,
+  dataUrl: string | null,
+): CommunityRun {
+  const key = String(questionId);
+  const existing = run.answers[key];
+  if (!existing) return run;
+  const next = { ...existing };
+  if (dataUrl) next.scratchImage = dataUrl;
+  else delete next.scratchImage;
+  return { ...run, answers: { ...run.answers, [key]: next } };
+}
+
 export function communityRunNeedsSelfGrade(run: CommunityRun): CommunityQuestion[] {
   return run.questionIds
     .map((id) => run.questions[String(id)])
@@ -454,6 +468,7 @@ export async function finishCommunityRun(): Promise<CommunityResult> {
       autoCorrect: graded.autoCorrect,
       timeSpentSec: answer?.timeSpentSec ?? 0,
       optionsOrder: run.optionOrders[String(id)] ?? [],
+      scratchImage: answer?.scratchImage,
     };
   });
 
@@ -485,12 +500,14 @@ export async function finishCommunityRun(): Promise<CommunityResult> {
     const existing = await db.wrongItems.get(id);
     const base = existing ?? createWrongItem(mapped, now);
     const updated = existing ? recordWrongAgain(existing, now) : base;
-    await db.wrongItems.put({
+    const next: typeof updated = {
       ...updated,
       source: 'community',
       communityId: item.questionId,
       questionSnapshot: mapped,
-    });
+    };
+    if (item.earned < 1 && item.scratchImage) next.scratchImage = item.scratchImage;
+    await db.wrongItems.put(next);
   }
 
   const result: CommunityResult = {

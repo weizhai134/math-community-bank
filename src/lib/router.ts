@@ -7,6 +7,7 @@ export type Route =
   | { name: 'play' }
   | { name: 'result'; id: string }
   | { name: 'wrong' }
+  | { name: 'flashcards' }
   | { name: 'community' }
   | { name: 'communityUpload' }
   | { name: 'communityMine' }
@@ -21,6 +22,7 @@ export function parseRoute(hash: string): Route {
   if (head === 'map') return { name: 'map' };
   if (head === 'play') return { name: 'play' };
   if (head === 'wrong') return { name: 'wrong' };
+  if (head === 'flashcards') return { name: 'flashcards' };
   if (head === 'community') {
     if (!second) return { name: 'community' };
     if (second === 'upload') return { name: 'communityUpload' };

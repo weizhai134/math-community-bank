@@ -6,6 +6,7 @@ import { formatDateTime, formatShortDate } from '../lib/date';
 import { navigate } from '../lib/router';
 import { useAppStore } from '../store/useAppStore';
 import { MathText } from '../components/MathText';
+import { Modal } from '../components/Modal';
 import { DifficultyBadge, ProgressBar } from '../components/ui';
 
 function intervalText(days: number): string {
@@ -39,6 +40,7 @@ export function WrongBookPage(): JSX.Element {
   const [chapterFilter, setChapterFilter] = useState<number | 'all'>('all');
   const [tab, setTab] = useState<'active' | 'archived'>('active');
   const [busyId, setBusyId] = useState<string | null>(null);
+  const [scratchItem, setScratchItem] = useState<WrongItem | null>(null);
 
   useEffect(() => {
     // 社区练习会直接写入错题本；进入页面时重新读一次，避免看到启动时的旧快照。
@@ -303,6 +305,16 @@ export function WrongBookPage(): JSX.Element {
                   </div>
                 </details>
 
+                {item.scratchImage ? (
+                  <button
+                    type="button"
+                    className="button small ghost scratch-open"
+                    onClick={() => setScratchItem(item)}
+                  >
+                    查看当时的草稿
+                  </button>
+                ) : null}
+
                 <div className="wrong-actions">
                   {!item.archived ? (
                     <>
@@ -350,6 +362,21 @@ export function WrongBookPage(): JSX.Element {
         复习调度为简化 SM-2：忘记 = 1，模糊 = 3，记住 = 5；再次答错会降低难度系数。
         {profile.pendingUnlocks.length > 0 ? ' 章节地图还有待确认的解锁。' : ''}
       </footer>
+
+      <Modal
+        open={Boolean(scratchItem)}
+        title="当时的草稿"
+        onClose={() => setScratchItem(null)}
+        wide
+      >
+        {scratchItem?.scratchImage ? (
+          <img
+            className="scratch-preview-image"
+            src={scratchItem.scratchImage}
+            alt={`${scratchItem.topic} 作答时的草稿`}
+          />
+        ) : null}
+      </Modal>
     </div>
   );
 }

@@ -12,6 +12,7 @@ import {
   finishCommunityRun,
   loadCommunityRun,
   saveCommunityRun,
+  setCommunityScratch,
   setCommunitySelfGrade,
 } from '../services/communityService';
 import { formatClock, formatDuration } from '../lib/date';
@@ -20,6 +21,7 @@ import { useAppStore } from '../store/useAppStore';
 import { MathText } from '../components/MathText';
 import { ChoiceOptions, JudgeButtons, SolutionInput } from '../components/AnswerInputs';
 import { ConfirmDialog } from '../components/Modal';
+import { Scratchpad, type ScratchpadHandle } from '../components/Scratchpad';
 import { DifficultyBadge } from '../components/ui';
 
 type ResponseValue = string | boolean | null;
@@ -38,8 +40,10 @@ export function CommunityPlayPage(): JSX.Element {
   const [busy, setBusy] = useState(false);
   const [notice, setNotice] = useState<string | null>(null);
   const [exitOpen, setExitOpen] = useState(false);
+  const [scratchOpen, setScratchOpen] = useState(false);
   const timerKey = useRef('');
   const runRef = useRef<CommunityRun | null>(null);
+  const scratchRef = useRef<ScratchpadHandle>(null);
 
   useEffect(() => {
     let active = true;
@@ -106,6 +110,12 @@ export function CommunityPlayPage(): JSX.Element {
     await saveCommunityRun(next);
   };
 
+  const saveScratch = async (questionId: number, dataUrl: string | null) => {
+    const current = runRef.current;
+    if (!current) return;
+    await persist(setCommunityScratch(current, questionId, dataUrl));
+  };
+
   /**
    * 自评可能被连续快速点击；必须基于 ref 里的最新快照计算，
    * 否则两次点击会各自从旧 run 出发、后一次覆盖前一次。
@@ -125,10 +135,14 @@ export function CommunityPlayPage(): JSX.Element {
     }
     setBusy(true);
     try {
-      const updated = applyCommunityAnswer(
-        run,
-        currentQuestion.type === 'solution' ? String(response).trim() : (response as string | boolean),
-      );
+      const value =
+        currentQuestion.type === 'solution'
+          ? String(response).trim()
+          : (response as string | boolean);
+      const current = runRef.current ?? run;
+      const image = scratchRef.current?.getImage() ?? null;
+      let updated = applyCommunityAnswer(current, value);
+      updated = setCommunityScratch(updated, currentQuestion.id, image);
       await persist(updated);
       setNow(Date.now());
     } finally {
@@ -140,15 +154,18 @@ export function CommunityPlayPage(): JSX.Element {
     if (!currentQuestion || !currentAnswer || !currentAnswer.submitted || busy) return;
     setBusy(true);
     try {
-      const isLast = run.index >= run.questionIds.length - 1;
+      const current = runRef.current ?? run;
+      const image = scratchRef.current?.getImage() ?? null;
+      const latest = setCommunityScratch(current, currentQuestion.id, image);
+      const isLast = latest.index >= latest.questionIds.length - 1;
       if (!isLast) {
-        await persist(advanceCommunityRun(run));
+        await persist(advanceCommunityRun(latest));
         setNow(Date.now());
         return;
       }
-      const needsSelfGrade = communityRunNeedsSelfGrade(run).length > 0;
+      const needsSelfGrade = communityRunNeedsSelfGrade(latest).length > 0;
       if (needsSelfGrade) {
-        await persist({ ...advanceCommunityRun(run), selfGrading: true });
+        await persist({ ...advanceCommunityRun(latest), selfGrading: true });
         return;
       }
       const result = await finishCommunityRun();
@@ -411,6 +428,26 @@ export function CommunityPlayPage(): JSX.Element {
       >
         <p>退出后本次答题不会获得 XP，也不会写入错题本。</p>
       </ConfirmDialog>
+
+      <button
+        type="button"
+        className="scratch-fab"
+        onClick={() => setScratchOpen((value) => !value)}
+        aria-expanded={scratchOpen}
+      >
+        {scratchOpen ? '收起草稿' : '✎ 草稿纸'}
+      </button>
+
+      <Scratchpad
+        key={currentQuestion.id}
+        ref={scratchRef}
+        open={scratchOpen}
+        onClose={() => setScratchOpen(false)}
+        initialImage={run.answers[String(currentQuestion.id)]?.scratchImage}
+        onChange={(dataUrl) => {
+          void saveScratch(currentQuestion.id, dataUrl);
+        }}
+      />
     </div>
   );
 }

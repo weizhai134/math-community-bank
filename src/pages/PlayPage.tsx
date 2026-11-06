@@ -7,6 +7,7 @@ import { useAppStore } from '../store/useAppStore';
 import { MathText } from '../components/MathText';
 import { ChoiceOptions, JudgeButtons, SolutionInput } from '../components/AnswerInputs';
 import { ConfirmDialog } from '../components/Modal';
+import { Scratchpad, type ScratchpadHandle } from '../components/Scratchpad';
 import { DifficultyBadge } from '../components/ui';
 
 type ResponseValue = string | boolean | null;
@@ -98,6 +99,7 @@ export function PlayPage(): JSX.Element {
   const resetQuestionTimer = useAppStore((state) => state.resetQuestionTimer);
   const prepareSettlement = useAppStore((state) => state.prepareSettlement);
   const abandonActive = useAppStore((state) => state.abandonActive);
+  const saveScratchImage = useAppStore((state) => state.saveScratchImage);
   const showToast = useAppStore((state) => state.showToast);
 
   const [response, setResponse] = useState<ResponseValue>(null);
@@ -105,6 +107,8 @@ export function PlayPage(): JSX.Element {
   const [busy, setBusy] = useState(false);
   const [exitOpen, setExitOpen] = useState(false);
   const [earlyOpen, setEarlyOpen] = useState(false);
+  const [scratchOpen, setScratchOpen] = useState(false);
+  const scratchRef = useRef<ScratchpadHandle>(null);
   const resetKey = useRef<string>('');
 
   const currentQuestionId = activeRun?.questionIds[activeRun.currentIndex];
@@ -192,10 +196,16 @@ export function PlayPage(): JSX.Element {
       ? typeof response === 'string' && response.trim().length > 0
       : response !== null;
 
+  const flushScratch = async () => {
+    const image = scratchRef.current?.getImage() ?? null;
+    await saveScratchImage(currentQuestion.id, image);
+  };
+
   const settle = async () => {
     if (busy) return;
     setBusy(true);
     try {
+      await flushScratch();
       const result = await prepareSettlement();
       navigate(`/result/${result.id}`);
     } catch (error) {
@@ -210,6 +220,7 @@ export function PlayPage(): JSX.Element {
     try {
       const value = currentQuestion.type === 'solution' ? String(response).trim() : response;
       if (value === null) throw new Error('请先作答');
+      await flushScratch();
       await submitCurrent(value);
       setNow(Date.now());
     } catch (error) {
@@ -231,6 +242,7 @@ export function PlayPage(): JSX.Element {
     }
     setBusy(true);
     try {
+      await flushScratch();
       await nextQuestion();
       setResponse(null);
       setNow(Date.now());
@@ -422,6 +434,26 @@ export function PlayPage(): JSX.Element {
           不会自动判分。
         </p>
       </ConfirmDialog>
+
+      <button
+        type="button"
+        className="scratch-fab"
+        onClick={() => setScratchOpen((value) => !value)}
+        aria-expanded={scratchOpen}
+      >
+        {scratchOpen ? '收起草稿' : '✎ 草稿纸'}
+      </button>
+
+      <Scratchpad
+        key={currentQuestion.id}
+        ref={scratchRef}
+        open={scratchOpen}
+        onClose={() => setScratchOpen(false)}
+        initialImage={activeRun.scratchImages?.[currentQuestion.id]}
+        onChange={(dataUrl) => {
+          void saveScratchImage(currentQuestion.id, dataUrl);
+        }}
+      />
     </div>
   );
 }

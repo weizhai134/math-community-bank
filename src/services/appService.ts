@@ -336,6 +336,8 @@ export async function finalizeRun(
             earned,
             timeSpentSec: submitted ? (current?.timeSpentSec ?? 0) : 0,
             questionSnapshot: question,
+            scratchImage:
+              grade !== 'correct' ? run.scratchImages?.[question.id] : undefined,
           },
         });
       }
@@ -498,10 +500,13 @@ export async function finalizeRun(
       const updatedWrongItems: WrongItem[] = [];
       for (const item of answers) {
         const wrong = wrongMap.get(item.question.id);
+        const scratchImage = item.answer.scratchImage;
+        const withScratch = (next: WrongItem): WrongItem =>
+          scratchImage && item.earned < 1 ? { ...next, scratchImage } : next;
         if (isTrial) {
           if (!wrong) {
             const created = applyReview(createWrongItem(item.question, now), item.earned === 1 ? 5 : item.earned === 0.5 ? 3 : 1, now);
-            updatedWrongItems.push(created);
+            updatedWrongItems.push(withScratch(created));
             continue;
           }
           let reviewed = applyReview(
@@ -515,11 +520,10 @@ export async function finalizeRun(
           if (item.earned === 1 && eligibleTrialQuestions.has(item.question.id)) {
             reviewed = withTrialXpAward(reviewed, now);
           }
-          updatedWrongItems.push(reviewed);
+          updatedWrongItems.push(withScratch(reviewed));
         } else if (item.earned < 1) {
-          updatedWrongItems.push(
-            wrong ? recordWrongAgain(wrong, now) : createWrongItem(item.question, now),
-          );
+          const next = wrong ? recordWrongAgain(wrong, now) : createWrongItem(item.question, now);
+          updatedWrongItems.push(withScratch(next));
         }
       }
       if (updatedWrongItems.length > 0) {
@@ -579,6 +583,7 @@ export async function abandonRun(run: ActiveRun): Promise<string> {
           earned: question.type === 'solution' ? 0 : autoCorrect ? 1 : 0,
           timeSpentSec: submitted ? (current?.timeSpentSec ?? 0) : 0,
           questionSnapshot: question,
+          scratchImage: run.scratchImages?.[question.id],
         };
       });
       const attempt: LevelAttempt = {
