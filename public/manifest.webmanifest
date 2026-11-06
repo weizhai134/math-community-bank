@@ -4,8 +4,8 @@
   "description": "同济版高等数学第八版上册：七章、二十一关、一百零五道题，纯本地闯关刷题。",
   "lang": "zh-CN",
   "dir": "ltr",
-  "start_url": "./",
-  "scope": "./",
+  "start_url": "/",
+  "scope": "/",
   "display": "standalone",
   "display_override": ["standalone", "minimal-ui"],
   "orientation": "any",
@@ -14,19 +14,19 @@
   "categories": ["education"],
   "icons": [
     {
-      "src": "./icons/icon-192.png",
+      "src": "/icons/icon-192.png",
       "sizes": "192x192",
       "type": "image/png",
       "purpose": "any"
     },
     {
-      "src": "./icons/icon-512.png",
+      "src": "/icons/icon-512.png",
       "sizes": "512x512",
       "type": "image/png",
       "purpose": "any"
     },
     {
-      "src": "./icons/icon-512.png",
+      "src": "/icons/icon-512.png",
       "sizes": "512x512",
       "type": "image/png",
       "purpose": "maskable"
@@ -36,14 +36,14 @@
     {
       "name": "章节地图",
       "short_name": "地图",
-      "url": "./#/map",
-      "icons": [{ "src": "./icons/icon-192.png", "sizes": "192x192" }]
+      "url": "/#/map",
+      "icons": [{ "src": "/icons/icon-192.png", "sizes": "192x192" }]
     },
     {
       "name": "错题本",
       "short_name": "错题",
-      "url": "./#/wrong",
-      "icons": [{ "src": "./icons/icon-192.png", "sizes": "192x192" }]
+      "url": "/#/wrong",
+      "icons": [{ "src": "/icons/icon-192.png", "sizes": "192x192" }]
     }
   ]
 }

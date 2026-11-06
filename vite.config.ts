@@ -1,4 +1,4 @@
-import { defineConfig, loadEnv, type Plugin } from 'vite';
+import { defineConfig, type Plugin } from 'vite';
 import react from '@vitejs/plugin-react';
 
 /** public/ 下需要进入离线缓存的固定资源（文件名不带 hash）。 */
@@ -121,12 +121,10 @@ function pwaServiceWorker(): Plugin {
   };
 }
 
-export default defineConfig(({ mode }) => {
-  const env = loadEnv(mode, '.', '');
-  // Vercel / 根目录部署用 '/'；GitHub Pages 子路径在 Actions 里传 VITE_BASE=./。
-  const base = env.VITE_BASE || '/';
+export default defineConfig(() => {
   return {
-    base,
+    // 只部署在 Vercel 根目录：资源统一使用根相对路径。
+    base: '/',
     plugins: [react(), pwaServiceWorker()],
     server: {
       port: 5173,
