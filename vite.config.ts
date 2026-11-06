@@ -1,4 +1,4 @@
-import { defineConfig, type Plugin } from 'vite';
+import { defineConfig, loadEnv, type Plugin } from 'vite';
 import react from '@vitejs/plugin-react';
 
 /** public/ 下需要进入离线缓存的固定资源（文件名不带 hash）。 */
@@ -121,48 +121,52 @@ function pwaServiceWorker(): Plugin {
   };
 }
 
-export default defineConfig(({ command }) => ({
-  // 构建产物使用相对路径，dist/ 可以放在任意静态托管的根目录或子目录（如 GitHub Pages 项目页）。
-  base: command === 'build' ? './' : '/',
-  plugins: [react(), pwaServiceWorker()],
-  server: {
-    port: 5173,
-    strictPort: true,
-    watch: {
-      // 忽略临时目录与原子替换产生的临时文件：Windows 上 chokidar 监听到这类
-      // 正在被删除/锁定的路径会抛 EBUSY 并让 dev server 退出。
-      ignored: [
-        '**/.tmp/**',
-        '**/.artifacts/**',
-        '**/.npm-cache/**',
-        '**/*.tmpdir/**',
-        '**/.*.tmpdir/**',
-        '**/*.tmp',
-      ],
+export default defineConfig(({ mode }) => {
+  const env = loadEnv(mode, '.', '');
+  // Vercel / 根目录部署用 '/'；GitHub Pages 子路径在 Actions 里传 VITE_BASE=./。
+  const base = env.VITE_BASE || '/';
+  return {
+    base,
+    plugins: [react(), pwaServiceWorker()],
+    server: {
+      port: 5173,
+      strictPort: true,
+      watch: {
+        // 忽略临时目录与原子替换产生的临时文件：Windows 上 chokidar 监听到这类
+        // 正在被删除/锁定的路径会抛 EBUSY 并让 dev server 退出。
+        ignored: [
+          '**/.tmp/**',
+          '**/.artifacts/**',
+          '**/.npm-cache/**',
+          '**/*.tmpdir/**',
+          '**/.*.tmpdir/**',
+          '**/*.tmp',
+        ],
+      },
     },
-  },
-  preview: {
-    port: 4173,
-    strictPort: true,
-  },
-  build: {
-    rollupOptions: {
-      output: {
-        manualChunks(id) {
-          if (!id.includes('node_modules')) return undefined;
-          if (id.includes('katex')) return 'katex';
-          if (id.includes('dexie')) return 'dexie';
-          if (
-            id.includes('react') ||
-            id.includes('scheduler') ||
-            id.includes('zustand') ||
-            id.includes('use-sync-external-store')
-          ) {
-            return 'react-vendor';
-          }
-          return 'vendor';
+    preview: {
+      port: 4173,
+      strictPort: true,
+    },
+    build: {
+      rollupOptions: {
+        output: {
+          manualChunks(id) {
+            if (!id.includes('node_modules')) return undefined;
+            if (id.includes('katex')) return 'katex';
+            if (id.includes('dexie')) return 'dexie';
+            if (
+              id.includes('react') ||
+              id.includes('scheduler') ||
+              id.includes('zustand') ||
+              id.includes('use-sync-external-store')
+            ) {
+              return 'react-vendor';
+            }
+            return 'vendor';
+          },
         },
       },
     },
-  },
-}));
+  };
+});

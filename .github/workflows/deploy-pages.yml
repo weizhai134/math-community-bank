@@ -33,6 +33,8 @@ jobs:
       - name: Build
         run: npm run build
         env:
+          # GitHub Pages 是子路径部署，资源必须用相对路径；Vercel 不设置时默认 '/'
+          VITE_BASE: ./
           # 这两个是公开的 anon/publishable 配置，不是 service_role。
           # 在仓库 Settings → Secrets and variables → Actions → Variables 里添加；
           # 不添加也能构建，只是社区模块会显示“暂不可用”，主线完全正常。
