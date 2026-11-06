@@ -34,8 +34,15 @@ const HELP_COPY: Record<BrowserKind, string> = {
   chromium:
     '点击浏览器右上角「⋮」→「安装应用」或「添加到主屏幕」。安装后从桌面打开即可全屏使用，首次加载后断网也能刷主线。',
   other:
-    '当前浏览器没有安装入口。请复制网址，用 Chrome / Edge / Safari 打开后再安装；安装后首次加载过的内容可离线使用。',
+    'Edge：点右上角「…」→「应用」→「安装此站点为应用」。Chrome：点地址栏右侧的安装图标，或「⋮」→「安装…」。Safari：分享 →「添加到主屏幕」。',
 };
+
+function getCapturedPrompt(): BeforeInstallPromptEvent | null {
+  return (
+    (window as unknown as { __pwaInstallPrompt?: BeforeInstallPromptEvent | null })
+      .__pwaInstallPrompt ?? null
+  );
+}
 
 /**
  * 首页右下角安装按钮：
@@ -53,20 +60,26 @@ export function InstallHint(): JSX.Element | null {
       return undefined;
     }
     setVisible(true);
+    setDeferred(getCapturedPrompt());
 
     const onBeforeInstall = (event: Event) => {
       event.preventDefault();
       setDeferred(event as BeforeInstallPromptEvent);
       setVisible(true);
     };
+    const onReady = () => {
+      setDeferred(getCapturedPrompt());
+    };
     const onInstalled = () => {
       setVisible(false);
       setDeferred(null);
     };
     window.addEventListener('beforeinstallprompt', onBeforeInstall);
+    window.addEventListener('pwa-install-ready', onReady);
     window.addEventListener('appinstalled', onInstalled);
     return () => {
       window.removeEventListener('beforeinstallprompt', onBeforeInstall);
+      window.removeEventListener('pwa-install-ready', onReady);
       window.removeEventListener('appinstalled', onInstalled);
     };
   }, []);

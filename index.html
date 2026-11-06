@@ -12,6 +12,15 @@
     <meta name="apple-mobile-web-app-status-bar-style" content="default" />
     <meta name="apple-mobile-web-app-title" content="高数闯关" />
     <title>高数闯关 · 同济第八版上册</title>
+    <script>
+      // 尽早捕获安装事件，避免 React 挂载前事件已经触发而丢失。
+      window.__pwaInstallPrompt = null;
+      window.addEventListener('beforeinstallprompt', function (event) {
+        event.preventDefault();
+        window.__pwaInstallPrompt = event;
+        window.dispatchEvent(new Event('pwa-install-ready'));
+      });
+    </script>
   </head>
   <body>
     <div id="root">
