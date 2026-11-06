@@ -1,0 +1,14 @@
+<svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 512 512" role="img" aria-label="高数闯关">
+  <rect width="512" height="512" rx="112" fill="#f4f0e6"/>
+  <circle cx="256" cy="248" r="172" fill="#1d272b"/>
+  <path
+    d="M309 103c-48 0-54 68-54 116 0 47 1 111-35 163-19 27-45 39-70 31"
+    fill="none"
+    stroke="#f4dfc3"
+    stroke-width="34"
+    stroke-linecap="round"
+  />
+  <path d="M338 144h-72" fill="none" stroke="#b45309" stroke-width="26" stroke-linecap="round"/>
+  <path d="M338 352h-72" fill="none" stroke="#b45309" stroke-width="26" stroke-linecap="round"/>
+  <path d="M154 414h214" fill="none" stroke="#f4dfc3" stroke-width="16" stroke-linecap="round" opacity="0.6"/>
+</svg>

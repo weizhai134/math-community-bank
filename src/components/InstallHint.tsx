@@ -1,7 +1,10 @@
 import { useEffect, useState } from 'react';
-import { getSetting, setSetting } from '../db/db';
+import { Modal } from './Modal';
 
-const DISMISS_KEY = 'installHintDismissed';
+interface BeforeInstallPromptEvent extends Event {
+  prompt: () => Promise<void>;
+  userChoice: Promise<{ outcome: 'accepted' | 'dismissed'; platform: string }>;
+}
 
 type BrowserKind = 'ios' | 'chromium' | 'other';
 
@@ -14,11 +17,6 @@ function isStandalone(): boolean {
   );
 }
 
-/**
- * 不同浏览器安装入口完全不同：iOS Safari 是“分享 → 添加到主屏幕”，
- * Chromium 系是菜单里的“安装应用”，而多数国产/厂商浏览器根本没有安装入口。
- * 与其让用户在找不到的菜单里翻，不如直接说清楚该用什么浏览器。
- */
 function detectBrowser(): BrowserKind {
   const ua = navigator.userAgent;
   if (/iPhone|iPad|iPod/i.test(ua)) return 'ios';
@@ -31,51 +29,101 @@ function detectBrowser(): BrowserKind {
   return chromium ? 'chromium' : 'other';
 }
 
-const COPY: Record<BrowserKind, string> = {
-  ios: 'iPhone：用 Safari 打开本页 → 底部「分享」→「添加到主屏幕」。装好后离线也能闯关。',
-  chromium: '点浏览器右上角「⋮」→「安装应用」（部分版本叫「添加到主屏幕」）。装好后离线也能闯关。',
+const HELP_COPY: Record<BrowserKind, string> = {
+  ios: '用 Safari 打开本页 → 点击底部「分享」按钮 → 选择「添加到主屏幕」。安装后从桌面打开即可全屏使用，首次加载后断网也能刷主线。',
+  chromium:
+    '点击浏览器右上角「⋮」→「安装应用」或「添加到主屏幕」。安装后从桌面打开即可全屏使用，首次加载后断网也能刷主线。',
   other:
-    '当前浏览器没有安装入口：复制网址，用 Chrome 打开后再安装。装好后离线也能闯关。',
+    '当前浏览器没有安装入口。请复制网址，用 Chrome / Edge / Safari 打开后再安装；安装后首次加载过的内容可离线使用。',
 };
 
 /**
- * 手机端安装引导。只在安全上下文（HTTPS / localhost）且尚未安装时出现；
- * 关掉后写入 IndexedDB，下次不再打扰。
+ * 首页右下角安装按钮：
+ * - Chromium 支持 beforeinstallprompt 时，点击直接触发原生安装弹窗；
+ * - iOS / 其他浏览器没有该事件，点击显示对应浏览器的“添加到主屏幕”指引。
  */
 export function InstallHint(): JSX.Element | null {
   const [visible, setVisible] = useState(false);
+  const [deferred, setDeferred] = useState<BeforeInstallPromptEvent | null>(null);
+  const [helpOpen, setHelpOpen] = useState(false);
   const [browser] = useState<BrowserKind>(() => detectBrowser());
 
   useEffect(() => {
-    let active = true;
-    if (!window.isSecureContext || isStandalone()) return undefined;
-    if (!('serviceWorker' in navigator)) return undefined;
-    getSetting<boolean>(DISMISS_KEY)
-      .then((dismissed) => {
-        if (active && !dismissed) setVisible(true);
-      })
-      .catch(() => undefined);
+    if (!window.isSecureContext || isStandalone() || !('serviceWorker' in navigator)) {
+      return undefined;
+    }
+    setVisible(true);
+
+    const onBeforeInstall = (event: Event) => {
+      event.preventDefault();
+      setDeferred(event as BeforeInstallPromptEvent);
+      setVisible(true);
+    };
+    const onInstalled = () => {
+      setVisible(false);
+      setDeferred(null);
+    };
+    window.addEventListener('beforeinstallprompt', onBeforeInstall);
+    window.addEventListener('appinstalled', onInstalled);
     return () => {
-      active = false;
+      window.removeEventListener('beforeinstallprompt', onBeforeInstall);
+      window.removeEventListener('appinstalled', onInstalled);
     };
   }, []);
 
   if (!visible) return null;
 
-  const dismiss = () => {
-    setVisible(false);
-    void setSetting(DISMISS_KEY, true);
+  const install = async () => {
+    if (!deferred) {
+      setHelpOpen(true);
+      return;
+    }
+    try {
+      await deferred.prompt();
+      const choice = await deferred.userChoice;
+      setDeferred(null);
+      if (choice.outcome === 'accepted') {
+        setVisible(false);
+      }
+    } catch {
+      setDeferred(null);
+      setHelpOpen(true);
+    }
   };
 
   return (
-    <section className="install-hint" aria-label="安装到手机桌面">
-      <div>
-        <strong>装到手机桌面，断网也能刷</strong>
-        <p>{COPY[browser]}</p>
-      </div>
-      <button className="button small ghost" onClick={dismiss}>
-        知道了
+    <>
+      <button
+        type="button"
+        className="install-fab"
+        onClick={() => void install()}
+        aria-label="安装高数闯关到桌面"
+      >
+        <span className="install-fab-icon" aria-hidden="true">
+          ↓
+        </span>
+        <span>
+          <strong>安装到桌面</strong>
+          <small>全屏 · 离线可用</small>
+        </span>
       </button>
-    </section>
+
+      <Modal
+        open={helpOpen}
+        title="安装到桌面"
+        onClose={() => setHelpOpen(false)}
+      >
+        <div className="install-help">
+          <p>{HELP_COPY[browser]}</p>
+          <div className="install-help-tips">
+            <span>首次加载后，核心题库与页面会缓存到本机。</span>
+            <span>社区题库仍需联网；主线、错题复习、闪卡可离线打开。</span>
+          </div>
+          <button className="button primary" onClick={() => setHelpOpen(false)}>
+            我知道了
+          </button>
+        </div>
+      </Modal>
+    </>
   );
 }
