@@ -1,3 +1,6 @@
+# 首次使用前必须手动开启 Pages：
+# 仓库 Settings → Pages → Build and deployment → Source 选择 “GitHub Actions”。
+# GITHUB_TOKEN 无权创建 Pages 站点，因此这里不调用 configure-pages 的 enablement。
 name: Deploy to GitHub Pages
 
 on:
@@ -40,11 +43,6 @@ jobs:
           # 不添加也能构建，只是社区模块会显示“暂不可用”，主线完全正常。
           VITE_SUPABASE_URL: ${{ vars.VITE_SUPABASE_URL }}
           VITE_SUPABASE_ANON_KEY: ${{ vars.VITE_SUPABASE_ANON_KEY }}
-
-      - name: Configure Pages
-        uses: actions/configure-pages@v5
-        with:
-          enablement: true
 
       - name: Upload artifact
         uses: actions/upload-pages-artifact@v3
