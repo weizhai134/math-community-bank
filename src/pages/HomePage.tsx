@@ -19,6 +19,7 @@ import { formatDateTime, formatDuration, localDateKey } from '../lib/date';
 import { navigate } from '../lib/router';
 import { useAppStore } from '../store/useAppStore';
 import { InstallHint } from '../components/InstallHint';
+import { DailyBlindBox } from '../components/DailyBlindBox';
 import { ProgressBar, Stars } from '../components/ui';
 
 export function HomePage(): JSX.Element {
@@ -118,6 +119,7 @@ export function HomePage(): JSX.Element {
             <strong>{rank.title}</strong>
             <span>{rank.epithet}</span>
           </div>
+          {profile.title ? <span className="profile-title">称号 · {profile.title}</span> : null}
           <div className="xp-number">
             <span>{profile.totalXp.toLocaleString()}</span> XP
           </div>
@@ -349,6 +351,23 @@ export function HomePage(): JSX.Element {
           })}
         </div>
       </section>
+
+      <section className="home-achievements">
+        <div>
+          <span className="card-eyebrow">成就徽章墙 · 永久保存在本机</span>
+          <h2>把每一个里程碑挂起来</h2>
+          <p>
+            首次通关基础关、累计做对 100 题、凌晨刷题和 5 连击都会点亮徽章；
+            解锁后永久保留，刷新或关闭浏览器都不会消失。
+          </p>
+        </div>
+        <button className="button primary" onClick={() => navigate('/achievements')}>
+          我的成就
+          <span className="button-arrow">→</span>
+        </button>
+      </section>
+
+      <DailyBlindBox />
 
       <footer className="page-footnote">
         所有进度、错题与设置仅保存在当前浏览器的 IndexedDB，不会上传到任何服务器。

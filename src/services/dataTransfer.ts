@@ -2,6 +2,8 @@ import { validateBank } from '../data';
 import { db } from '../db/db';
 import { STORAGE_KEYS, TIER_ORDER } from '../domain/constants';
 import type { CommunityCacheRecord } from '../domain/communityTypes';
+import type { AchievementState } from '../domain/achievements';
+import type { DailyBoxRecord } from '../domain/dailyBox';
 import type { FlashcardState } from '../domain/flashcards';
 import type {
   Level,
@@ -38,6 +40,9 @@ interface BackupPayload {
     communityQuestions?: CommunityCacheRecord[];
     /** 第三阶段新增；旧备份没有该字段也能恢复。 */
     flashcardStates?: FlashcardState[];
+    /** 第四阶段新增；旧备份没有该字段也能恢复。 */
+    achievements?: AchievementState[];
+    dailyBoxes?: DailyBoxRecord[];
   };
 }
 
@@ -99,6 +104,8 @@ export async function loadBackupData(): Promise<BackupPayload['data']> {
     settings,
     communityQuestions,
     flashcardStates,
+    achievements,
+    dailyBoxes,
   ] = await Promise.all([
     db.questions.toArray(),
     db.levels.toArray(),
@@ -109,6 +116,8 @@ export async function loadBackupData(): Promise<BackupPayload['data']> {
     db.settings.toArray(),
     db.communityQuestions.toArray(),
     db.flashcardStates.toArray(),
+    db.achievements.toArray(),
+    db.dailyBoxes.toArray(),
   ]);
   if (!profile) throw new Error('用户档案不存在，无法导出备份');
   return {
@@ -121,6 +130,8 @@ export async function loadBackupData(): Promise<BackupPayload['data']> {
     settings,
     communityQuestions,
     flashcardStates,
+    achievements,
+    dailyBoxes,
   };
 }
 
@@ -190,6 +201,12 @@ export async function restoreBackup(raw: unknown): Promise<void> {
   const flashcardStates = Array.isArray(data.flashcardStates)
     ? (data.flashcardStates as FlashcardState[])
     : [];
+  const achievements = Array.isArray(data.achievements)
+    ? (data.achievements as AchievementState[])
+    : [];
+  const dailyBoxes = Array.isArray(data.dailyBoxes)
+    ? (data.dailyBoxes as DailyBoxRecord[])
+    : [];
 
   await db.transaction(
     'rw',
@@ -203,6 +220,8 @@ export async function restoreBackup(raw: unknown): Promise<void> {
       db.settings,
       db.communityQuestions,
       db.flashcardStates,
+      db.achievements,
+      db.dailyBoxes,
     ],
     async () => {
       await Promise.all([
@@ -215,6 +234,8 @@ export async function restoreBackup(raw: unknown): Promise<void> {
         db.settings.clear(),
         db.communityQuestions.clear(),
         db.flashcardStates.clear(),
+        db.achievements.clear(),
+        db.dailyBoxes.clear(),
       ]);
       await db.questions.bulkPut(questions);
       await db.levels.bulkPut(levels);
@@ -225,6 +246,8 @@ export async function restoreBackup(raw: unknown): Promise<void> {
       if (settings.length > 0) await db.settings.bulkPut(settings);
       if (communityQuestions.length > 0) await db.communityQuestions.bulkPut(communityQuestions);
       if (flashcardStates.length > 0) await db.flashcardStates.bulkPut(flashcardStates);
+      if (achievements.length > 0) await db.achievements.bulkPut(achievements);
+      if (dailyBoxes.length > 0) await db.dailyBoxes.bulkPut(dailyBoxes);
     },
   );
   // 防止备份中的日期格式与当前实现不一致。

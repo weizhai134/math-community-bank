@@ -324,6 +324,7 @@ export interface FinalizeResult {
   attempt: LevelAttempt;
   profile: Profile;
   newUnlocks: string[];
+  correctCount: number;
 }
 
 export async function finalizeRun(
@@ -602,7 +603,7 @@ export async function finalizeRun(
 
       await db.settings.delete(STORAGE_KEYS.activeRun);
       await db.settings.delete(STORAGE_KEYS.pendingReview);
-      return { attempt, profile: profileAfter, newUnlocks };
+      return { attempt, profile: profileAfter, newUnlocks, correctCount };
     },
   );
 }

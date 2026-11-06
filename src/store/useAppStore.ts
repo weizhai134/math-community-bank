@@ -1,4 +1,5 @@
 import { create } from 'zustand';
+import type { AchievementEvent } from '../domain/achievements';
 import type {
   ActiveRun,
   Grade,
@@ -11,6 +12,11 @@ import type {
   WrongItem,
 } from '../domain/types';
 import { isLevelUnlocked } from '../domain/rules';
+import {
+  ensureAchievementStates,
+  evaluateAchievements,
+} from '../services/achievementService';
+import { markDailyBoxEligible } from '../services/dailyBoxService';
 import {
   abandonRun,
   advanceRun,
@@ -47,6 +53,7 @@ interface AppStore {
   pendingReview: PendingReview | null;
   dataOpen: boolean;
   toast: string | null;
+  recordCompletion: (event: AchievementEvent) => Promise<void>;
   bootstrap: () => Promise<void>;
   refresh: () => Promise<void>;
   setDataOpen: (open: boolean) => void;
@@ -87,12 +94,21 @@ export const useAppStore = create<AppStore>((set, get) => ({
     try {
       set({ loading: true, bootError: null });
       const snapshot = await loadSnapshot();
+      await ensureAchievementStates(true).catch(() => undefined);
       set({ ...snapshot, loading: false });
     } catch (error) {
       set({
         loading: false,
         bootError: error instanceof Error ? error.message : '应用初始化失败',
       });
+    }
+  },
+
+  recordCompletion: async (event) => {
+    const unlocked = await evaluateAchievements(event);
+    await markDailyBoxEligible(event.finishedAt);
+    if (unlocked.length > 0) {
+      get().showToast(`成就解锁：${unlocked.map((item) => item.title).join('、')}`);
     }
   },
 
@@ -212,6 +228,15 @@ export const useAppStore = create<AppStore>((set, get) => ({
     }
     const result = await finalizeRun(activeRun, {});
     await get().refresh();
+    await get().recordCompletion({
+      correct: result.correctCount,
+      maxCombo: result.attempt.maxCombo,
+      finishedAt: result.attempt.finishedAt,
+      basicCleared:
+        !result.attempt.isTrial &&
+        result.attempt.tier === 'basic' &&
+        result.attempt.stars >= 1,
+    });
     set({ activeRun: null, pendingReview: null });
     return { kind: 'attempt', id: result.attempt.id };
   },
@@ -221,6 +246,15 @@ export const useAppStore = create<AppStore>((set, get) => ({
     if (!pending) throw new Error('没有待结算的关卡');
     const result = await finalizeRun(pending.run, grades);
     await get().refresh();
+    await get().recordCompletion({
+      correct: result.correctCount,
+      maxCombo: result.attempt.maxCombo,
+      finishedAt: result.attempt.finishedAt,
+      basicCleared:
+        !result.attempt.isTrial &&
+        result.attempt.tier === 'basic' &&
+        result.attempt.stars >= 1,
+    });
     set({ pendingReview: null, activeRun: null });
     return result.attempt.id;
   },

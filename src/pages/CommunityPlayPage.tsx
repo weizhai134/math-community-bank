@@ -171,7 +171,12 @@ export function CommunityPlayPage(): JSX.Element {
         return;
       }
       const result = await finishCommunityRun();
-      void result;
+      await useAppStore.getState().recordCompletion({
+        correct: result.correct,
+        maxCombo: 0,
+        finishedAt: result.finishedAt,
+        basicCleared: false,
+      });
       await useAppStore.getState().refresh();
       navigate('/community/result');
     } catch (error) {
@@ -197,7 +202,13 @@ export function CommunityPlayPage(): JSX.Element {
     }
     setBusy(true);
     try {
-      await finishCommunityRun();
+      const result = await finishCommunityRun();
+      await useAppStore.getState().recordCompletion({
+        correct: result.correct,
+        maxCombo: 0,
+        finishedAt: result.finishedAt,
+        basicCleared: false,
+      });
       await useAppStore.getState().refresh();
       navigate('/community/result');
     } catch (error) {

@@ -1,5 +1,7 @@
 import Dexie, { type EntityTable } from 'dexie';
+import type { AchievementState } from '../domain/achievements';
 import type { CommunityCacheRecord } from '../domain/communityTypes';
+import type { DailyBoxRecord } from '../domain/dailyBox';
 import type { FlashcardState } from '../domain/flashcards';
 import type {
   Level,
@@ -21,6 +23,8 @@ export class GaoshuDatabase extends Dexie {
   settings!: EntityTable<SettingRecord, 'key'>;
   communityQuestions!: EntityTable<CommunityCacheRecord, 'id'>;
   flashcardStates!: EntityTable<FlashcardState, 'id'>;
+  achievements!: EntityTable<AchievementState, 'id'>;
+  dailyBoxes!: EntityTable<DailyBoxRecord, 'date'>;
 
   constructor() {
     super('gaoshu-quest');
@@ -42,6 +46,11 @@ export class GaoshuDatabase extends Dexie {
     // 第三阶段：公式闪卡的本地 SM-2 状态；只加表，不改已有表。
     this.version(3).stores({
       flashcardStates: 'id, nextReviewAt',
+    });
+    // 第四阶段：成就与每日盲盒；只新增表。
+    this.version(4).stores({
+      achievements: 'id, unlockedAt',
+      dailyBoxes: 'date, claimedAt',
     });
   }
 }

@@ -158,6 +158,8 @@ export interface Profile {
   createdAt: number;
   updatedAt: number;
   lastEncouragement?: string;
+  /** 每日盲盒抽到的称号，展示在首页段位旁。 */
+  title?: string;
 }
 
 export interface SettingRecord<T = unknown> {

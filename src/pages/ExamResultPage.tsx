@@ -149,6 +149,12 @@ export function ExamResultPage(): JSX.Element {
     setError(null);
     try {
       const finalResult = await finalizeExam(current, questions);
+      await useAppStore.getState().recordCompletion({
+        correct: finalResult.items.filter((item) => item.earned === 1).length,
+        maxCombo: 0,
+        finishedAt: finalResult.finishedAt,
+        basicCleared: false,
+      });
       setResult(finalResult);
       setSession(null);
       sessionRef.current = null;
