@@ -29,10 +29,12 @@ import { createWrongItem, recordWrongAgain } from '../domain/sm2';
 import { clamp, localDateKey, shuffle, uid } from '../lib/date';
 import {
   CommunityUnavailableError,
+  SINGLE_FILE_COMMUNITY_MESSAGE,
   describeCommunityError,
   ensureCommunitySession,
   getCommunityClient,
   isOfflineError,
+  isSingleFileDemo,
 } from './supabaseClient';
 
 export const COMMUNITY_RUN_KEY = 'communityRun';
@@ -97,6 +99,17 @@ export async function fetchCommunityPage(
   page: number,
   pageSize = 8,
 ): Promise<CommunityPageResult> {
+  if (isSingleFileDemo) {
+    const cached = await readCachedCommunityQuestions(filters);
+    return {
+      items: cached.items,
+      total: cached.items.length,
+      offline: true,
+      cachedAt: cached.cachedAt ?? undefined,
+      errorMessage: SINGLE_FILE_COMMUNITY_MESSAGE,
+    };
+  }
+
   const sb = getCommunityClient();
   if (!sb) {
     const cached = await readCachedCommunityQuestions(filters);
@@ -143,6 +156,14 @@ export async function fetchCommunityPage(
 
 /** 随机抽 5 题练习：优先在线取一批再洗牌；失败时用缓存。 */
 export async function fetchPracticeQuestions(filters: CommunityFilters): Promise<CommunityQuestion[]> {
+  if (isSingleFileDemo) {
+    const cached = await readCachedCommunityQuestions(filters);
+    if (cached.items.length === 0) {
+      throw new CommunityUnavailableError(SINGLE_FILE_COMMUNITY_MESSAGE, 'network');
+    }
+    return pickPracticeSet(cached.items);
+  }
+
   const sb = getCommunityClient();
   if (sb) {
     try {

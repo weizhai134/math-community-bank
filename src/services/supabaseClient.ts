@@ -5,6 +5,14 @@ import type { CommunitySessionInfo } from '../domain/communityTypes';
 const url = (import.meta.env.VITE_SUPABASE_URL ?? '').trim();
 const anonKey = (import.meta.env.VITE_SUPABASE_ANON_KEY ?? '').trim();
 
+/** 单文件比赛版：file:// 或单文件构建，社区只做优雅降级。 */
+export const isSingleFileDemo =
+  typeof window !== 'undefined' &&
+  (window.location.protocol === 'file:' ||
+    (import.meta.env as Record<string, string | undefined>).VITE_SINGLE_FILE === 'true');
+
+export const SINGLE_FILE_COMMUNITY_MESSAGE = '当前为单机演示版，社区题库功能暂不可用';
+
 /** 缺少环境变量时，社区模块整体降级；主线完全不依赖它。 */
 export const communityConfigured = Boolean(url && anonKey);
 
@@ -135,6 +143,11 @@ async function ensureCommunitySessionInner(): Promise<CommunitySessionInfo> {
 
 /** 对匿名登录/会话恢复加超时：网络不可达时快速降级，而不是卡住社区页。 */
 export function ensureCommunitySession(): Promise<CommunitySessionInfo> {
+  if (isSingleFileDemo) {
+    return Promise.reject(
+      new CommunityUnavailableError(SINGLE_FILE_COMMUNITY_MESSAGE, 'network'),
+    );
+  }
   return withTimeout(
     ensureCommunitySessionInner(),
     9000,

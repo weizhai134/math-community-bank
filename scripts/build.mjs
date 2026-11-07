@@ -13,8 +13,9 @@ const tempDir = path.join(root, '.tmp', 'esbuild-temp');
 mkdirSync(tempDir, { recursive: true });
 
 const env = { ...process.env, TEMP: tempDir, TMP: tempDir };
+const target = process.argv[2] ?? 'build:raw';
 const npmCommand = process.platform === 'win32' ? 'npm.cmd' : 'npm';
-const result = spawnSync(npmCommand, ['run', 'build:raw'], {
+const result = spawnSync(npmCommand, ['run', target], {
   cwd: root,
   env,
   stdio: 'inherit',

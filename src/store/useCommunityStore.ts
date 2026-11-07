@@ -21,9 +21,11 @@ import {
   type UploadResult,
 } from '../services/communityService';
 import {
+  SINGLE_FILE_COMMUNITY_MESSAGE,
   communityConfigured,
   describeCommunityError,
   ensureCommunitySession,
+  isSingleFileDemo,
 } from '../services/supabaseClient';
 
 interface CommunityStore {
@@ -102,13 +104,18 @@ export const useCommunityStore = create<CommunityStore>((set, get) => {
     myError: null,
 
     bootstrap: async () => {
-      set({ booting: true, sessionError: null });
+      set({
+        booting: true,
+        sessionError: isSingleFileDemo ? SINGLE_FILE_COMMUNITY_MESSAGE : null,
+      });
       // 列表与登录并行：即使匿名登录不可达或很慢，已缓存题目也能先显示。
-      const sessionTask = communityConfigured
-        ? ensureCommunitySession()
-            .then((session) => set({ session }))
-            .catch((error) => set({ session: null, sessionError: describeCommunityError(error) }))
-        : Promise.resolve();
+      // 单文件版直接跳过 Supabase 会话请求，避免 file:// 下等待/报错。
+      const sessionTask =
+        communityConfigured && !isSingleFileDemo
+          ? ensureCommunitySession()
+              .then((session) => set({ session }))
+              .catch((error) => set({ session: null, sessionError: describeCommunityError(error) }))
+          : Promise.resolve();
       await loadPage(0, false);
       const xp = await todayCommunityXp().catch(() => 0);
       set({ booting: false, xpToday: xp });
@@ -132,6 +139,7 @@ export const useCommunityStore = create<CommunityStore>((set, get) => {
     },
 
     report: async (questionId) => {
+      if (isSingleFileDemo) throw new Error(SINGLE_FILE_COMMUNITY_MESSAGE);
       try {
         const session = get().session ?? (await ensureCommunitySession());
         set({ session });
@@ -143,6 +151,7 @@ export const useCommunityStore = create<CommunityStore>((set, get) => {
     },
 
     remove: async (questionId) => {
+      if (isSingleFileDemo) throw new Error(SINGLE_FILE_COMMUNITY_MESSAGE);
       try {
         const session = get().session ?? (await ensureCommunitySession());
         set({ session });
@@ -158,6 +167,7 @@ export const useCommunityStore = create<CommunityStore>((set, get) => {
     },
 
     upload: async (draft) => {
+      if (isSingleFileDemo) throw new Error(SINGLE_FILE_COMMUNITY_MESSAGE);
       const session = get().session ?? (await ensureCommunitySession());
       set({ session });
       const result = await uploadCommunityQuestion(draft, session);
@@ -166,7 +176,11 @@ export const useCommunityStore = create<CommunityStore>((set, get) => {
     },
 
     loadMine: async () => {
-      set({ myLoading: true, myError: null });
+      set({ myLoading: true, myError: isSingleFileDemo ? SINGLE_FILE_COMMUNITY_MESSAGE : null });
+      if (isSingleFileDemo) {
+        set({ myItems: [], myLoading: false });
+        return;
+      }
       try {
         const session = get().session ?? (await ensureCommunitySession());
         set({ session });

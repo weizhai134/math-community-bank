@@ -3,6 +3,7 @@ import { CHAPTERS, QUESTION_TYPE_LABEL } from '../domain/constants';
 import type { CommunityFilters, CommunityQuestion } from '../domain/communityTypes';
 import type { Difficulty, QuestionType } from '../domain/types';
 import { fetchPracticeQuestions, loadCommunityRun, startCommunityRun } from '../services/communityService';
+import { isSingleFileDemo } from '../services/supabaseClient';
 import { navigate } from '../lib/router';
 import { useCommunityStore } from '../store/useCommunityStore';
 import { MathText } from '../components/MathText';
@@ -55,6 +56,10 @@ export function CommunityListPage(): JSX.Element {
   };
 
   const handlePractice = async () => {
+    if (singleFileDemo) {
+      setNotice('当前为单机演示版，社区题库功能暂不可用');
+      return;
+    }
     setBusy(true);
     setNotice(null);
     try {
@@ -87,6 +92,7 @@ export function CommunityListPage(): JSX.Element {
   };
 
   const serviceUnavailable = !configured;
+  const singleFileDemo = isSingleFileDemo;
   const showEmpty = !loading && items.length === 0;
 
   return (
@@ -101,16 +107,33 @@ export function CommunityListPage(): JSX.Element {
           </p>
         </div>
         <div className="community-heading-actions">
-          <button className="button ghost" onClick={() => navigate('/community/mine')}>
+          <button
+            className="button ghost"
+            onClick={() => navigate('/community/mine')}
+            disabled={singleFileDemo}
+          >
             我的投稿
           </button>
-          <button className="button primary" onClick={() => navigate('/community/upload')}>
+          <button
+            className="button primary"
+            onClick={() => navigate('/community/upload')}
+            disabled={singleFileDemo}
+          >
             上传题目
           </button>
         </div>
       </header>
 
-      {serviceUnavailable ? (
+      {singleFileDemo ? (
+        <section className="community-banner unavailable">
+          <div>
+            <strong>当前为单机演示版</strong>
+            <p>社区题库功能暂不可用。主线七章、错题本、XP、公式闪卡、模拟考均可正常使用。</p>
+          </div>
+        </section>
+      ) : null}
+
+      {!singleFileDemo && serviceUnavailable ? (
         <section className="community-banner unavailable">
           <div>
             <strong>社区功能暂不可用</strong>
@@ -126,7 +149,7 @@ export function CommunityListPage(): JSX.Element {
         </section>
       ) : null}
 
-      {!serviceUnavailable && sessionError ? (
+      {!singleFileDemo && !serviceUnavailable && sessionError ? (
         <section className="community-banner warn">
           <div>
             <strong>社区登录不可用</strong>
@@ -135,7 +158,7 @@ export function CommunityListPage(): JSX.Element {
         </section>
       ) : null}
 
-      {offline || (error && !serviceUnavailable) ? (
+      {!singleFileDemo && (offline || (error && !serviceUnavailable)) ? (
         <section className="community-banner offline">
           <div>
             <strong>{offline ? '离线模式，仅显示已缓存题目' : '社区刷新失败'}</strong>
@@ -222,7 +245,11 @@ export function CommunityListPage(): JSX.Element {
           <button className="button ghost" onClick={() => void refresh()} disabled={loading}>
             刷新
           </button>
-          <button className="button ink" onClick={() => void handlePractice()} disabled={busy || loading}>
+          <button
+            className="button ink"
+            onClick={() => void handlePractice()}
+            disabled={busy || loading || singleFileDemo}
+          >
             {busy ? '正在抽题…' : '随机抽 5 题练习'}
           </button>
         </div>
@@ -238,14 +265,26 @@ export function CommunityListPage(): JSX.Element {
 
       {showEmpty ? (
         <div className="empty-state community-empty">
-          <h2>{offline ? '缓存里还没有社区题' : '社区题库还是空的'}</h2>
+          <h2>
+            {singleFileDemo
+              ? '单机演示版没有社区题'
+              : offline
+                ? '缓存里还没有社区题'
+                : '社区题库还是空的'}
+          </h2>
           <p>
-            {offline
-              ? '联网后刷新一次，题目会缓存到本机，之后断网也能看。'
-              : '成为第一个上传题目的人；提交即对所有设备可见。'}
+            {singleFileDemo
+              ? '社区题库需要联网；主线七章、错题本、公式闪卡和模拟考不受影响。'
+              : offline
+                ? '联网后刷新一次，题目会缓存到本机，之后断网也能看。'
+                : '成为第一个上传题目的人；提交即对所有设备可见。'}
           </p>
           <div className="inline-actions">
-            <button className="button primary" onClick={() => navigate('/community/upload')}>
+            <button
+              className="button primary"
+              onClick={() => navigate('/community/upload')}
+              disabled={singleFileDemo}
+            >
               上传题目
             </button>
             <button className="button ghost" onClick={() => navigate('/map')}>
@@ -276,8 +315,14 @@ export function CommunityListPage(): JSX.Element {
                 <button
                   className="text-button community-report"
                   onClick={() => setReporting(question)}
-                  disabled={offline}
-                  title={offline ? '离线模式下不能举报' : '举报违规或错误题目'}
+                  disabled={offline || singleFileDemo}
+                  title={
+                    singleFileDemo
+                      ? '单机演示版不能举报'
+                      : offline
+                        ? '离线模式下不能举报'
+                        : '举报违规或错误题目'
+                  }
                 >
                   举报
                 </button>

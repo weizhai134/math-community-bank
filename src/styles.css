@@ -7130,6 +7130,12 @@ h3 {
   align-self: flex-start;
 }
 
+.install-help-actions {
+  display: flex;
+  flex-wrap: wrap;
+  gap: 8px;
+}
+
 @media (max-width: 720px) {
   .install-fab {
     right: 10px;
