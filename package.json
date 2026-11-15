@@ -7,10 +7,7 @@
   "scripts": {
     "dev": "vite",
     "dev:lan": "vite --host 0.0.0.0",
-    "build": "node scripts/build.mjs",
-    "build:raw": "tsc -b && vite build",
-    "build:single": "node scripts/build.mjs build:single:raw",
-    "build:single:raw": "tsc -b && vite build --mode singlefile",
+    "build": "tsc -b && vite build",
     "preview": "vite preview",
     "preview:lan": "vite preview --host 0.0.0.0",
     "typecheck": "tsc -b --pretty false",
@@ -32,7 +29,6 @@
     "@vitejs/plugin-react": "^4.3.4",
     "typescript": "~5.7.3",
     "vite": "^6.1.0",
-    "vite-plugin-pwa": "^2.0.0",
-    "vite-plugin-singlefile": "^2.3.4"
+    "vite-plugin-pwa": "^2.0.0"
   }
 }
