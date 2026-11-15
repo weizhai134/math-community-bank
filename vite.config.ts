@@ -5,8 +5,7 @@ import { VitePWA } from 'vite-plugin-pwa';
 /**
  * 标准 Vite 多文件构建：
  * - JS/CSS 由 Vite 正常拆分到 dist/assets；
- * - PWA 只负责 manifest、Service Worker 与离线缓存；
- * - 不再包含 singlefile / inlineDynamicImports 等单 HTML 打包逻辑。
+ * - PWA 只负责 manifest、Service Worker 与离线缓存。
  */
 export default defineConfig({
   plugins: [
