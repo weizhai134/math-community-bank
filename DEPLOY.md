@@ -103,10 +103,12 @@ VITE_SUPABASE_ANON_KEY=<你的 legacy anon key>
 
 Supabase → Authentication → URL Configuration：
 
-- Site URL：`https://<你的项目>.vercel.app`；
-- Redirect URLs：`https://<你的项目>.vercel.app/**`。
+- Site URL：`https://calcpass.top`；
+- Redirect URLs：
+  - `https://calcpass.top/**`
+  - `https://www.calcpass.top/**`
 
-匿名登录不跳转，但邮箱确认、Google 绑定需要它。自定义域名后同步更新。
+匿名登录不跳转，但邮箱确认、Google 绑定需要它。旧的 `*.vercel.app` 地址可暂时保留，确认新域名正常后再删除。
 
 ## 7. 上线后验证
 
@@ -115,6 +117,46 @@ Supabase → Authentication → URL Configuration：
 3. 上传一道题，另一台设备/另一个浏览器配置刷新可见；
 4. 手机打开 HTTPS 地址 → 安装到主屏幕；断网后主线可开；
 5. 两设备各自主线进度独立，社区题共享。
+
+## 8. 绑定自定义域名 calcpass.top
+
+### 为什么没有 SPA rewrite
+
+项目使用 **hash 路由**（`/#/community`、`/#/wrong` 等）。浏览器刷新 `https://calcpass.top/#/community` 时，`#` 后面的部分不会发给服务器，Vercel 实际只请求 `/`，直接返回 `index.html`，所以**不需要** `rewrites` 兜底。
+
+不要加 `"source": "/(.*)"` 这类全站 rewrite，它可能把 `/assets/*.js`、`/sw.js` 也改写成 HTML，反而制造 404/MIME 错误。
+
+### Vercel 后台
+
+1. 项目 → **Settings → Domains**；
+2. 添加 `calcpass.top` 和 `www.calcpass.top`；
+3. 把 `calcpass.top` 设为主域名，`www` 设为 **Redirect to calcpass.top**；
+4. 按页面提示添加 DNS 记录；等待状态变成 **Valid Configuration**，HTTPS 证书会自动签发。
+
+### 腾讯云 DNSPod
+
+在域名所在账号的 **DNS 解析 → 记录管理** 中添加：
+
+| 主机记录 | 类型 | 记录值 | TTL |
+| --- | --- | --- | --- |
+| `@` | A | `76.76.21.21`（以 Vercel Domains 页面显示为准） | 600 |
+| `www` | CNAME | `cname.vercel-dns.com` | 600 |
+
+- 删除 `@`/`www` 上冲突的旧 A/CNAME，保留邮箱 MX、TXT；
+- 如果 Vercel 要求 TXT 验证，按它给的主机名和值添加；
+- 域名需完成实名认证；Vercel 托管在境外，不需要 ICP 备案，但以后若改用腾讯云 CDN/服务器则需要。
+
+### 环境变量
+
+域名与 `VITE_SUPABASE_URL`、`VITE_SUPABASE_ANON_KEY` 无关；这两个值仍然指向 Supabase 项目，不要改成 calcpass.top。Vercel 的 Production/Preview 环境变量改完后必须 **Redeploy**，因为 Vite 是构建时注入。
+
+### 上线检查
+
+1. `https://calcpass.top` 打开首页；
+2. `https://calcpass.top/#/community` 刷新不 404；
+3. 社区能匿名登录、列表/上传可用；
+4. 手机可安装 PWA；
+5. Supabase Authentication 的 Site URL/Redirect URLs 已改成新域名。
 
 ## 常见问题
 
