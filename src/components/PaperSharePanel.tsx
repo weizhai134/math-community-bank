@@ -11,11 +11,33 @@ import {
 } from '../domain/papers';
 import {
   listCommunityPapers,
-  paperDownloadUrl,
   paperUploadHint,
   uploadCommunityPaper,
 } from '../services/paperService';
 import { Modal } from './Modal';
+
+const DOWNLOAD_TIMEOUT_MS = 60_000;
+
+function safeDownloadName(name: string, kind: 'pdf' | 'image'): string {
+  let decoded = name.trim();
+  try {
+    decoded = decodeURIComponent(decoded);
+  } catch {
+    // 文件名不是合法 URL 编码时保持原样。
+  }
+  const cleaned = decoded
+    .replace(/[\\/:*?"<>|\u0000-\u001f]/g, '_')
+    .replace(/^\.+/, '')
+    .trim();
+  if (!cleaned) return kind === 'pdf' ? '试卷.pdf' : '试卷.png';
+  const extension = cleaned.split('.').pop()?.toLowerCase() ?? '';
+  const allowed = kind === 'pdf' ? ['pdf'] : ['png', 'jpg', 'jpeg'];
+  return allowed.includes(extension) ? cleaned : `${cleaned}.${kind === 'pdf' ? 'pdf' : 'png'}`;
+}
+
+function isHandheldViewport(): boolean {
+  return window.matchMedia('(max-width: 900px)').matches;
+}
 
 export function PaperSharePanel({
   configured,
@@ -34,7 +56,13 @@ export function PaperSharePanel({
   const [uploading, setUploading] = useState(false);
   const [notice, setNotice] = useState<string | null>(null);
   const [preview, setPreview] = useState<CommunityPaper | null>(null);
+  const [downloadingId, setDownloadingId] = useState<string | number | null>(null);
+  const [actionError, setActionError] = useState<{
+    id: string | number;
+    message: string;
+  } | null>(null);
   const fileInputRef = useRef<HTMLInputElement>(null);
+  const downloadingRef = useRef(false);
 
   const load = useCallback(async () => {
     if (!configured || singleFileDemo) return;
@@ -59,6 +87,71 @@ export function PaperSharePanel({
     const timer = window.setTimeout(() => setNotice(null), 4200);
     return () => window.clearTimeout(timer);
   }, [notice]);
+
+  const openPaper = (paper: CommunityPaper) => {
+    if (isHandheldViewport()) {
+      try {
+        const opened = window.open(paper.fileUrl, '_blank');
+        if (opened) {
+          opened.opener = null;
+          return;
+        }
+      } catch {
+        // 弹窗被拦截时回退到 iframe 弹窗。
+      }
+    }
+    setPreview(paper);
+  };
+
+  const downloadPaper = async (paper: CommunityPaper) => {
+    if (downloadingRef.current) return;
+    downloadingRef.current = true;
+    setDownloadingId(paper.id);
+    setActionError(null);
+
+    const controller = new AbortController();
+    const timer = window.setTimeout(() => controller.abort(), DOWNLOAD_TIMEOUT_MS);
+    try {
+      if (!paper.fileUrl) throw new Error('文件地址为空，无法下载');
+      const response = await fetch(paper.fileUrl, {
+        mode: 'cors',
+        signal: controller.signal,
+      });
+      if (!response.ok) {
+        throw new Error(`下载失败（HTTP ${response.status}）`);
+      }
+      const blob = await response.blob();
+      if (blob.size <= 0) throw new Error('下载到的文件为空，请稍后重试');
+
+      const name = safeDownloadName(paper.fileName, paper.fileKind);
+      const objectUrl = URL.createObjectURL(blob);
+      const link = document.createElement('a');
+      link.href = objectUrl;
+      link.download = name;
+      link.rel = 'noopener';
+      link.style.display = 'none';
+      document.body.appendChild(link);
+      link.click();
+      link.remove();
+      // 给浏览器留出接管下载的时间，再释放内存。
+      window.setTimeout(() => URL.revokeObjectURL(objectUrl), 60_000);
+      setNotice(`已开始下载：${name}`);
+    } catch (error) {
+      const isAbort = error instanceof DOMException && error.name === 'AbortError';
+      const message = isAbort
+        ? '下载超时，请检查网络后重试，或点「新窗口」打开。'
+        : error instanceof Error && /failed to fetch|networkerror/i.test(error.message)
+          ? '下载请求失败，可能被 Storage 跨域限制拦截；请点「新窗口」打开后保存。'
+          : error instanceof Error
+            ? error.message
+            : '下载失败，请稍后重试';
+      setActionError({ id: paper.id, message });
+    } finally {
+      window.clearTimeout(timer);
+      downloadingRef.current = false;
+      setDownloadingId(null);
+    }
+  };
 
   const handleFile = (next: File | null) => {
     setFile(next);
@@ -290,7 +383,7 @@ export function PaperSharePanel({
               <button
                 type="button"
                 className="paper-open"
-                onClick={() => setPreview(paper)}
+                onClick={() => openPaper(paper)}
                 aria-label={`预览 ${paper.title}`}
               >
                 <span className={`paper-file-icon ${paper.fileKind}`}>
@@ -306,6 +399,11 @@ export function PaperSharePanel({
                     <span>{formatPaperTime(paper.createdAt)}</span>
                     <span>{formatPaperSize(paper.fileSize)}</span>
                   </span>
+                  {actionError?.id === paper.id ? (
+                    <span className="paper-action-error" role="alert">
+                      {actionError.message}
+                    </span>
+                  ) : null}
                 </span>
               </button>
               <div className="paper-card-actions">
@@ -317,13 +415,14 @@ export function PaperSharePanel({
                 >
                   新窗口
                 </a>
-                <a
-                  className="button ink small"
-                  href={paperDownloadUrl(paper)}
-                  download={paper.fileName}
+                <button
+                  type="button"
+                  className="button ink small paper-download"
+                  onClick={() => void downloadPaper(paper)}
+                  disabled={downloadingId !== null}
                 >
-                  下载
-                </a>
+                  {downloadingId === paper.id ? '下载中…' : '下载'}
+                </button>
               </div>
             </article>
           ))}
@@ -352,15 +451,21 @@ export function PaperSharePanel({
                 >
                   新窗口
                 </a>
-                <a
-                  className="button ink small"
-                  href={paperDownloadUrl(preview)}
-                  download={preview.fileName}
+                <button
+                  type="button"
+                  className="button ink small paper-download"
+                  onClick={() => void downloadPaper(preview)}
+                  disabled={downloadingId !== null}
                 >
-                  下载
-                </a>
+                  {downloadingId === preview.id ? '下载中…' : '下载'}
+                </button>
               </span>
             </div>
+            {actionError?.id === preview.id ? (
+              <p className="paper-action-error" role="alert">
+                {actionError.message}
+              </p>
+            ) : null}
             {preview.fileKind === 'pdf' ? (
               <iframe
                 className="paper-preview-frame"
