@@ -232,12 +232,22 @@ export async function listCommunityPapers(): Promise<CommunityPaper[]> {
   const sb = getCommunityClient();
   if (!sb) throw new Error('未配置 Supabase，无法读取试卷');
 
-  const query = sb
+  let result = await sb
     .from('community_papers')
     .select('*')
     .order('created_at', { ascending: false })
     .limit(PAPER_LIST_LIMIT);
-  const { data, error } = await query;
+
+  // 有些表用 uploaded_at / inserted_at；没有 created_at 时退回读取后在本地排序。
+  if (
+    result.error &&
+    (unknownColumn(result.error) === 'created_at' ||
+      /created_at.*does not exist/i.test(errorMessage(result.error)))
+  ) {
+    result = await sb.from('community_papers').select('*').limit(PAPER_LIST_LIMIT);
+  }
+
+  const { data, error } = result;
   if (error) {
     if (errorCode(error) === 'PGRST205' || /could not find the table/i.test(errorMessage(error))) {
       throw new Error('community_papers 表不存在，请先在 Supabase 中创建它');
@@ -248,9 +258,19 @@ export async function listCommunityPapers(): Promise<CommunityPaper[]> {
     throw new Error(describeCommunityError(error));
   }
 
-  return (data ?? [])
+  const papers = (data ?? [])
     .map((row) => normalizePaperRow(row as PaperRow))
     .filter((paper): paper is CommunityPaper => Boolean(paper));
+
+  if (papers.some((paper) => paper.createdAt)) {
+    papers.sort((a, b) => {
+      const left = Date.parse(a.createdAt);
+      const right = Date.parse(b.createdAt);
+      if (Number.isNaN(left) || Number.isNaN(right)) return 0;
+      return right - left;
+    });
+  }
+  return papers;
 }
 
 async function resolveNickname(userId: string, provided?: string): Promise<string> {
