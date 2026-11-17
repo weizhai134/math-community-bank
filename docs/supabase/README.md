@@ -36,6 +36,12 @@ VITE_SUPABASE_ANON_KEY=<anon public key>
 
 打开 **SQL Editor**，整段粘贴并执行 [`schema.sql`](./schema.sql)。
 
+### 社区试卷（papers）
+
+社区页的「试卷分享」还需要 `community_papers` 表与 `papers` Storage 桶。完整 SQL（表结构、RLS、Bucket 配置、Storage 策略）见 [`papers.sql`](./papers.sql)；如果表/列已经建好，先按文件开头的查询核对列名，再执行对应的 RLS 与 Storage 策略。
+
+前端兼容若干常见列名（`file_url/url/file_path`、`author_id/uploader_id` 等），但**上传前必须至少有一条允许匿名/登录用户写入的 Storage INSERT 策略，以及一条允许写入 `community_papers` 的 RLS INSERT 策略**，否则会报“没有上传权限”或“试卷写入被拒绝”。
+
 执行后自检：
 
 ```sql

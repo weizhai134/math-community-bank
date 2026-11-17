@@ -9,6 +9,7 @@ import { useCommunityStore } from '../store/useCommunityStore';
 import { MathText } from '../components/MathText';
 import { ConfirmDialog } from '../components/Modal';
 import { DifficultyBadge } from '../components/ui';
+import { PaperSharePanel } from '../components/PaperSharePanel';
 
 function formatDate(value: string): string {
   const date = new Date(value);
@@ -39,6 +40,7 @@ export function CommunityListPage(): JSX.Element {
   const [reporting, setReporting] = useState<CommunityQuestion | null>(null);
   const [busy, setBusy] = useState(false);
   const [hasRun, setHasRun] = useState(false);
+  const [activeTab, setActiveTab] = useState<'questions' | 'papers'>('questions');
 
   useEffect(() => {
     void bootstrap();
@@ -102,26 +104,28 @@ export function CommunityListPage(): JSX.Element {
           <div className="eyebrow">独立于主线 · 跨设备共享</div>
           <h1>社区题库</h1>
           <p className="page-subtitle">
-            其他同学上传的题目。不参与主线章节进度、星级与 Boss 解锁；答对计入 XP（每日上限{' '}
-            {100}），错题按同一条 SM-2 队列复习。
+            单题练手，整卷模拟。单题不参与主线章节进度、星级与 Boss 解锁，答对计入 XP（每日上限{' '}
+            {100}）；试卷按时间排序，支持 PDF 与图片预览、下载。
           </p>
         </div>
-        <div className="community-heading-actions">
-          <button
-            className="button ghost"
-            onClick={() => navigate('/community/mine')}
-            disabled={singleFileDemo}
-          >
-            我的投稿
-          </button>
-          <button
-            className="button primary"
-            onClick={() => navigate('/community/upload')}
-            disabled={singleFileDemo}
-          >
-            上传题目
-          </button>
-        </div>
+        {activeTab === 'questions' ? (
+          <div className="community-heading-actions">
+            <button
+              className="button ghost"
+              onClick={() => navigate('/community/mine')}
+              disabled={singleFileDemo}
+            >
+              我的投稿
+            </button>
+            <button
+              className="button primary"
+              onClick={() => navigate('/community/upload')}
+              disabled={singleFileDemo}
+            >
+              上传题目
+            </button>
+          </div>
+        ) : null}
       </header>
 
       {singleFileDemo ? (
@@ -158,7 +162,7 @@ export function CommunityListPage(): JSX.Element {
         </section>
       ) : null}
 
-      {!singleFileDemo && (offline || (error && !serviceUnavailable)) ? (
+      {activeTab === 'questions' && !singleFileDemo && (offline || (error && !serviceUnavailable)) ? (
         <section className="community-banner offline">
           <div>
             <strong>{offline ? '离线模式，仅显示已缓存题目' : '社区刷新失败'}</strong>
@@ -176,6 +180,31 @@ export function CommunityListPage(): JSX.Element {
         </div>
       ) : null}
 
+      <div className="community-tabs" role="tablist" aria-label="社区内容类型">
+        <button
+          type="button"
+          role="tab"
+          aria-selected={activeTab === 'questions'}
+          className={activeTab === 'questions' ? 'active' : ''}
+          onClick={() => setActiveTab('questions')}
+        >
+          <span>单题分享</span>
+          <small>一道题一道题刷</small>
+        </button>
+        <button
+          type="button"
+          role="tab"
+          aria-selected={activeTab === 'papers'}
+          className={activeTab === 'papers' ? 'active' : ''}
+          onClick={() => setActiveTab('papers')}
+        >
+          <span>试卷分享</span>
+          <small>整卷 PDF / 图片</small>
+        </button>
+      </div>
+
+      {activeTab === 'questions' ? (
+        <>
       <section className="community-toolbar">
         <div className="filter-chips" role="group" aria-label="按章节筛选">
           <button
@@ -345,6 +374,10 @@ export function CommunityListPage(): JSX.Element {
           </button>
         </div>
       ) : null}
+        </>
+      ) : (
+        <PaperSharePanel configured={configured} singleFileDemo={singleFileDemo} />
+      )}
 
       <ConfirmDialog
         open={Boolean(reporting)}
