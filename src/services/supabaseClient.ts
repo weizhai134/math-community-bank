@@ -34,12 +34,20 @@ const indexedDbStorage = {
 
 let client: SupabaseClient | null = null;
 
-/** 所有 Supabase 请求的统一超时，避免不可达时页面一直停在“载入中”。 */
+/** 普通请求超时，避免不可达时页面一直停在“载入中”。 */
 const REQUEST_TIMEOUT_MS = 5000;
 
+/** 试卷最大 10MB，慢网下上传要留足时间；普通 REST 请求仍用 5 秒。 */
+const UPLOAD_TIMEOUT_MS = 120000;
+
 const timeoutFetch: typeof fetch = (input, init) => {
+  const isUpload =
+    typeof FormData !== 'undefined' && init?.body instanceof FormData;
   const controller = new AbortController();
-  const timer = window.setTimeout(() => controller.abort(), REQUEST_TIMEOUT_MS);
+  const timer = window.setTimeout(
+    () => controller.abort(),
+    isUpload ? UPLOAD_TIMEOUT_MS : REQUEST_TIMEOUT_MS,
+  );
   const signal = init?.signal ?? controller.signal;
   return fetch(input, { ...init, signal }).finally(() => window.clearTimeout(timer));
 };
