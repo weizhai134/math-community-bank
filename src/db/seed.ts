@@ -3,7 +3,7 @@ import { STORAGE_KEYS } from '../domain/constants';
 import type { Profile } from '../domain/types';
 import { db, getProfile, setSetting } from './db';
 
-export const SEED_VERSION = '1.1.0';
+export const SEED_VERSION = '1.2.0';
 
 export async function seedDatabase(): Promise<void> {
   assertSeedIntegrity();

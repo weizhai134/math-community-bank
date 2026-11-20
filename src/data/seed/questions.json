@@ -393,9 +393,9 @@
     "source": "原创",
     "hasGraph": true,
     "graph": {
-      "expression": "e^(2*x)",
+      "expression": "exp(2*x)",
       "kind": "tangent",
-      "derivativeExpression": "2*e^(2*x)",
+      "derivativeExpression": "2*exp(2*x)",
       "tangentAt": 0,
       "xMin": -1.5,
       "xMax": 1,
