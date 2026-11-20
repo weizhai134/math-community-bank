@@ -4,6 +4,7 @@ import { STORAGE_KEYS, TIER_ORDER } from '../domain/constants';
 import type { CommunityCacheRecord } from '../domain/communityTypes';
 import type { AchievementState } from '../domain/achievements';
 import type { DailyBoxRecord } from '../domain/dailyBox';
+import type { ExamHistoryRecord } from '../domain/examHistory';
 import type { FlashcardState } from '../domain/flashcards';
 import type {
   Level,
@@ -43,6 +44,8 @@ interface BackupPayload {
     /** 第四阶段新增；旧备份没有该字段也能恢复。 */
     achievements?: AchievementState[];
     dailyBoxes?: DailyBoxRecord[];
+    /** 第五阶段新增；旧备份没有该字段也能恢复。 */
+    examHistory?: ExamHistoryRecord[];
   };
 }
 
@@ -106,6 +109,7 @@ export async function loadBackupData(): Promise<BackupPayload['data']> {
     flashcardStates,
     achievements,
     dailyBoxes,
+    examHistory,
   ] = await Promise.all([
     db.questions.toArray(),
     db.levels.toArray(),
@@ -118,6 +122,7 @@ export async function loadBackupData(): Promise<BackupPayload['data']> {
     db.flashcardStates.toArray(),
     db.achievements.toArray(),
     db.dailyBoxes.toArray(),
+    db.examHistory.toArray(),
   ]);
   if (!profile) throw new Error('用户档案不存在，无法导出备份');
   return {
@@ -132,6 +137,7 @@ export async function loadBackupData(): Promise<BackupPayload['data']> {
     flashcardStates,
     achievements,
     dailyBoxes,
+    examHistory,
   };
 }
 
@@ -207,6 +213,9 @@ export async function restoreBackup(raw: unknown): Promise<void> {
   const dailyBoxes = Array.isArray(data.dailyBoxes)
     ? (data.dailyBoxes as DailyBoxRecord[])
     : [];
+  const examHistory = Array.isArray(data.examHistory)
+    ? (data.examHistory as ExamHistoryRecord[])
+    : [];
 
   await db.transaction(
     'rw',
@@ -222,6 +231,7 @@ export async function restoreBackup(raw: unknown): Promise<void> {
       db.flashcardStates,
       db.achievements,
       db.dailyBoxes,
+      db.examHistory,
     ],
     async () => {
       await Promise.all([
@@ -236,6 +246,7 @@ export async function restoreBackup(raw: unknown): Promise<void> {
         db.flashcardStates.clear(),
         db.achievements.clear(),
         db.dailyBoxes.clear(),
+        db.examHistory.clear(),
       ]);
       await db.questions.bulkPut(questions);
       await db.levels.bulkPut(levels);
@@ -248,6 +259,7 @@ export async function restoreBackup(raw: unknown): Promise<void> {
       if (flashcardStates.length > 0) await db.flashcardStates.bulkPut(flashcardStates);
       if (achievements.length > 0) await db.achievements.bulkPut(achievements);
       if (dailyBoxes.length > 0) await db.dailyBoxes.bulkPut(dailyBoxes);
+      if (examHistory.length > 0) await db.examHistory.bulkPut(examHistory);
     },
   );
   // 防止备份中的日期格式与当前实现不一致。

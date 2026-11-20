@@ -2,6 +2,7 @@ import Dexie, { type EntityTable } from 'dexie';
 import type { AchievementState } from '../domain/achievements';
 import type { CommunityCacheRecord } from '../domain/communityTypes';
 import type { DailyBoxRecord } from '../domain/dailyBox';
+import type { ExamHistoryRecord } from '../domain/examHistory';
 import type { FlashcardState } from '../domain/flashcards';
 import type {
   Level,
@@ -25,6 +26,7 @@ export class GaoshuDatabase extends Dexie {
   flashcardStates!: EntityTable<FlashcardState, 'id'>;
   achievements!: EntityTable<AchievementState, 'id'>;
   dailyBoxes!: EntityTable<DailyBoxRecord, 'date'>;
+  examHistory!: EntityTable<ExamHistoryRecord, 'id'>;
 
   constructor() {
     super('gaoshu-quest');
@@ -51,6 +53,10 @@ export class GaoshuDatabase extends Dexie {
     this.version(4).stores({
       achievements: 'id, unlockedAt',
       dailyBoxes: 'date, claimedAt',
+    });
+    // 第五阶段：模拟考历史成绩摘要；只新增表，不改已有表。
+    this.version(5).stores({
+      examHistory: 'id, finishedAt, difficulty, [difficulty+finishedAt]',
     });
   }
 }

@@ -17,6 +17,8 @@ import {
   saveExamSession,
 } from '../services/examService';
 import { MathText } from '../components/MathText';
+import { ShareReportButton } from '../components/ShareReportButton';
+import { buildExamShareData } from '../domain/shareCard';
 import { DifficultyBadge } from '../components/ui';
 
 const GRADE_LABEL: Record<Grade, string> = {
@@ -255,6 +257,7 @@ export function ExamResultPage(): JSX.Element {
 }
 
 function ExamReport({ result }: { result: ExamResult }): JSX.Element {
+  const profile = useAppStore((state) => state.profile);
   const groups = [
     { type: 'choice' as const, label: '选择题' },
     { type: 'judge' as const, label: '判断题' },
@@ -358,6 +361,9 @@ function ExamReport({ result }: { result: ExamResult }): JSX.Element {
       </section>
 
       <div className="result-actions">
+        {profile ? (
+          <ShareReportButton createData={() => buildExamShareData(result, profile)} />
+        ) : null}
         <button className="button primary" onClick={() => navigate('/exam')}>
           再考一次
         </button>

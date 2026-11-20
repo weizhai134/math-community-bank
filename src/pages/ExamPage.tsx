@@ -17,6 +17,7 @@ import {
   startExam,
 } from '../services/examService';
 import { ConfirmDialog } from '../components/Modal';
+import { ExamHistoryList } from '../components/ExamHistoryList';
 
 const DIFFICULTIES: ExamDifficulty[] = ['easy', 'medium', 'hard'];
 
@@ -124,6 +125,8 @@ export function ExamPage(): JSX.Element {
           </div>
         </section>
       ) : null}
+
+      <ExamHistoryList />
 
       {result ? (
         <section className="exam-last-result">

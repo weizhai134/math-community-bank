@@ -7574,6 +7574,393 @@ h3 {
   }
 }
 
+/* 模拟考历史 */
+.exam-history {
+  margin: 24px 0;
+  padding: 22px;
+  border: 1px solid var(--line);
+  border-radius: 20px;
+  background: var(--surface);
+}
+
+.exam-history-list {
+  display: flex;
+  flex-direction: column;
+  gap: 8px;
+  margin-top: 14px;
+}
+
+.exam-history-row {
+  display: grid;
+  grid-template-columns: minmax(0, 1fr) auto minmax(190px, auto);
+  gap: 16px;
+  align-items: center;
+  padding: 12px 14px;
+  border: 1px solid var(--line);
+  border-radius: 12px;
+  background: #fbf8f0;
+}
+
+.exam-history-main {
+  display: flex;
+  flex-wrap: wrap;
+  gap: 6px 12px;
+  align-items: baseline;
+  min-width: 0;
+}
+
+.exam-history-difficulty {
+  color: var(--ink);
+  font-family: var(--serif);
+  font-size: 16px;
+  font-weight: 600;
+}
+
+.exam-history-date {
+  color: var(--muted-light);
+  font-size: 10px;
+}
+
+.exam-history-score {
+  color: var(--ink);
+  font-family: var(--serif);
+  font-size: 22px;
+  font-weight: 500;
+  white-space: nowrap;
+}
+
+.exam-history-score small {
+  color: var(--muted);
+  font-family: var(--sans);
+  font-size: 11px;
+  font-weight: 400;
+}
+
+.exam-history-meta {
+  display: flex;
+  flex-wrap: wrap;
+  gap: 4px 12px;
+  justify-content: flex-end;
+  color: var(--muted);
+  font-size: 10px;
+}
+
+/* 战报卡片：固定 750 × 1000，截图时不依赖外部资源 */
+.share-card-host {
+  position: fixed;
+  top: 0;
+  left: -10000px;
+  z-index: -1;
+  width: 750px;
+  height: 1000px;
+  overflow: hidden;
+  pointer-events: none;
+}
+
+.share-card-capture {
+  width: 750px;
+  height: 1000px;
+}
+
+.share-card {
+  width: 750px;
+  height: 1000px;
+  padding: 22px;
+  background: #f7f1e3;
+  color: #1d272b;
+  font-family: "Songti SC", "STSong", "Noto Serif CJK SC", "SimSun", serif;
+}
+
+.share-card-frame {
+  position: relative;
+  display: flex;
+  flex-direction: column;
+  height: 100%;
+  padding: 40px 46px 30px;
+  border: 1px solid #b9ab8f;
+  background:
+    radial-gradient(circle at 12% 4%, rgba(180, 83, 9, 0.1), transparent 240px),
+    radial-gradient(circle at 92% 96%, rgba(15, 118, 110, 0.09), transparent 260px),
+    #fbf7ec;
+}
+
+.share-card-top {
+  display: flex;
+  gap: 20px;
+  align-items: flex-start;
+  justify-content: space-between;
+}
+
+.share-brand {
+  display: flex;
+  gap: 12px;
+  align-items: center;
+}
+
+.share-brand-mark {
+  display: inline-flex;
+  width: 48px;
+  height: 48px;
+  align-items: center;
+  justify-content: center;
+  border-radius: 8px;
+  background: #1d272b;
+  color: #fbf7ec;
+  font-family: "Times New Roman", serif;
+  font-size: 34px;
+  line-height: 1;
+}
+
+.share-brand strong {
+  display: block;
+  color: #1d272b;
+  font-family: "Songti SC", "STSong", serif;
+  font-size: 24px;
+  font-weight: 600;
+  letter-spacing: 0.04em;
+}
+
+.share-brand small {
+  display: block;
+  margin-top: 2px;
+  color: #7a7264;
+  font-family: "Segoe UI", "Microsoft YaHei", sans-serif;
+  font-size: 10px;
+  letter-spacing: 0.16em;
+}
+
+.share-rank {
+  text-align: right;
+}
+
+.share-rank span {
+  display: block;
+  color: #8a8172;
+  font-family: "Segoe UI", "Microsoft YaHei", sans-serif;
+  font-size: 9px;
+  letter-spacing: 0.2em;
+  text-transform: uppercase;
+}
+
+.share-rank strong {
+  display: block;
+  margin-top: 2px;
+  color: #8a3f07;
+  font-size: 26px;
+  font-weight: 600;
+  letter-spacing: 0.08em;
+}
+
+.share-rank small {
+  display: block;
+  color: #6d746f;
+  font-size: 11px;
+}
+
+.share-card-rule {
+  height: 1px;
+  margin: 26px 0 30px;
+  background: linear-gradient(90deg, transparent, #bcb29d 12%, #bcb29d 88%, transparent);
+}
+
+.share-card-main {
+  display: flex;
+  flex: 1;
+  flex-direction: column;
+  align-items: center;
+  text-align: center;
+}
+
+.share-kicker {
+  color: #b45309;
+  font-family: "Segoe UI", "Microsoft YaHei", sans-serif;
+  font-size: 10px;
+  letter-spacing: 0.28em;
+}
+
+.share-card-main h1 {
+  max-width: 620px;
+  margin: 15px 0 10px;
+  color: #1d272b;
+  font-family: "Songti SC", "STSong", "Noto Serif CJK SC", serif;
+  font-size: 38px;
+  font-weight: 600;
+  line-height: 1.25;
+  letter-spacing: 0.01em;
+}
+
+.share-subtitle {
+  margin: 0;
+  color: #7a7264;
+  font-family: "Segoe UI", "Microsoft YaHei", sans-serif;
+  font-size: 13px;
+}
+
+.share-stars {
+  display: flex;
+  gap: 12px;
+  margin: 34px 0 30px;
+  color: #d6cbb8;
+  font-size: 54px;
+  line-height: 1;
+}
+
+.share-stars .lit {
+  color: #b45309;
+  text-shadow: 0 2px 0 rgba(138, 63, 7, 0.14);
+}
+
+.share-score {
+  display: flex;
+  gap: 8px;
+  align-items: baseline;
+  margin: 34px 0 30px;
+  color: #8a3f07;
+}
+
+.share-score strong {
+  font-family: "Songti SC", "STSong", serif;
+  font-size: 84px;
+  font-weight: 500;
+  line-height: 0.9;
+}
+
+.share-score span {
+  color: #6d746f;
+  font-family: "Segoe UI", "Microsoft YaHei", sans-serif;
+  font-size: 16px;
+}
+
+.share-metrics {
+  display: grid;
+  width: 100%;
+  max-width: 560px;
+  grid-template-columns: repeat(3, minmax(0, 1fr));
+  margin: 0 auto;
+  padding: 18px 0;
+  border-top: 1px solid #d8d0bf;
+  border-bottom: 1px solid #d8d0bf;
+}
+
+.share-metrics div + div {
+  border-left: 1px solid #e2dacb;
+}
+
+.share-metrics span {
+  display: block;
+  color: #8a8172;
+  font-family: "Segoe UI", "Microsoft YaHei", sans-serif;
+  font-size: 10px;
+  letter-spacing: 0.12em;
+}
+
+.share-metrics strong {
+  display: block;
+  margin-top: 5px;
+  color: #344147;
+  font-family: "Songti SC", "STSong", serif;
+  font-size: 21px;
+  font-weight: 600;
+}
+
+.share-quote {
+  max-width: 600px;
+  margin: 40px auto 0;
+  padding: 20px 28px;
+  border-top: 1px solid #d8d0bf;
+  border-bottom: 1px solid #d8d0bf;
+  color: #344147;
+  font-size: 19px;
+  font-style: italic;
+  line-height: 1.85;
+}
+
+.share-card-footer {
+  display: flex;
+  gap: 16px;
+  align-items: center;
+  justify-content: space-between;
+  padding-top: 22px;
+  color: #8a8172;
+  font-family: "Segoe UI", "Microsoft YaHei", sans-serif;
+  font-size: 10px;
+  letter-spacing: 0.1em;
+}
+
+.share-seal {
+  position: absolute;
+  right: 44px;
+  bottom: 36px;
+  display: flex;
+  width: 58px;
+  height: 58px;
+  align-items: center;
+  justify-content: center;
+  border: 2px solid rgba(180, 35, 24, 0.55);
+  border-radius: 50%;
+  color: rgba(180, 35, 24, 0.65);
+  font-family: "Times New Roman", serif;
+  font-size: 32px;
+  transform: rotate(-12deg);
+}
+
+.share-preview {
+  display: flex;
+  flex-direction: column;
+  gap: 8px;
+}
+
+.share-preview-image {
+  display: block;
+  width: auto;
+  max-width: 100%;
+  max-height: 54vh;
+  margin: 0 auto;
+  object-fit: contain;
+  border: 1px solid var(--line);
+  border-radius: 10px;
+  background: #f7f1e3;
+}
+
+.share-preview-hint {
+  margin: 0;
+  color: var(--muted);
+  font-size: 11px;
+  text-align: center;
+}
+
+.share-preview-loading {
+  display: flex;
+  min-height: 220px;
+  flex-direction: column;
+  gap: 12px;
+  align-items: center;
+  justify-content: center;
+  text-align: center;
+}
+
+.share-preview-loading p {
+  margin: 0;
+  color: var(--muted);
+  font-size: 12px;
+}
+
+@media (max-width: 680px) {
+  .exam-history {
+    padding: 16px;
+  }
+
+  .exam-history-row {
+    grid-template-columns: minmax(0, 1fr) auto;
+    gap: 8px 12px;
+  }
+
+  .exam-history-meta {
+    grid-column: 1 / -1;
+    justify-content: flex-start;
+  }
+}
+
 
 
 

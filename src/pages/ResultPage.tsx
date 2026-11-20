@@ -18,6 +18,8 @@ import { navigate } from '../lib/router';
 import { getResult } from '../services/appService';
 import { useAppStore } from '../store/useAppStore';
 import { MathText } from '../components/MathText';
+import { ShareReportButton } from '../components/ShareReportButton';
+import { buildLevelShareData } from '../domain/shareCard';
 import { DifficultyBadge, ProgressBar, Stars } from '../components/ui';
 
 function gradeLabel(grade: Grade | null): string {
@@ -627,6 +629,7 @@ function FinalResultView({
       </section>
 
       <div className="result-actions">
+        <ShareReportButton createData={() => buildLevelShareData(attempt, profile)} />
         <button
           className="button primary"
           onClick={() => navigate(attempt.isTrial ? '/wrong' : `/level/${attempt.levelId}`)}

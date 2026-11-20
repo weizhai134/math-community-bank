@@ -1,5 +1,9 @@
 import { db, deleteSetting, getSetting, setSetting } from '../db/db';
 import {
+  examResultToHistory,
+  type ExamHistoryRecord,
+} from '../domain/examHistory';
+import {
   EXAM_DIFFICULTY_PRIORITY,
   EXAM_DURATION_MS,
   EXAM_QUESTION_COUNTS,
@@ -120,6 +124,14 @@ export async function loadExamResult(): Promise<ExamResult | null> {
   return (await getSetting<ExamResult>(EXAM_RESULT_KEY)) ?? null;
 }
 
+export async function recordExamHistory(result: ExamResult): Promise<void> {
+  await db.examHistory.put(examResultToHistory(result));
+}
+
+export async function listExamHistory(limit = 10): Promise<ExamHistoryRecord[]> {
+  return db.examHistory.orderBy('finishedAt').reverse().limit(limit).toArray();
+}
+
 export async function finalizeExam(
   session: ExamSession,
   questions: Question[],
@@ -185,6 +197,7 @@ export async function finalizeExam(
     }
   });
 
+  await recordExamHistory(result);
   await setSetting(EXAM_RESULT_KEY, result);
   await clearExamSession();
   return result;
