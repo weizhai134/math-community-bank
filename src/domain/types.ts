@@ -20,6 +20,10 @@ export interface Question {
   options?: QuestionOption[];
   answer: string | boolean;
   explanation: string;
+  /** 这道题是否支持“画图”查看。 */
+  hasGraph?: boolean;
+  /** 图形描述；仅当 hasGraph 为 true 时渲染按钮。 */
+  graph?: import('./graph').GraphSpec;
 }
 
 export interface Level {

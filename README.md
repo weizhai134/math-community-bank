@@ -40,7 +40,7 @@ npm run build && npm run preview:lan   # 构建版，监听 0.0.0.0:4173
 
 ### 2. 部署到静态托管（推荐长期使用）
 
-`npm run build` 后把整个 `dist/` 目录上传到任意静态托管即可：GitHub Pages、Netlify、Vercel、Cloudflare Pages、nginx 或对象存储。构建产物使用**相对路径**（`base: './'`），放在域名根目录或子目录（如 `https://user.github.io/gaoshu/`）都能直接运行；没有环境变量、没有服务端配置。
+`npm run build` 后把整个 `dist/` 目录上传到任意静态托管即可：GitHub Pages、Netlify、Vercel、Cloudflare Pages、nginx 或对象存储。构建使用 Vite 默认的根路径 `base: '/'`，适合部署在域名根目录；如果部署在子目录（如 `https://user.github.io/gaoshu/`），需要把 `vite.config.ts` 的 `base` 改成对应子路径后重新构建。没有服务端配置。
 
 部署后请用 **HTTPS** 访问（主流静态托管默认提供），这是手机安装与离线使用的前提。
 
@@ -84,6 +84,9 @@ npm run build && npm run preview:lan   # 构建版，监听 0.0.0.0:4173
 7. 右上角“数据”可导出/恢复完整备份，也可导入扩展题库 JSON。
 8. “期末模拟考场”按 16 题 / 120 分钟组卷，交卷后自评解答题生成预测成绩单；成绩摘要会写入本地模拟考历史，错题进入同一错题本。
 9. 关卡结算页和模拟考成绩单底部都有“生成战报”，生成 750×1000 的证书卡，可保存图片分享。
+10. 首页“每日一题”每天按日期固定抽一道选择/判断题，完成额外 +20 XP；当天完成后置灰，次日自动换题。
+11. 刷题页右侧悬浮的“∑ 公式本”可打开公式速查抽屉（本地 JSON + KaTeX），只供查阅，不影响答题；题干旁的“画图”按钮会对带图像数据的题打开函数图。
+12. 函数图支持普通曲线、导数切线（青色）与定积分阴影面积；图像用轻量 `function-plot` 在 Modal 中按需渲染。
 
 ### 键盘
 
@@ -163,6 +166,9 @@ IndexedDB 数据库名：`gaoshu-quest`。对象仓库：
 - `profile`：XP、段位依据、连续天数、章节解锁
 - `settings`：进行中会话、待自评会话、种子版本、社区练习/结果/每日 XP、Supabase 会话等
 - `communityQuestions`：社区题离线缓存（第二阶段新增）
+- `flashcardStates`：公式闪卡的本地 SM-2 状态（第三阶段新增）
+- `achievements`、`dailyBoxes`：成就与每日盲盒（第四阶段新增）
+- `examHistory`：模拟考成绩摘要（第五阶段新增）
 
 进行中的关卡每次作答都会保存；刷新页面可继续。显式退出会二次确认，并追加一条 `abandoned` 未完成记录，不给星级或 XP。
 

@@ -20,6 +20,7 @@ import { navigate } from '../lib/router';
 import { useAppStore } from '../store/useAppStore';
 import { InstallHint } from '../components/InstallHint';
 import { DailyBlindBox } from '../components/DailyBlindBox';
+import { DailyChallengeCard } from '../components/DailyChallengeCard';
 import { ProgressBar, Stars } from '../components/ui';
 
 export function HomePage(): JSX.Element {
@@ -151,6 +152,8 @@ export function HomePage(): JSX.Element {
       </section>
 
       <InstallHint />
+
+      <DailyChallengeCard />
 
       <section className="dashboard-grid">
         <article className="continue-card">

@@ -8,6 +8,7 @@ import { MathText } from '../components/MathText';
 import { ChoiceOptions, JudgeButtons, SolutionInput } from '../components/AnswerInputs';
 import { ConfirmDialog } from '../components/Modal';
 import { FormulaCheatSheet } from '../components/FormulaCheatSheet';
+import { GraphButton } from '../components/GraphButton';
 import { Scratchpad, type ScratchpadHandle } from '../components/Scratchpad';
 import { DifficultyBadge } from '../components/ui';
 
@@ -355,9 +356,12 @@ export function PlayPage(): JSX.Element {
               {currentQuestion.source}
             </span>
           </div>
-          <MathText className="question-stem" as="div">
-            {currentQuestion.stem}
-          </MathText>
+          <div className="question-stem-row">
+            <MathText className="question-stem" as="div">
+              {currentQuestion.stem}
+            </MathText>
+            <GraphButton question={currentQuestion} />
+          </div>
 
           {currentQuestion.type === 'choice' ? (
             <ChoiceOptions
@@ -449,6 +453,16 @@ export function PlayPage(): JSX.Element {
           不会自动判分。
         </p>
       </ConfirmDialog>
+
+      <button
+        type="button"
+        className="formula-fab"
+        onClick={() => setCheatOpen(true)}
+        aria-label="打开公式本"
+      >
+        <span aria-hidden="true">∑</span>
+        公式本
+      </button>
 
       <button
         type="button"

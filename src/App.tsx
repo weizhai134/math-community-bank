@@ -11,6 +11,7 @@ import { LevelDetailPage } from './pages/LevelDetailPage';
 import { ResultPage } from './pages/ResultPage';
 import { WrongBookPage } from './pages/WrongBookPage';
 import { FlashcardsPage } from './pages/FlashcardsPage';
+import { DailyChallengePage } from './pages/DailyChallengePage';
 import { AchievementsPage } from './pages/AchievementsPage';
 import { ExamPage } from './pages/ExamPage';
 import { ExamPlayPage } from './pages/ExamPlayPage';
@@ -127,6 +128,8 @@ function RouteView({ route }: { route: Route }): JSX.Element {
       return <WrongBookPage />;
     case 'flashcards':
       return <FlashcardsPage />;
+    case 'daily':
+      return <DailyChallengePage />;
     case 'achievements':
       return <AchievementsPage />;
     case 'exam':

@@ -5,6 +5,16 @@
     "topic": "函数定义域",
     "difficulty": "基础",
     "source": "原创",
+    "hasGraph": true,
+    "graph": {
+      "expression": "sqrt(4 - x^2)/(x - 1)",
+      "kind": "curve",
+      "xMin": -2.2,
+      "xMax": 2.2,
+      "yMin": -6,
+      "yMax": 6,
+      "note": "曲线只在 [-2,2] 内有定义；x=1 处有一条竖直渐近线。"
+    },
     "type": "choice",
     "stem": "函数 $f(x)=\\dfrac{\\sqrt{4-x^2}}{x-1}$ 的定义域是（ ）。",
     "options": [
@@ -278,6 +288,18 @@
     "topic": "导数的基本计算",
     "difficulty": "基础",
     "source": "原创",
+    "hasGraph": true,
+    "graph": {
+      "expression": "x^3 - 3*x",
+      "kind": "curve",
+      "derivativeExpression": "3*x^2 - 3",
+      "tangentAt": 1,
+      "xMin": -2.5,
+      "xMax": 2.5,
+      "yMin": -5,
+      "yMax": 5,
+      "note": "曲线在 x=1 处切线水平，所以 f'(1)=0。"
+    },
     "type": "choice",
     "stem": "设 $f(x)=x^3-3x$，则 $f'(1)=$（ ）。",
     "options": [
@@ -369,6 +391,18 @@
     "topic": "切线方程",
     "difficulty": "基础",
     "source": "原创",
+    "hasGraph": true,
+    "graph": {
+      "expression": "e^(2*x)",
+      "kind": "tangent",
+      "derivativeExpression": "2*e^(2*x)",
+      "tangentAt": 0,
+      "xMin": -1.5,
+      "xMax": 1,
+      "yMin": -1,
+      "yMax": 5,
+      "note": "曲线在 (0,1) 处的切线斜率为 2。"
+    },
     "type": "choice",
     "stem": "曲线 $y=e^{2x}$ 在点 $(0,1)$ 处的切线方程为（ ）。",
     "options": [
@@ -1097,6 +1131,18 @@
     "topic": "定积分的计算",
     "difficulty": "基础",
     "source": "原创",
+    "hasGraph": true,
+    "graph": {
+      "expression": "x^2",
+      "kind": "area",
+      "areaFrom": 0,
+      "areaTo": 1,
+      "xMin": -1,
+      "xMax": 1.5,
+      "yMin": -1,
+      "yMax": 2.5,
+      "note": "阴影区域是 y=x^2 在 [0,1] 上的曲边梯形，面积就是定积分。"
+    },
     "type": "choice",
     "stem": "$\\displaystyle\\int_0^1 x^2\\,dx=$（ ）。",
     "options": [
@@ -1450,6 +1496,18 @@
     "topic": "曲边梯形面积",
     "difficulty": "进阶",
     "source": "原创",
+    "hasGraph": true,
+    "graph": {
+      "expression": "1/x",
+      "kind": "area",
+      "areaFrom": 1,
+      "areaTo": 2.718281828459045,
+      "xMin": 0.2,
+      "xMax": 3.5,
+      "yMin": -0.5,
+      "yMax": 2.2,
+      "note": "阴影区域是 y=1/x 在 [1,e] 上的面积，大小为 1。"
+    },
     "type": "judge",
     "stem": "判断：曲线 $y=\\dfrac1x$ 与直线 $x=1$、$x=e$ 及 $x$ 轴所围图形的面积为 $1$。",
     "answer": true,
