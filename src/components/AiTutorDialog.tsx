@@ -1,9 +1,8 @@
 import { useEffect, useState } from 'react';
 import type { WrongItem } from '../domain/types';
-import { useAppStore } from '../store/useAppStore';
 import { MathText } from './MathText';
 import { Modal } from './Modal';
-import { askAiTutor, AiTutorError } from '../services/aiTutor';
+import { askAiTutor } from '../services/aiTutor';
 
 function answerText(item: WrongItem, answer: string | boolean | undefined): string {
   if (answer === undefined || answer === null) return '未记录（旧错题没有保存作答）';
@@ -37,11 +36,9 @@ export function AiTutorDialog({
   item: WrongItem | null;
   onClose: () => void;
 }): JSX.Element {
-  const setDataOpen = useAppStore((state) => state.setDataOpen);
-  const setDataTab = useAppStore((state) => state.setDataTab);
   const [state, setState] = useState<State>('loading');
   const [answer, setAnswer] = useState('');
-  const [error, setError] = useState<AiTutorError | Error | null>(null);
+  const [error, setError] = useState<Error | null>(null);
   const [attempt, setAttempt] = useState(0);
 
   useEffect(() => {
@@ -71,8 +68,6 @@ export function AiTutorDialog({
     };
   }, [item, attempt]);
 
-  const errorCode = error instanceof AiTutorError ? error.code : null;
-
   return (
     <Modal open={Boolean(item)} title="AI 错题点拨" onClose={onClose}>
       {item ? (
@@ -94,19 +89,6 @@ export function AiTutorDialog({
               <strong>这次没能问到 AI</strong>
               <p>{error.message}</p>
               <div className="ai-error-actions">
-                {errorCode === 'missing-key' ? (
-                  <button
-                    type="button"
-                    className="button primary small"
-                    onClick={() => {
-                      onClose();
-                      setDataTab('ai');
-                      setDataOpen(true);
-                    }}
-                  >
-                    去设置配置
-                  </button>
-                ) : null}
                 <button
                   type="button"
                   className="button ghost small"
@@ -128,7 +110,8 @@ export function AiTutorDialog({
           ) : null}
 
           <p className="ai-footnote">
-            AI 生成内容仅供参考，可能出错；请以教材和老师讲解为准。API Key 只保存在本机浏览器。
+            AI 生成内容仅供参考，可能出错；请以教材和老师讲解为准。请求通过本项目的
+            Vercel 代理发起。
           </p>
         </div>
       ) : null}

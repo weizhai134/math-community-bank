@@ -1,48 +1,24 @@
-const AI_CONFIG_KEY = 'gaoshu-ai-config-v1';
-const AI_ENDPOINT = 'https://api.deepseek.com/chat/completions';
-const AI_MODEL = 'deepseek-chat';
-const AI_TIMEOUT_MS = 45_000;
+import { getCommunityAccessToken } from './supabaseClient';
 
-export interface AiTutorConfig {
-  apiKey: string;
-}
+const CHAT_ENDPOINT = '/api/chat';
+const CLIENT_TIMEOUT_MS = 55_000;
+
+export type AiTutorErrorCode =
+  | 'auth'
+  | 'quota'
+  | 'timeout'
+  | 'network'
+  | 'http'
+  | 'empty';
 
 export class AiTutorError extends Error {
-  readonly code: 'missing-key' | 'timeout' | 'network' | 'http' | 'empty';
+  readonly code: AiTutorErrorCode;
 
-  constructor(
-    message: string,
-    code: AiTutorError['code'],
-  ) {
+  constructor(message: string, code: AiTutorErrorCode) {
     super(message);
     this.name = 'AiTutorError';
     this.code = code;
   }
-}
-
-export function readAiTutorConfig(): AiTutorConfig {
-  if (typeof window === 'undefined') return { apiKey: '' };
-  try {
-    const raw = window.localStorage.getItem(AI_CONFIG_KEY);
-    if (!raw) return { apiKey: '' };
-    const parsed = JSON.parse(raw) as { apiKey?: unknown };
-    return { apiKey: typeof parsed.apiKey === 'string' ? parsed.apiKey : '' };
-  } catch {
-    return { apiKey: '' };
-  }
-}
-
-export function saveAiTutorConfig(apiKey: string): AiTutorConfig {
-  const normalized = apiKey.trim();
-  if (typeof window !== 'undefined') {
-    window.localStorage.setItem(AI_CONFIG_KEY, JSON.stringify({ apiKey: normalized }));
-  }
-  return { apiKey: normalized };
-}
-
-export function clearAiTutorConfig(): void {
-  if (typeof window === 'undefined') return;
-  window.localStorage.removeItem(AI_CONFIG_KEY);
 }
 
 export interface AiTutorPromptInput {
@@ -62,50 +38,87 @@ export function buildAiTutorPrompt(input: AiTutorPromptInput): string {
   ].join('\n');
 }
 
+type ChatSuccess = {
+  content: string;
+  used?: number;
+  remaining?: number;
+  limit?: number;
+};
+
+type ChatErrorBody = {
+  error?: unknown;
+  code?: unknown;
+  used?: unknown;
+  remaining?: unknown;
+  limit?: unknown;
+};
+
+/**
+ * 只请求同源 /api/chat。AI Key、service_role 与配额判断都在 Vercel Function 内，
+ * 浏览器只带 Supabase 匿名会话的 access token。
+ */
 export async function askAiTutor(input: AiTutorPromptInput): Promise<string> {
-  const { apiKey } = readAiTutorConfig();
-  if (!apiKey) {
-    throw new AiTutorError('请先在设置中配置 API Key', 'missing-key');
+  let token: string;
+  try {
+    token = await getCommunityAccessToken();
+  } catch (error) {
+    throw new AiTutorError(
+      error instanceof Error ? error.message : '无法获取登录状态，请刷新页面后重试',
+      'auth',
+    );
   }
 
   const controller = new AbortController();
-  const timeout = window.setTimeout(() => controller.abort(), AI_TIMEOUT_MS);
+  const timer = window.setTimeout(() => controller.abort(), CLIENT_TIMEOUT_MS);
 
   try {
-    const response = await fetch(AI_ENDPOINT, {
+    const response = await fetch(CHAT_ENDPOINT, {
       method: 'POST',
       headers: {
         'Content-Type': 'application/json',
-        Authorization: `Bearer ${apiKey}`,
+        Authorization: `Bearer ${token}`,
       },
-      body: JSON.stringify({
-        model: AI_MODEL,
-        messages: [
-          {
-            role: 'user',
-            content: buildAiTutorPrompt(input),
-          },
-        ],
-        temperature: 0.7,
-        stream: false,
-      }),
+      body: JSON.stringify({ prompt: buildAiTutorPrompt(input) }),
       signal: controller.signal,
     });
 
+    const payload = (await response.json().catch(() => null)) as
+      | ChatSuccess
+      | ChatErrorBody
+      | null;
+
     if (!response.ok) {
+      const errorBody = payload as ChatErrorBody | null;
+      const serverMessage =
+        errorBody && typeof errorBody === 'object' && typeof errorBody.error === 'string'
+          ? errorBody.error
+          : '';
+
       if (response.status === 401 || response.status === 403) {
-        throw new AiTutorError('API Key 无效或没有调用权限，请在设置中检查后重试', 'http');
+        throw new AiTutorError(
+          serverMessage || '登录状态已失效，请刷新页面后重试',
+          'auth',
+        );
       }
       if (response.status === 429) {
-        throw new AiTutorError('请求太频繁或额度不足，请稍后再试', 'http');
+        throw new AiTutorError(
+          serverMessage || '今天的 AI 助教次数已用完，明天再来。',
+          'quota',
+        );
       }
-      throw new AiTutorError(`AI 服务返回错误（HTTP ${response.status}），请稍后再试`, 'http');
+      if (response.status === 504) {
+        throw new AiTutorError(serverMessage || 'AI 请求超时，请稍后再试', 'timeout');
+      }
+      throw new AiTutorError(
+        serverMessage || `AI 服务暂时不可用（HTTP ${response.status}），请稍后再试`,
+        'http',
+      );
     }
 
-    const data = (await response.json()) as {
-      choices?: Array<{ message?: { content?: unknown } }>;
-    };
-    const content = data.choices?.[0]?.message?.content;
+    const content =
+      payload && typeof payload === 'object' && 'content' in payload
+        ? (payload as ChatSuccess).content
+        : '';
     if (typeof content !== 'string' || !content.trim()) {
       throw new AiTutorError('AI 没有返回内容，请重试', 'empty');
     }
@@ -113,10 +126,10 @@ export async function askAiTutor(input: AiTutorPromptInput): Promise<string> {
   } catch (error) {
     if (error instanceof AiTutorError) throw error;
     if (error instanceof DOMException && error.name === 'AbortError') {
-      throw new AiTutorError('AI 请求超时（45 秒），请检查网络后重试', 'timeout');
+      throw new AiTutorError('AI 请求超时，请检查网络后重试', 'timeout');
     }
     throw new AiTutorError('网络请求失败，请检查网络后重试', 'network');
   } finally {
-    window.clearTimeout(timeout);
+    window.clearTimeout(timer);
   }
 }

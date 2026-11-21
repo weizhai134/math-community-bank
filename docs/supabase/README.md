@@ -42,6 +42,10 @@ VITE_SUPABASE_ANON_KEY=<anon public key>
 
 前端兼容若干常见列名（`file_url/url/file_path`、`author_id/uploader_id` 等），但**上传前必须至少有一条允许匿名/登录用户写入的 Storage INSERT 策略，以及一条允许写入 `community_papers` 的 RLS INSERT 策略**，否则会报“没有上传权限”或“试卷写入被拒绝”。
 
+### AI 助教每日配额
+
+AI 代理需要 `ai_usage` 表与 `consume_ai_quota` RPC。在 SQL Editor 执行 [`ai_quota.sql`](./ai_quota.sql)；表只授权给 `service_role`，浏览器不可读写。执行后 Vercel Function 才能按用户扣减每天 10 次额度。
+
 执行后自检：
 
 ```sql

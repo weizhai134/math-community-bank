@@ -52,13 +52,13 @@ interface AppStore {
   activeRun: ActiveRun | null;
   pendingReview: PendingReview | null;
   dataOpen: boolean;
-  dataTab: 'backup' | 'bank' | 'ai';
+  dataTab: 'backup' | 'bank';
   toast: string | null;
   recordCompletion: (event: AchievementEvent) => Promise<void>;
   bootstrap: () => Promise<void>;
   refresh: () => Promise<void>;
   setDataOpen: (open: boolean) => void;
-  setDataTab: (tab: 'backup' | 'bank' | 'ai') => void;
+  setDataTab: (tab: 'backup' | 'bank') => void;
   showToast: (message: string) => void;
   startLevel: (levelId: string) => Promise<ActiveRun>;
   startTrial: () => Promise<ActiveRun>;

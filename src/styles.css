@@ -3565,55 +3565,6 @@ h3 {
 }
 
 /* ===== AI tutor ===== */
-.ai-config {
-  display: flex;
-  flex-direction: column;
-  gap: 10px;
-  padding: 16px 0;
-  border-top: 1px solid var(--line);
-}
-
-.ai-config label {
-  color: var(--ink);
-  font-size: 10px;
-  font-weight: 700;
-}
-
-.ai-config input {
-  width: 100%;
-  padding: 12px 14px;
-  border: 1px solid var(--line-strong);
-  border-radius: 9px;
-  background: #fffdf8;
-  color: var(--ink);
-  font-family: var(--mono);
-  font-size: 12px;
-  letter-spacing: 0.03em;
-}
-
-.ai-config input:focus {
-  outline: 2px solid rgba(184, 103, 31, 0.22);
-  border-color: var(--amber);
-}
-
-.ai-config .small-note code {
-  font-family: var(--mono);
-  font-size: 9px;
-}
-
-.ai-config-actions {
-  display: flex;
-  align-items: center;
-  flex-wrap: wrap;
-  gap: 10px;
-}
-
-.ai-saved {
-  color: var(--green);
-  font-size: 10px;
-  font-weight: 700;
-}
-
 .ai-panel {
   display: flex;
   flex-direction: column;
@@ -3723,10 +3674,6 @@ h3 {
 @media (max-width: 680px) {
   .ai-answer-text {
     max-height: 34vh;
-  }
-
-  .ai-config input {
-    font-size: 16px;
   }
 }
 

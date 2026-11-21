@@ -163,6 +163,39 @@ export function ensureCommunitySession(): Promise<CommunitySessionInfo> {
   );
 }
 
+/**
+ * 取当前 Supabase 会话的 access token，供同源 /api/chat 校验用户。
+ * 没有会话时先静默匿名登录；单文件版或未配置 Supabase 时抛错，由 AI 弹窗展示。
+ */
+export async function getCommunityAccessToken(): Promise<string> {
+  if (isSingleFileDemo) {
+    throw new CommunityUnavailableError(
+      'AI 助教需要在线版并启用 Supabase 匿名登录',
+      'network',
+    );
+  }
+
+  await ensureCommunitySession();
+
+  const sb = getCommunityClient();
+  if (!sb) {
+    throw new CommunityUnavailableError(
+      '未配置 Supabase，AI 助教暂不可用',
+      'unconfigured',
+    );
+  }
+
+  const { data, error } = await sb.auth.getSession();
+  const token = data.session?.access_token;
+  if (error || !token) {
+    throw new CommunityUnavailableError(
+      error ? `读取登录凭证失败：${error.message}` : '当前登录状态没有可用凭证，请刷新页面后重试',
+      'auth',
+    );
+  }
+  return token;
+}
+
 export async function refreshCommunityUser(): Promise<CommunitySessionInfo> {
   const sb = getCommunityClient();
   if (!sb) {

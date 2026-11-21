@@ -1,6 +1,6 @@
 # 高数闯关 · 同济第八版上册
 
-一个纯前端、本地优先的高等数学闯关刷题 Web 应用。七章、二十一关、一百零五道题，覆盖选择、判断、解答三类题型。所有进度、错题与设置只保存在当前浏览器的 IndexedDB，不设账号、不建后端、不发起业务网络请求。
+一个本地优先的高等数学闯关刷题 Web 应用。七章、二十一关、一百零五道题，覆盖选择、判断、解答三类题型。所有进度、错题与设置只保存在当前浏览器的 IndexedDB；社区题库与 AI 助教通过 Supabase 和 Vercel Function 提供，主线和离线题库不依赖后端。
 
 ![首页](docs/screenshots/home.png)
 
@@ -40,7 +40,7 @@ npm run build && npm run preview:lan   # 构建版，监听 0.0.0.0:4173
 
 ### 2. 部署到静态托管（推荐长期使用）
 
-`npm run build` 后把整个 `dist/` 目录上传到任意静态托管即可：GitHub Pages、Netlify、Vercel、Cloudflare Pages、nginx 或对象存储。构建使用 Vite 默认的根路径 `base: '/'`，适合部署在域名根目录；如果部署在子目录（如 `https://user.github.io/gaoshu/`），需要把 `vite.config.ts` 的 `base` 改成对应子路径后重新构建。没有服务端配置。
+`npm run build` 后把整个 `dist/` 目录上传到任意静态托管即可：GitHub Pages、Netlify、Vercel、Cloudflare Pages、nginx 或对象存储。构建使用 Vite 默认的根路径 `base: '/'`，适合部署在域名根目录；如果部署在子目录（如 `https://user.github.io/gaoshu/`），需要把 `vite.config.ts` 的 `base` 改成对应子路径后重新构建。社区题库需要 Supabase；AI 助教还需要部署到支持 `api/chat` 的 Vercel（或其他 Node Function 平台）。
 
 部署后请用 **HTTPS** 访问（主流静态托管默认提供），这是手机安装与离线使用的前提。
 
@@ -81,19 +81,21 @@ npm run build && npm run preview:lan   # 构建版，监听 0.0.0.0:4173
 4. 整关结束后，在结算页对每道已作答的解答题自评“做对 / 部分对 / 做错”，再统一计算正确率、星级、XP、错题与解锁。
 5. 结算页按“星级 → 成绩与逐题回顾 → 历史对比 → 鼓励 → 建议 → XP/段位/解锁”排列；逐题回顾里的完整解析默认收起，点“查看完整解析”展开完整步骤。
 6. 错题本按简化 SM-2 安排复习；到期后可进入错题试炼。
-7. 右上角“设置”可导出/恢复完整备份、导入扩展题库，并配置 AI 助教的 API Key。
+7. 右上角“设置”可导出/恢复完整备份、导入扩展题库；AI 助教无需用户配置 Key。
 8. “期末模拟考场”按 16 题 / 120 分钟组卷，交卷后自评解答题生成预测成绩单；成绩摘要会写入本地模拟考历史，错题进入同一错题本。
 9. 关卡结算页和模拟考成绩单底部都有“生成战报”，生成 750×1000 的证书卡，可保存图片分享。
 10. 首页“每日一题”每天按日期固定抽一道选择/判断题，完成额外 +20 XP；当天完成后置灰，次日自动换题。
 11. 刷题页右侧悬浮的“∑ 公式本”可打开公式速查抽屉（本地 JSON + KaTeX），只供查阅，不影响答题；题干旁的“画图”按钮会对带图像数据的题打开函数图。
 12. 函数图支持普通曲线、导数切线（青色）与定积分阴影面积；图像用轻量 `function-plot` 在 Modal 中按需渲染。
-13. 错题本每道题的解析下方有“追问 AI”：用你自己的 DeepSeek API Key，让 AI 结合题干、错误答案、正确答案和官方解析分析易错点。Key 只存本机 localStorage，不写入代码、构建产物或备份；未配置时会提示去“设置 → AI 助教”配置。
+13. 错题本每道题的解析下方有“追问 AI”：前端只请求同源 `/api/chat`，由 Vercel Function 校验 Supabase 匿名会话、扣每日 10 次额度后代调大模型；API Key 不出现在浏览器。
 
 ### AI 助教说明
 
-- 请求直连 `https://api.deepseek.com/chat/completions`，模型为 `deepseek-chat`，由浏览器发起，不经过本项目服务器。
-- 只有点击“追问 AI”时才会请求；未配置 Key 或网络失败不影响主线、错题复习和社区功能。
-- 回答由大模型生成，仅供参考，可能出错；遇到 401/403 请检查 Key，遇到超时会提示 45 秒后重试。
+- 前端不保存、不请求任何模型的 API Key；`AI_API_KEY` 与 `SUPABASE_SERVICE_ROLE_KEY` 只在 Vercel Function 环境变量中读取。
+- 首次使用会静默创建 Supabase 匿名会话；每个账号每天最多 10 次，额度记录在 `ai_usage` 表，由 `consume_ai_quota` 原子扣减。
+- 部署与环境变量配置见 [docs/vercel-ai.md](docs/vercel-ai.md)，配额 SQL 见 [docs/supabase/ai_quota.sql](docs/supabase/ai_quota.sql)。
+- 只有点击“追问 AI”时才会请求；未登录 Supabase、额度用尽或网络失败不影响主线、错题复习和社区功能。
+- 回答由大模型生成，仅供参考，可能出错；请以教材和老师讲解为准。
 
 ### 键盘
 
@@ -150,7 +152,7 @@ npm run build && npm run preview:lan   # 构建版，监听 0.0.0.0:4173
 
 ### 安全与治理
 
-- 前端只使用 anon key；`service_role` 不出现在代码、环境变量或构建产物中。
+- 前端只使用 anon key；`service_role` 只在 Vercel Function 的服务器环境变量中出现，绝不进入浏览器构建产物。
 - `community_questions` 所有人只能读 `visible`；登录用户只能插入 `author_id = auth.uid()` 且 `status='visible'` 的行；作者只能删自己的题；`community_reports` 只能插入、客户端读不到全量。
 - 题干/解析/昵称走 React 文本转义；公式由 KaTeX `trust: false` 渲染；长度在客户端与数据库两侧限制。
 - 举报阈值由 **security definer 触发器**维护，普通客户端无法改 `status`。
@@ -181,7 +183,7 @@ IndexedDB 数据库名：`gaoshu-quest`。对象仓库：
 
 ### 完整备份
 
-“设置 → 备份与恢复”导出 `gaoshu-quest-backup` JSON，包含题库、关卡、全部尝试、作答快照、错题、档案、设置与社区题缓存。恢复会**覆盖当前浏览器全部数据**。Supabase 会话也会被备份/恢复，换设备时可连同作者身份一起迁移（需同一 Supabase 项目）。AI API Key 只存在本机 localStorage，**不进入备份**。
+“设置 → 备份与恢复”导出 `gaoshu-quest-backup` JSON，包含题库、关卡、全部尝试、作答快照、错题、档案、设置与社区题缓存。恢复会**覆盖当前浏览器全部数据**。Supabase 会话也会被备份/恢复，换设备时可连同作者身份一起迁移（需同一 Supabase 项目）。AI 助教不把 Key 存进浏览器，也不进入备份。
 
 ### 导入题库
 
