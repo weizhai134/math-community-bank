@@ -141,6 +141,8 @@ export interface WrongItem {
   lastWrongAt: number;
   lastReviewedAt?: number;
   lastXpAt?: number;
+  /** 最近一次作答内容；用于 AI 错题点拨的上下文，旧记录可能没有。 */
+  lastAnswer?: string | boolean;
   reviewCount: number;
   archived: boolean;
   questionSnapshot: Question;

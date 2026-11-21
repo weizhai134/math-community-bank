@@ -52,11 +52,13 @@ interface AppStore {
   activeRun: ActiveRun | null;
   pendingReview: PendingReview | null;
   dataOpen: boolean;
+  dataTab: 'backup' | 'bank' | 'ai';
   toast: string | null;
   recordCompletion: (event: AchievementEvent) => Promise<void>;
   bootstrap: () => Promise<void>;
   refresh: () => Promise<void>;
   setDataOpen: (open: boolean) => void;
+  setDataTab: (tab: 'backup' | 'bank' | 'ai') => void;
   showToast: (message: string) => void;
   startLevel: (levelId: string) => Promise<ActiveRun>;
   startTrial: () => Promise<ActiveRun>;
@@ -88,6 +90,7 @@ export const useAppStore = create<AppStore>((set, get) => ({
   activeRun: null,
   pendingReview: null,
   dataOpen: false,
+  dataTab: 'backup',
   toast: null,
 
   bootstrap: async () => {
@@ -118,6 +121,7 @@ export const useAppStore = create<AppStore>((set, get) => ({
   },
 
   setDataOpen: (open) => set({ dataOpen: open }),
+  setDataTab: (tab) => set({ dataTab: tab }),
 
   showToast: (message) => {
     if (toastTimer) clearTimeout(toastTimer);

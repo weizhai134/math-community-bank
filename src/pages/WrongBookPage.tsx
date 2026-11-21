@@ -7,6 +7,7 @@ import { navigate } from '../lib/router';
 import { useAppStore } from '../store/useAppStore';
 import { MathText } from '../components/MathText';
 import { Modal } from '../components/Modal';
+import { AiTutorDialog } from '../components/AiTutorDialog';
 import { DifficultyBadge, ProgressBar } from '../components/ui';
 import { exportWrongBookPdf } from '../services/wrongBookExport';
 
@@ -42,6 +43,7 @@ export function WrongBookPage(): JSX.Element {
   const [tab, setTab] = useState<'active' | 'archived'>('active');
   const [busyId, setBusyId] = useState<string | null>(null);
   const [scratchItem, setScratchItem] = useState<WrongItem | null>(null);
+  const [aiItem, setAiItem] = useState<WrongItem | null>(null);
   const [exporting, setExporting] = useState(false);
 
   useEffect(() => {
@@ -331,6 +333,14 @@ export function WrongBookPage(): JSX.Element {
                   </div>
                 </details>
 
+                <button
+                  type="button"
+                  className="button small ghost ai-ask-button"
+                  onClick={() => setAiItem(item)}
+                >
+                  ✦ 追问 AI
+                </button>
+
                 {item.scratchImage ? (
                   <button
                     type="button"
@@ -403,6 +413,8 @@ export function WrongBookPage(): JSX.Element {
           />
         ) : null}
       </Modal>
+
+      <AiTutorDialog item={aiItem} onClose={() => setAiItem(null)} />
     </div>
   );
 }

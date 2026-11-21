@@ -570,13 +570,22 @@ export async function finalizeRun(
       for (const item of answers) {
         const wrong = wrongMap.get(item.question.id);
         const scratchImage = item.answer.scratchImage;
+        const lastAnswer = item.answer.response;
         const withScratch = (next: WrongItem): WrongItem =>
           scratchImage && item.earned < 1 ? { ...next, scratchImage } : next;
+        const withAnswer = (next: WrongItem): WrongItem =>
+          item.earned < 1 && lastAnswer !== null && lastAnswer !== undefined
+            ? { ...next, lastAnswer }
+            : next;
         if (isTrial) {
           if (!wrong) {
             // 靶向突破会混入同章节变式题；答对的变式题不应该凭空进入错题本。
             if (item.earned === 1) continue;
-            const created = applyReview(createWrongItem(item.question, now), item.earned === 1 ? 5 : item.earned === 0.5 ? 3 : 1, now);
+            const created = applyReview(
+              createWrongItem(item.question, now, lastAnswer),
+              item.earned === 1 ? 5 : item.earned === 0.5 ? 3 : 1,
+              now,
+            );
             updatedWrongItems.push(withScratch(created));
             continue;
           }
@@ -591,10 +600,10 @@ export async function finalizeRun(
           if (item.earned === 1 && eligibleTrialQuestions.has(item.question.id)) {
             reviewed = withTrialXpAward(reviewed, now);
           }
-          updatedWrongItems.push(withScratch(reviewed));
+          updatedWrongItems.push(withScratch(withAnswer(reviewed)));
         } else if (item.earned < 1) {
           const next = wrong ? recordWrongAgain(wrong, now) : createWrongItem(item.question, now);
-          updatedWrongItems.push(withScratch(next));
+          updatedWrongItems.push(withScratch(withAnswer(next)));
         }
       }
       if (updatedWrongItems.length > 0) {

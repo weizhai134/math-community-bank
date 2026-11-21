@@ -3259,6 +3259,17 @@ h3 {
   text-underline-offset: 3px;
 }
 
+.ai-ask-button {
+  margin: 0 0 11px;
+  border-color: #ddc9a3;
+  color: var(--amber-dark);
+}
+
+.ai-ask-button:hover {
+  border-color: var(--amber);
+  background: #fff8e8;
+}
+
 .wrong-reference {
   margin-top: 10px;
   padding: 12px 14px;
@@ -3551,6 +3562,172 @@ h3 {
   color: var(--muted-light);
   font-size: 9px;
   text-align: center;
+}
+
+/* ===== AI tutor ===== */
+.ai-config {
+  display: flex;
+  flex-direction: column;
+  gap: 10px;
+  padding: 16px 0;
+  border-top: 1px solid var(--line);
+}
+
+.ai-config label {
+  color: var(--ink);
+  font-size: 10px;
+  font-weight: 700;
+}
+
+.ai-config input {
+  width: 100%;
+  padding: 12px 14px;
+  border: 1px solid var(--line-strong);
+  border-radius: 9px;
+  background: #fffdf8;
+  color: var(--ink);
+  font-family: var(--mono);
+  font-size: 12px;
+  letter-spacing: 0.03em;
+}
+
+.ai-config input:focus {
+  outline: 2px solid rgba(184, 103, 31, 0.22);
+  border-color: var(--amber);
+}
+
+.ai-config .small-note code {
+  font-family: var(--mono);
+  font-size: 9px;
+}
+
+.ai-config-actions {
+  display: flex;
+  align-items: center;
+  flex-wrap: wrap;
+  gap: 10px;
+}
+
+.ai-saved {
+  color: var(--green);
+  font-size: 10px;
+  font-weight: 700;
+}
+
+.ai-panel {
+  display: flex;
+  flex-direction: column;
+  gap: 14px;
+}
+
+.ai-context {
+  display: flex;
+  align-items: baseline;
+  justify-content: space-between;
+  gap: 12px;
+  padding-bottom: 11px;
+  border-bottom: 1px solid var(--line);
+}
+
+.ai-context span {
+  color: var(--muted);
+  font-size: 10px;
+}
+
+.ai-context strong {
+  color: var(--amber-dark);
+  font-family: var(--serif);
+  font-size: 16px;
+  font-weight: 600;
+}
+
+.ai-status {
+  display: flex;
+  align-items: center;
+  gap: 11px;
+  padding: 34px 0;
+  color: var(--muted);
+  font-size: 12px;
+}
+
+.ai-spinner {
+  width: 18px;
+  height: 18px;
+  flex: 0 0 auto;
+  border: 2px solid #e4d6bd;
+  border-top-color: var(--amber);
+  border-radius: 50%;
+  animation: ai-spin 0.8s linear infinite;
+}
+
+@keyframes ai-spin {
+  to {
+    transform: rotate(360deg);
+  }
+}
+
+.ai-error {
+  padding: 15px 16px;
+  border: 1px solid #ecc6be;
+  border-radius: 10px;
+  background: #fdf2ef;
+}
+
+.ai-error strong {
+  color: var(--red);
+  font-family: var(--serif);
+  font-size: 16px;
+  font-weight: 600;
+}
+
+.ai-error p {
+  margin: 7px 0 0;
+  color: #7b3026;
+  font-size: 11px;
+  line-height: 1.7;
+}
+
+.ai-error-actions {
+  display: flex;
+  flex-wrap: wrap;
+  gap: 8px;
+  margin-top: 12px;
+}
+
+.ai-answer {
+  padding: 15px 16px;
+  border: 1px solid #d7e5e0;
+  border-radius: 10px;
+  background: #f7fbf9;
+}
+
+.ai-answer-text {
+  max-height: 46vh;
+  margin-top: 7px;
+  overflow-y: auto;
+  color: var(--ink-soft);
+  font-family: var(--serif);
+  font-size: 14px;
+  line-height: 1.9;
+  white-space: pre-wrap;
+}
+
+.ai-footnote {
+  margin: 0;
+  color: var(--muted-light);
+  font-size: 9px;
+  line-height: 1.7;
+  text-align: center;
+}
+
+@media (max-width: 680px) {
+  .ai-answer-text {
+    max-height: 34vh;
+  }
+
+  .ai-config input {
+    font-size: 16px;
+  }
 }
 
 .bank-intro {

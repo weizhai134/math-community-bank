@@ -1,6 +1,11 @@
-import { useRef, useState } from 'react';
+import { useEffect, useRef, useState } from 'react';
 import { localDateKey } from '../lib/date';
 import { useAppStore } from '../store/useAppStore';
+import {
+  clearAiTutorConfig,
+  readAiTutorConfig,
+  saveAiTutorConfig,
+} from '../services/aiTutor';
 import {
   buildBackup,
   buildBankExport,
@@ -8,8 +13,6 @@ import {
   loadBackupData,
 } from '../services/dataTransfer';
 import { Modal } from './Modal';
-
-type Tab = 'backup' | 'bank';
 
 async function readJsonFile(file: File): Promise<unknown> {
   const text = await file.text();
@@ -30,8 +33,9 @@ export function DataPanel(): JSX.Element {
   const importBank = useAppStore((state) => state.importBank);
   const restore = useAppStore((state) => state.restore);
   const showToast = useAppStore((state) => state.showToast);
+  const tab = useAppStore((state) => state.dataTab);
+  const setTab = useAppStore((state) => state.setDataTab);
 
-  const [tab, setTab] = useState<Tab>('backup');
   const [busy, setBusy] = useState(false);
   const [bankText, setBankText] = useState('');
   const [bankError, setBankError] = useState<string | null>(null);
@@ -39,8 +43,48 @@ export function DataPanel(): JSX.Element {
   const [restoreRaw, setRestoreRaw] = useState<unknown>(null);
   const [restoreName, setRestoreName] = useState('');
   const [restoreError, setRestoreError] = useState<string | null>(null);
+  const [aiKey, setAiKey] = useState('');
+  const [aiSaved, setAiSaved] = useState(false);
+  const [aiError, setAiError] = useState<string | null>(null);
   const bankInputRef = useRef<HTMLInputElement>(null);
   const restoreInputRef = useRef<HTMLInputElement>(null);
+
+  useEffect(() => {
+    if (!open) return;
+    const config = readAiTutorConfig();
+    setAiKey(config.apiKey);
+    setAiSaved(Boolean(config.apiKey));
+    setAiError(null);
+  }, [open]);
+
+  const handleSaveAi = () => {
+    const key = aiKey.trim();
+    if (!key) {
+      setAiError('请先粘贴 API Key');
+      return;
+    }
+    try {
+      saveAiTutorConfig(key);
+      setAiKey(key);
+      setAiSaved(true);
+      setAiError(null);
+      showToast('AI 助教配置已保存到本机');
+    } catch {
+      setAiError('浏览器拒绝了本地存储，请检查隐私设置');
+    }
+  };
+
+  const handleClearAi = () => {
+    try {
+      clearAiTutorConfig();
+      setAiKey('');
+      setAiSaved(false);
+      setAiError(null);
+      showToast('已清除本机 AI 配置');
+    } catch {
+      setAiError('清除本地配置失败');
+    }
+  };
 
   const handleExportBackup = async () => {
     setBusy(true);
@@ -132,7 +176,7 @@ export function DataPanel(): JSX.Element {
   };
 
   return (
-    <Modal open={open} title="数据与题库" onClose={() => setOpen(false)} wide>
+    <Modal open={open} title="设置与数据" onClose={() => setOpen(false)} wide>
       <div className="data-tabs" role="tablist">
         <button
           className={tab === 'backup' ? 'active' : ''}
@@ -149,6 +193,14 @@ export function DataPanel(): JSX.Element {
           aria-selected={tab === 'bank'}
         >
           导入题库
+        </button>
+        <button
+          className={tab === 'ai' ? 'active' : ''}
+          onClick={() => setTab('ai')}
+          role="tab"
+          aria-selected={tab === 'ai'}
+        >
+          AI 助教
         </button>
       </div>
 
@@ -233,10 +285,10 @@ export function DataPanel(): JSX.Element {
           </section>
 
           <p className="data-footnote">
-            本应用不设账号、不发起网络请求。清理浏览器站点数据会删除全部进度，请定期导出备份。
+            备份与题库文件只在本机处理。社区题库与 AI 助教会按需发起网络请求；清理浏览器站点数据会删除全部进度，请定期导出备份。
           </p>
         </div>
-      ) : (
+      ) : tab === 'bank' ? (
         <div className="data-panel">
           <section className="data-section bank-intro">
             <div>
@@ -297,6 +349,64 @@ export function DataPanel(): JSX.Element {
               {busy ? '校验并导入中…' : '校验并导入题库'}
             </button>
           </div>
+        </div>
+      ) : (
+        <div className="data-panel">
+          <section className="data-section ai-settings-head">
+            <div>
+              <h3>AI 助教配置</h3>
+              <p>
+                错题本里的「追问 AI」会使用你自己的 DeepSeek API Key。Key 只保存在本机
+                localStorage，不会写进代码、不会进入备份，也不会经过本应用的中转。
+              </p>
+            </div>
+          </section>
+
+          <div className="ai-config">
+            <label htmlFor="ai-api-key">DeepSeek API Key</label>
+            <input
+              id="ai-api-key"
+              type="password"
+              value={aiKey}
+              onChange={(event) => {
+                setAiKey(event.target.value);
+                setAiSaved(false);
+                setAiError(null);
+              }}
+              placeholder="sk-..."
+              autoComplete="off"
+              spellCheck={false}
+            />
+            <p className="small-note">
+              请求直连 <code>https://api.deepseek.com/chat/completions</code>，模型为
+              <code>deepseek-chat</code>；未配置 Key 时其他功能不受影响。
+            </p>
+            {aiError ? <div className="form-error">{aiError}</div> : null}
+            <div className="ai-config-actions">
+              <button
+                type="button"
+                className="button primary"
+                onClick={handleSaveAi}
+                disabled={!aiKey.trim()}
+              >
+                保存 Key
+              </button>
+              <button
+                type="button"
+                className="button ghost"
+                onClick={handleClearAi}
+                disabled={!aiSaved && !aiKey}
+              >
+                清除本地 Key
+              </button>
+              {aiSaved ? <span className="ai-saved">已保存在本机</span> : null}
+            </div>
+          </div>
+
+          <p className="data-footnote">
+            在错题本展开任意错题，点击解析下方的「追问 AI」即可。AI 回答仅供参考，遇到 401
+            请回来检查 Key 是否有效。
+          </p>
         </div>
       )}
     </Modal>

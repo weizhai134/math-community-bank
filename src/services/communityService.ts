@@ -526,6 +526,7 @@ export async function finishCommunityRun(): Promise<CommunityResult> {
       source: 'community',
       communityId: item.questionId,
       questionSnapshot: mapped,
+      lastAnswer: item.response ?? undefined,
     };
     if (item.earned < 1 && item.scratchImage) next.scratchImage = item.scratchImage;
     await db.wrongItems.put(next);

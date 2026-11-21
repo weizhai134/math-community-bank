@@ -193,6 +193,7 @@ export async function finalizeExam(
         ...wrong,
         source: 'mainline',
         questionSnapshot: item.question,
+        lastAnswer: item.response ?? undefined,
       });
     }
   });

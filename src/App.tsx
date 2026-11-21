@@ -74,8 +74,8 @@ function Header({ route }: { route: Route }): JSX.Element {
               <strong>{profile.totalXp} XP</strong>
             </button>
           ) : null}
-          <button className="data-button" onClick={() => setDataOpen(true)} title="数据与题库">
-            数据
+          <button className="data-button" onClick={() => setDataOpen(true)} title="设置、数据与题库">
+            设置
           </button>
         </div>
       </div>

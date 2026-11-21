@@ -30,7 +30,11 @@ export function initialWrongMinutes(type: Question['type']): number {
   return INITIAL_MINUTES[type];
 }
 
-export function createWrongItem(question: Question, now = Date.now()): WrongItem {
+export function createWrongItem(
+  question: Question,
+  now = Date.now(),
+  lastAnswer?: string | boolean | null,
+): WrongItem {
   const minutes = INITIAL_MINUTES[question.type];
   return {
     id: question.id,
@@ -49,6 +53,7 @@ export function createWrongItem(question: Question, now = Date.now()): WrongItem
     reviewCount: 0,
     archived: false,
     questionSnapshot: question,
+    ...(lastAnswer === undefined || lastAnswer === null ? {} : { lastAnswer }),
   };
 }
 
