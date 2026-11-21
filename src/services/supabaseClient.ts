@@ -175,8 +175,6 @@ export async function getCommunityAccessToken(): Promise<string> {
     );
   }
 
-  await ensureCommunitySession();
-
   const sb = getCommunityClient();
   if (!sb) {
     throw new CommunityUnavailableError(
@@ -185,15 +183,51 @@ export async function getCommunityAccessToken(): Promise<string> {
     );
   }
 
-  const { data, error } = await sb.auth.getSession();
-  const token = data.session?.access_token;
-  if (error || !token) {
+  try {
+    // 必须显式拿 session；不能只看是否有 user。
+    const { data, error } = await sb.auth.getSession();
+    if (error) {
+      throw new CommunityUnavailableError(`读取登录状态失败：${error.message}`, 'auth');
+    }
+
+    let session = data.session;
+
+    if (!session) {
+      const { data: signInData, error: signInError } = await sb.auth.signInAnonymously();
+      if (signInError || !signInData.session) {
+        throw new CommunityUnavailableError(
+          signInError ? `匿名登录失败：${signInError.message}` : '匿名登录没有返回会话',
+          'auth',
+        );
+      }
+      session = signInData.session;
+    } else if (
+      typeof session.expires_at === 'number' &&
+      session.expires_at * 1000 <= Date.now() + 30_000
+    ) {
+      // 会话存在但已过期/即将过期：先刷新，避免把过期 JWT 送到 /api/chat。
+      const { data: refreshed, error: refreshError } = await sb.auth.refreshSession();
+      if (refreshError || !refreshed.session) {
+        throw new CommunityUnavailableError(
+          refreshError ? `登录状态刷新失败：${refreshError.message}` : '登录状态刷新失败',
+          'auth',
+        );
+      }
+      session = refreshed.session;
+    }
+
+    const token = session.access_token.trim().replace(/^Bearer\s+/i, '');
+    if (!token) {
+      throw new CommunityUnavailableError('当前登录状态没有可用凭证，请刷新页面后重试', 'auth');
+    }
+    return token;
+  } catch (error) {
+    if (error instanceof CommunityUnavailableError) throw error;
     throw new CommunityUnavailableError(
-      error ? `读取登录凭证失败：${error.message}` : '当前登录状态没有可用凭证，请刷新页面后重试',
+      error instanceof Error ? error.message : '读取登录状态失败，请刷新页面后重试',
       'auth',
     );
   }
-  return token;
 }
 
 export async function refreshCommunityUser(): Promise<CommunitySessionInfo> {

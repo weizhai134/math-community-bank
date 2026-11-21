@@ -1,3 +1,5 @@
+import { createClient } from '@supabase/supabase-js';
+
 declare const process: { env: Record<string, string | undefined> };
 
 type ApiRequest = {
@@ -35,9 +37,36 @@ function headerValue(
   name: string,
 ): string {
   if (!headers) return '';
-  const raw = headers[name] ?? headers[name.toLowerCase()];
-  if (Array.isArray(raw)) return raw[0] ?? '';
-  return typeof raw === 'string' ? raw : '';
+  const direct = headers[name] ?? headers[name.toLowerCase()];
+  if (Array.isArray(direct)) return direct[0] ?? '';
+  if (typeof direct === 'string') return direct;
+
+  // Node/Vercel 通常会把 header 名转小写，但代理或测试环境可能保留 Authorization 原样。
+  const lowerName = name.toLowerCase();
+  for (const [key, value] of Object.entries(headers)) {
+    if (key.toLowerCase() !== lowerName) continue;
+    if (Array.isArray(value)) return value[0] ?? '';
+    if (typeof value === 'string') return value;
+  }
+  return '';
+}
+
+/** 从 Authorization 中取纯 JWT：兼容大小写、多个空格和数组 header。 */
+function readBearer(headers: ApiRequest['headers']): string {
+  const raw = headerValue(headers, 'authorization').trim();
+  if (!raw) return '';
+  const match = /^Bearer\s+(.+)$/i.exec(raw);
+  return match ? match[1].trim() : '';
+}
+
+function timeout<T>(promise: Promise<T>, ms: number): Promise<T> {
+  let timer: ReturnType<typeof setTimeout> | undefined;
+  const deadline = new Promise<never>((_, reject) => {
+    timer = setTimeout(() => reject(new Error('timeout')), ms);
+  });
+  return Promise.race([promise, deadline]).finally(() => {
+    if (timer) clearTimeout(timer);
+  });
 }
 
 function fail(status: number, error: string, code: string, extra: Record<string, unknown> = {}): ChatResult {
@@ -105,7 +134,7 @@ export async function handleChat(
   const prompt = readPrompt(request.body);
   if (!prompt) return fail(400, `prompt 必须是 1-${MAX_PROMPT_LENGTH} 字的字符串`, 'bad-request');
 
-  const bearer = headerValue(request.headers, 'authorization').replace(/^Bearer\s+/i, '').trim();
+  const bearer = readBearer(request.headers);
   if (!bearer) return fail(401, '请先登录后再使用 AI 助教', 'auth');
 
   const supabaseUrl = pickEnv(env, 'SUPABASE_URL', 'VITE_SUPABASE_URL');
@@ -119,26 +148,33 @@ export async function handleChat(
 
   let userId = '';
   try {
-    const authResponse = await fetchWithTimeout(
-      `${supabaseUrl.replace(/\/+$/, '')}/auth/v1/user`,
-      {
-        headers: {
-          apikey: supabaseAnonKey,
-          Authorization: `Bearer ${bearer}`,
-        },
+    // 用 anon key 初始化 Auth 客户端，再用用户自己的 JWT 校验；
+    // 这里绝不能把 service_role 当作“跳过鉴权”的捷径。
+    const authClient = createClient(supabaseUrl.replace(/\/+$/, ''), supabaseAnonKey, {
+      auth: {
+        persistSession: false,
+        autoRefreshToken: false,
+        detectSessionInUrl: false,
       },
+      global: {
+        headers: { 'x-application-name': 'gaoshu-quest' },
+      },
+    });
+
+    const { data, error } = await timeout(
+      authClient.auth.getUser(bearer),
       AUTH_TIMEOUT_MS,
     );
 
-    if (authResponse.status === 401 || authResponse.status === 403) {
-      return fail(401, '登录状态已失效，请刷新页面后重试', 'auth');
-    }
-    if (!authResponse.ok) {
+    if (error) {
+      const status = typeof error.status === 'number' ? error.status : 0;
+      if (status === 401 || status === 403) {
+        return fail(401, '登录状态已失效，请刷新页面后重试', 'auth');
+      }
       return fail(503, '登录校验服务暂时不可用，请稍后再试', 'auth-unavailable');
     }
 
-    const user = (await authResponse.json()) as { id?: unknown };
-    userId = typeof user.id === 'string' ? user.id : '';
+    userId = typeof data.user?.id === 'string' ? data.user.id : '';
   } catch {
     return fail(503, '登录校验超时，请检查网络后重试', 'auth-unavailable');
   }

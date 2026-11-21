@@ -76,6 +76,7 @@ export async function askAiTutor(input: AiTutorPromptInput): Promise<string> {
       method: 'POST',
       headers: {
         'Content-Type': 'application/json',
+        // 必须保留 "Bearer " 前缀后的空格；token 由 getCommunityAccessToken 负责 trim。
         Authorization: `Bearer ${token}`,
       },
       body: JSON.stringify({ prompt: buildAiTutorPrompt(input) }),
