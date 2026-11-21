@@ -70,23 +70,44 @@ export async function askAiTutor(input: AiTutorPromptInput): Promise<string> {
 
   const controller = new AbortController();
   const timer = window.setTimeout(() => controller.abort(), CLIENT_TIMEOUT_MS);
+  const prompt = buildAiTutorPrompt(input);
 
-  try {
+  const send = async (accessToken: string) => {
     const response = await fetch(CHAT_ENDPOINT, {
       method: 'POST',
       headers: {
         'Content-Type': 'application/json',
         // 必须保留 "Bearer " 前缀后的空格；token 由 getCommunityAccessToken 负责 trim。
-        Authorization: `Bearer ${token}`,
+        Authorization: `Bearer ${accessToken}`,
       },
-      body: JSON.stringify({ prompt: buildAiTutorPrompt(input) }),
+      body: JSON.stringify({ prompt }),
       signal: controller.signal,
     });
-
     const payload = (await response.json().catch(() => null)) as
       | ChatSuccess
       | ChatErrorBody
       | null;
+    return { response, payload };
+  };
+
+  try {
+    let { response, payload } = await send(token);
+
+    // 后端明确返回 401：可能 token 在请求途中过期，强制刷新一次再重试。
+    if (response.status === 401 || response.status === 403) {
+      try {
+        token = await getCommunityAccessToken(true);
+        ({ response, payload } = await send(token));
+      } catch (refreshError) {
+        if (refreshError instanceof AiTutorError) throw refreshError;
+        throw new AiTutorError(
+          refreshError instanceof Error
+            ? refreshError.message
+            : '登录状态刷新失败，请刷新页面后重试',
+          'auth',
+        );
+      }
+    }
 
     if (!response.ok) {
       const errorBody = payload as ChatErrorBody | null;

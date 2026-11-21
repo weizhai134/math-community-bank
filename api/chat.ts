@@ -26,8 +26,10 @@ const MODEL_TIMEOUT_MS = 40_000;
 
 function pickEnv(env: Record<string, string | undefined>, ...names: string[]): string {
   for (const name of names) {
-    const value = env[name]?.trim();
-    if (value) return value;
+    const raw = env[name]?.trim();
+    if (!raw) continue;
+    // 环境变量面板复制时偶尔会连引号一起粘进来，去掉首尾引号再使用。
+    return raw.replace(/^["']|["']$/g, '').trim();
   }
   return '';
 }
@@ -53,10 +55,27 @@ function headerValue(
 
 /** 从 Authorization 中取纯 JWT：兼容大小写、多个空格和数组 header。 */
 function readBearer(headers: ApiRequest['headers']): string {
-  const raw = headerValue(headers, 'authorization').trim();
-  if (!raw) return '';
-  const match = /^Bearer\s+(.+)$/i.exec(raw);
-  return match ? match[1].trim() : '';
+  const authHeader = headerValue(headers, 'authorization').trim();
+  if (!authHeader) return '';
+  const parts = authHeader.split(/\s+/);
+  // 必须是标准的 "Bearer <token>"，不能把 Bearer 前缀一起送到 Supabase。
+  if (parts.length < 2 || parts[0].toLowerCase() !== 'bearer') return '';
+  return parts.slice(1).join(' ').trim();
+}
+
+function jwtIssuer(token: string): string {
+  try {
+    const segment = token.split('.')[1] ?? '';
+    if (!segment) return '';
+    const padded = segment.replace(/-/g, '+').replace(/_/g, '/').padEnd(
+      Math.ceil(segment.length / 4) * 4,
+      '=',
+    );
+    const payload = JSON.parse(atob(padded)) as { iss?: unknown };
+    return typeof payload.iss === 'string' ? payload.iss : '';
+  } catch {
+    return '';
+  }
 }
 
 function timeout<T>(promise: Promise<T>, ms: number): Promise<T> {
@@ -141,9 +160,20 @@ export async function handleChat(
   const supabaseAnonKey = pickEnv(env, 'SUPABASE_ANON_KEY', 'VITE_SUPABASE_ANON_KEY');
   const serviceRoleKey = pickEnv(env, 'SUPABASE_SERVICE_ROLE_KEY');
   const aiKey = pickEnv(env, 'AI_API_KEY');
+  const urlSource = pickEnv(env, 'SUPABASE_URL') ? 'SUPABASE_URL' : 'VITE_SUPABASE_URL';
+  const anonKeySource = pickEnv(env, 'SUPABASE_ANON_KEY')
+    ? 'SUPABASE_ANON_KEY'
+    : 'VITE_SUPABASE_ANON_KEY';
 
   if (!supabaseUrl || !supabaseAnonKey || !serviceRoleKey || !aiKey) {
-    return fail(503, 'AI 服务未配置，请联系管理员', 'server-config');
+    const missing = [
+      !supabaseUrl ? 'SUPABASE_URL/VITE_SUPABASE_URL' : '',
+      !supabaseAnonKey ? 'SUPABASE_ANON_KEY/VITE_SUPABASE_ANON_KEY' : '',
+      !serviceRoleKey ? 'SUPABASE_SERVICE_ROLE_KEY' : '',
+      !aiKey ? 'AI_API_KEY' : '',
+    ].filter(Boolean);
+    console.error(`[api/chat] 缺少服务端环境变量: ${missing.join(', ')}`);
+    return fail(503, `AI 服务未配置，缺少：${missing.join(', ')}`, 'server-config');
   }
 
   let userId = '';
@@ -169,8 +199,36 @@ export async function handleChat(
     if (error) {
       const status = typeof error.status === 'number' ? error.status : 0;
       if (status === 401 || status === 403) {
-        return fail(401, '登录状态已失效，请刷新页面后重试', 'auth');
+        // 这些信息只写服务器日志/响应 details，不包含 token 本身，便于定位项目不匹配。
+        console.error('[api/chat] Supabase 验证 Token 失败:', {
+          status,
+          code: (error as { code?: string }).code,
+          message: error.message,
+          supabaseHost: (() => {
+            try {
+              return new URL(supabaseUrl).host;
+            } catch {
+              return 'invalid-url';
+            }
+          })(),
+          tokenIssuer: jwtIssuer(bearer),
+          urlSource,
+          anonKeySource,
+          anonKeyKind: supabaseAnonKey.startsWith('eyJ')
+            ? 'legacy-jwt'
+            : supabaseAnonKey.startsWith('sb_publishable_')
+              ? 'publishable'
+              : 'unknown',
+        });
+        return fail(401, '登录状态已失效，请刷新页面后重试', 'auth', {
+          details: error.message,
+        });
       }
+      console.error('[api/chat] Supabase 登录校验服务异常:', {
+        status,
+        code: (error as { code?: string }).code,
+        message: error.message,
+      });
       return fail(503, '登录校验服务暂时不可用，请稍后再试', 'auth-unavailable');
     }
 

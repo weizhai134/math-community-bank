@@ -167,7 +167,7 @@ export function ensureCommunitySession(): Promise<CommunitySessionInfo> {
  * 取当前 Supabase 会话的 access token，供同源 /api/chat 校验用户。
  * 没有会话时先静默匿名登录；单文件版或未配置 Supabase 时抛错，由 AI 弹窗展示。
  */
-export async function getCommunityAccessToken(): Promise<string> {
+export async function getCommunityAccessToken(forceRefresh = false): Promise<string> {
   if (isSingleFileDemo) {
     throw new CommunityUnavailableError(
       'AI 助教需要在线版并启用 Supabase 匿名登录',
@@ -202,10 +202,12 @@ export async function getCommunityAccessToken(): Promise<string> {
       }
       session = signInData.session;
     } else if (
-      typeof session.expires_at === 'number' &&
-      session.expires_at * 1000 <= Date.now() + 30_000
+      forceRefresh ||
+      (typeof session.expires_at === 'number' &&
+        session.expires_at * 1000 <= Date.now() + 30_000)
     ) {
-      // 会话存在但已过期/即将过期：先刷新，避免把过期 JWT 送到 /api/chat。
+      // 会话存在但已过期/即将过期，或后端明确返回 401：先刷新，
+      // 避免把过期 JWT 送到 /api/chat。
       const { data: refreshed, error: refreshError } = await sb.auth.refreshSession();
       if (refreshError || !refreshed.session) {
         throw new CommunityUnavailableError(
